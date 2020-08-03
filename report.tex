@@ -97,7 +97,8 @@ The webbed structure is native to the well-established $\Lambda$ Cold Dark Matte
 its exact origins are not well understood~\cite{class_perturbs} and at present it is believed that the structure originates 
 from an amplification of quantum fluctuations as a density perturbation in the early universe~\cite{perturbation_theory}, 
 which is described by inflationary cosmology~\cite{inflation_cosmology}. The matter distribution of webbed structure in 
-the universe holds information on the true nature of dark matter, dark energy, the laws of gravity and the mode of galaxy formation~\cite{DarkEnergySurvey, kids_lensing, kids_cosmo, gal_formation, gal_formation2}.
+the universe holds information on the true nature of dark matter, dark energy, the laws of gravity and the mode of galaxy 
+formation~\cite{DarkEnergySurvey, kids_lensing, kids_cosmo, gal_formation, gal_formation2}.
 
 % PROBLEMS, FUTURE HOPES, SIMULATIONS
 Simulations that trace the evolution of phenomena such as structure formation, galaxy populations and the distribution of 
@@ -243,7 +244,7 @@ backpropagation gradients are calculated with $D$ and $G$ as adversaries of each
 network are shown at the Nash equilibrium. The game between the models is described with the value function $V$ as 
 
 \begin{eqnarray}\label{eqn:value}
-    \min_G \max_D V(D,G) &=& \mathbb{E}_{\mathbf{x}\sim p_{data}}\log D(\mathbf{x})                                                           \nonumber \\
+    \min_G \max_D V(D,G) &=& \mathbb{E}_{\mathbf{x}\sim p_{data}}\log D(\mathbf{x})            \nonumber \\
                          &+& \mathbb{E}_{G(\mathbf{z}) \sim p_{model}}\log(1-D(G(\mathbf{z}))) \nonumber \\
 \end{eqnarray}
 
@@ -448,7 +449,8 @@ $\Lambda \text{CDM}$ cosmology, the Planck experiment found a value of $H_0 =~ 6
 \text{ Mpc}^{-1}$~\cite{planck}. 
 
 The same event GW170817 had a degeneracy between the source distance and the viewing angle to the radio counterpart that 
-limited the initial certainty in the EM localization of the GW source. This degeneracy was broken from radio interferometry~\cite{GW170817_source_radio} and a value of $H_0$ that disagrees with the previous values was found to be 
+limited the initial certainty in the EM localization of the GW source. This degeneracy was broken from radio 
+interferometry~\cite{GW170817_source_radio} and a value of $H_0$ that disagrees with the previous values was found to be 
 $68.9^{+4.7}_{-4.6} \text{ km s}^{-1} \text{ Mpc}^{-1}$~\cite{GW170817_jet_H0}. A recent survey calibrates Type Ia 
 supernovae (SNe Ia) against a set of Tip of the Red Giant Branch (TRGB) stars~\cite{H0_redgiant}. These are bright stars
 that have just initiated helium burning in their cores and $H_0$ from this calibration was found to be $69.8 \pm 0.8 \, 
@@ -580,7 +582,8 @@ applied to obtain the original image.
 % Appendix~\ref{appendix:gan_setups}. The generator transforms a 100-dimensional vector drawn from a Gaussian prior 
 % $\mathbf{z}\sim \mathcal{N} (0,1)$ into a $32\times 32$ single-channel image. The latent-space vector is followed by a 
 % fully connected layer that is reshaped to a stack of feature maps for the two convolutional layers. Batch-normalisation 
-% is only used after the fully connected layer. Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} for more detail on batch-normalisation and activation functions. 
+% is only used after the fully connected layer. Through each layer hyperbolic tangent activations are used. See 
+% Appendices~\ref{appendix:app_acts} and~\ref{app_BN} for more detail on batch-normalisation and activation functions. 
 
 % The discriminator network has two convolutional layers and two fully connected layers. The image samples have features 
 % extracted by the first two convolutional layers and the features are flattened for the final fully connected layers. 
@@ -632,7 +635,8 @@ applied to obtain the original image.
 
 \textit{Architecture} --- 
 Table~\ref{table:3dgan_archi} of Appendix~\ref{appendix:gan_setups} shows the architectures of the 3D-GAN discriminator 
-and generator models. The hyper-parameters used in the 3D-GAN are also given in Table~\ref{table:3dgan_params} of Appendix~\ref{appendix:gan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
+and generator models. The hyper-parameters used in the 3D-GAN are also given in Table~\ref{table:3dgan_params} of 
+Appendix~\ref{appendix:gan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
 parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers 
 for the discriminator model. \\
 
@@ -1048,7 +1052,8 @@ histograms for each comparison were made. This process was repeated for each ker
 % \end{figure}
 
 % The differences between the training-uniform and generated-uniform means and variances are similar to the same values in 
-% the 2D-comparisons. These values show the significance of the training-generated comparisons in the top row of Figure~\ref{fig:3dgan_kltrials}, which are a nearly a whole order of magnitude smaller. The mean $D_{KL}$ values of these 
+% the 2D-comparisons. These values show the significance of the training-generated comparisons in the top row of 
+% Figure~\ref{fig:3dgan_kltrials}, which are a nearly a whole order of magnitude smaller. The mean $D_{KL}$ values of these 
 % comparisons are almost at the value of the training-training comparison means which is more evidence for the understandings
 % of the training data by the generator. The similarity shown by the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values may mostly be 
 % due to the similar pixel density distributions of the training and generated data. Considering that the lack of filament 
@@ -1185,7 +1190,8 @@ correctly posited just as the histograms are in training.
 \subsection{Simulation transfer}
 It is expected that the GAN could perform well on another simulation. The simulations in this work originate from the same 
 $\Lambda \text{CDM}$ cosmology and the webbed structure is consistent. An informative transfer would be to a future 
-simulation operating at a higher resolution with a greater number of total simulation particles such as the Millennium-XXL simulation~\cite{millxxlsim}. The Millennium-XXL simulation uses $6720^3$ particles in a volume of $3000 \: h^{-1} 
+simulation operating at a higher resolution with a greater number of total simulation particles such as the Millennium-XXL 
+simulation~\cite{millxxlsim}. The Millennium-XXL simulation uses $6720^3$ particles in a volume of $3000 \: h^{-1} 
 \,\textup{Mpc}$. Assuming a larger set of samples from this simulation, the GAN would be recreating the distributions of 
 smaller scale cosmological structure that could be tested further. From the experience of obtaining the strongest model in
 the 3D-GAN implementations, increasing the number of pixels increased the performance of the models. This could be due to 
