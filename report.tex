@@ -1,0 +1,969 @@
+\documentclass[twocolumn]{article}
+
+%% Language and font encodings
+\usepackage[english]{babel} \usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc} \usepackage{authblk}
+
+%% Sets page size and margins
+\usepackage[a4paper,top=3cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.5cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes} \usepackage[colorlinks=true,
+allcolors=blue]{hyperref}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\argmin}{\text{argmin}}
+
+\usepackage[normalem]{ulem}
+%\usepackage[switch]{lineno} \linenumbers
+\usepackage{amsmath,amsfonts,amssymb}       % blackboard math symbols
+\usepackage{bm}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{cite}
+\usepackage{caption}
+%\pagestyle{fancyplain}
+\usepackage{tabularx}
+\newcolumntype{b}{X}
+\newcolumntype{s}{>{\hsize=1.09\hsize}X}
+\newcolumntype{g}{>{\hsize=1.09\hsize}X}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\usepackage{etoolbox}
+\appto\appendix{\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}}
+
+
+\DeclareMathAlphabet{\mathbbmsl}{U}{bbm}{m}{sl}
+\newcommand\PP{\mathbb{P}}
+\newcommand\EE{\mathbb{E}}
+
+\newcommand{\bomu}{\ensuremath{\boldsymbol{\mu}}}
+\newcommand{\boC}{\ensuremath{{\sf{C}}}}
+\newcommand{\boSo}{\ensuremath{{\boldsymbol{S}_{\mathrm{o}}}}}
+
+\numberwithin{equation}{section}
+
+\title{\textbf{Teaching a machine to generate an artificial universe}}
+\author[1]{Jed Homer\thanks{}}
+\author[1]{Christopher Messenger}
+\author[1]{Martin Hendry}
+\affil[1]{Institute for Gravitational Research, School of Physics and Astronomy, University of Glasgow, G12 8QQ, UK}
+%Institute for Gravitational Research, 
+\begin{document}
+\date{}
+%\lhead{\textbf{Version $2.7$}}
+\twocolumn[
+	\begin{@twocolumnfalse}
+		\maketitle
+		\begin{abstract}
+		    This work presents separate two- and three-dimensional generative frameworks that use Generative Adversarial Networks to create realistic samples of cosmological structure. Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to volumes and projections of size $80 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate a high degree of coherence with their simulated counterparts and the distinction cannot be made visually by human experts. The nature of the separation between generated and N-body simulation samples is quantified with repeated tests of the Kullback-Leibler divergence on ensembles of samples alongside samples with uniformly distributed pixel densities. It is found that the implementations secure a coherence to within the same order of magnitude as a self comparison of the simulation samples. The main advantage of the generative approach to simulating large volumes of cosmological structure is that much less time is required than creating N-body simulations on high performance computing resources. Future explorations of the method that are relevant to the next paradigm in cosmological simulations are also outlined. The most pertinent application being for a generator that can produce samples that maintain high statistical coherence to simulation data at various redshifts. At this stage, the generative artificial intelligence can then be said to be capable of generating an artificial universe.
+		
+            %\textit{Nbody data, GANs, coherence, main results, implications and amplications, }
+            
+		\end{abstract}
+	\end{@twocolumnfalse}
+]
+{\renewcommand{\thefootnote}%
+    {\fnsymbol{footnote}}
+  \footnotetext[1]{Corresponding author: \url{jedhmr@gmail.com}}
+}
+
+\setcounter{tocdepth}{2}
+\begingroup
+\let\clearpage\relax
+\tableofcontents
+\endgroup
+\newpage
+
+\section{Introduction}
+Beyond the distance scales of galactic diameters, toward the sizes of galaxy clusters and beyond, matter in the Universe appears as a webbed structure of filaments across volumes of emptiness known as voids. This network of luminous formation is known as the cosmic web~\cite{bond_cw1, Coles_cw2, Forero_cw3, Dietrich_cw4, cw_phenomenon}. The cosmic web as a distribution of matter contains artefacts linked to the state of the primordial universe, the nature of early universe perturbations and more fundamental physics to describe this era in cosmic time. The emergence of the structure is from an early period of exponential expansion, known as inflation~\cite{inflation_cosmo2}. This structure has been observed by missions such as~\cite{sdss1, 2df} and by weak gravitational lensing~\cite{glens_book} through distortions, or shears~\cite{shear_review}, to images of distant galaxies caused by the large-scale structure of the universe. 
+
+The webbed structure is native to the well-established $\Lambda$ Cold Dark Matter ($\Lambda \text{CDM}$) cosmology but its exact origins are not well understood~\cite{class_perturbs} and at present it is believed that the structure originates from an amplification of quantum fluctuations as a density perturbation in the early universe~\cite{perturbation_theory}, which is described by inflationary cosmology~\cite{inflation_cosmology}. The matter distribution of webbed structure in the universe holds information on the true nature of dark matter, dark energy, the laws of gravity and the mode of galaxy formation~\cite{DarkEnergySurvey, kids_lensing, kids_cosmo, gal_formation, gal_formation2}.
+
+% PROBLEMS, FUTURE HOPES, SIMULATIONS
+Simulations that trace the evolution of phenomena such as structure formation, galaxy populations and the distribution of matter are imperative to our understandings of cosmological measurements. Our insight into the high-redshift deep field will increase with the amount of information provided by next generation observational missions such as~\cite{wfirst_afta, euclid, LSST}. As a consequence, so too does the need for higher resolution and more capacity in the volumes of simulated universes. Evidence for new theory in cosmology can come from greater observational resolution. This level of detail informs research into baryonic acoustic oscillations within the matter distribution~\cite{bao,bao2,bao3}. Undoubtedly new information will emerge on these dilemmas in cosmology. This sets the next paradigm of the field in the study of smaller scales of cosmological structure.
+
+Clearly there is a need for coherent simulations that are summarised by the same statistics as galaxy surveys such as the 2dF Galaxy Redshift Survey~\cite{2df}. These simulations will then contain the same environments of large scale structure as observations to check experimental measurements with. Obtaining these more realistic simulations~\cite{mill2sim, millxxlsim} involves using greater computational resources and theoretical analysis. The latter of the two, due to the complexity of the non-linear physics that describes the growth of structure over cosmic time, shows some differences to observations~\cite{mill_diffs}. A resource that could effectively reproduce the statistical properties of observations and simulations by learning the distribution in an advanced simulation (and therefore potentially of nature) without any assumptions of these properties would be of great value. This work aims to validate a method for obtaining a resource capable of achieving this objective by synthesising both 2D and 3D images from existing simulation data for two separate Generative Adversarial Networks (GANs) to emulate. 
+
+%SOME EXAMPLES OF GENERATIVE AI
+Deep learning has evolved to be able to process the statistical structure of the hierarchy of features in the visual domain~\cite{nvidia_gan}. There have been a number of recent applications of generative deep learning in astrophysics. GANs have been used to create new samples of galaxy images~\cite{gal_im_gen2} and to obtain visual characteristics past the deconvolution limit~\cite{gal_im_gen3}. Other applications use the GAN framework to generate 2D images of the cosmic web~\cite{web_gan} and projected 2D mass distributions, known as convergence maps, from simulated data of weak gravitational lensing within the environment of an N-body simulation~\cite{cosmogan}. This report will show the insights that the study of astrophysics can have on AI through applications of statistics that could give new mechanisms for maximizing the realism of GAN generated samples. 
+
+This work is organised as follows. Section~\ref{sec:ai_intro} will introduce the domain in which the methods for generating new galaxy-distribution samples originate. This section will introduce the sub-field of generative artificial intelligence and its relevance to the experimental method. Section~\ref{sec:gans} will describe Generative Adversarial Networks (GANs), their analytical properties and how these models learn to imitate datasets. Section~\ref{sec:related_work} will study the present state of the concepts from the previous sections with respect to recent research in physics and astrophysics. Section~\ref{sec:universe_applications} discusses some of the applications for successful potential of the work, that is, being able to generate distributions of galaxies that are coherent with N-body simulation data. Section~\ref{sec:methods} describes the methods of extracting and pre-processing training data from N-body simulations, the setup of each training loop for the GAN implementations and the architectures of the generative models. Section~\ref{sec:stats_and_diags} gives insight into the methods of comparison between the generated and training distributions and finally Sections~\ref{sec:results},~\ref{sec:future_work} and~\ref{sec:conclusions} present the results, future work and conclusions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/diagrams/GAN_diagram1.png}
+\centering
+\caption{Schematic of the GAN framework; including discriminator and generator networks, the latent-space vector, dataset of samples and the backpropagation feedback to model parameters.}
+\label{fig:GAN_diagram}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure*}%[hbt!]
+\includegraphics[width=15cm]{figures/diagrams/gan_game.png}
+\centering
+\caption{A diagram of the simplified two-parameter value function $V$ for the zero-sum game in which the generator $G$ and discriminator $D$ participate in; (a) - the value function in parameter space with a Nash equilibrium point, (b) - The maximization objective for $G$ with $\theta^{(D)}=0$ and (c) - the minimization task for $D$ with $\theta^{(G)}=0$.}
+\label{fig:gan_game}
+\end{figure*}
+
+\section{Generative Adversarial Networks}\label{sec:gans}
+% what are GANs, what do D and G do, how do D and G work, how does this change over training,
+% GANS ARE GOOD, EXAMPLES OF GANS
+
+The type of generative model chosen for the objective of this work was the Generative Adversarial Network (GAN) invented by Goodfellow et al. 2014~\cite{gf_gan}. The successes of GANs are well established in a wide range of applications on natural images~\cite{wgan, karrasgan, largegan} and there are many extensions to GANs that open up a wide range of other successful models~\cite{pix2pix, hiresgan, lapgan}. 
+
+% BASICS: WHAT DO D AND G DO?
+Generative Adversarial Networks consist of two models known as the generator and the discriminator. The generator must create samples that are allegedly drawn from the same distribution as the real samples dataset. The discriminator assigns scalars to a collection of input data and generated samples that represent the probability that each sample is real and from the data distribution $p_{data}$ or fake and from the model distribution  $p_{model}$. The discriminator has access to both real and fake samples. The training of a GAN involves navigating the combined parameter space of the generator and discriminator network parameters to find the optimal value of a function that gives the best performance of the networks at their opposing objectives. The metric that describes the performance is related to the distance between the model and data distributions. There is no need for a validation subset external to the training data because the generator does not have direct access to the training data. This is not the case for singular deep learning networks.
+
+% \begin{figure}
+% \includegraphics[width=\columnwidth]{figures/diagrams/GAN_diagram1.png}
+% \centering
+% \caption{Schematic of the GAN framework; including discriminator and generator networks, the latent-space vector, dataset of samples and the backpropagation feedback to model parameters.}
+% \label{fig:GAN_diagram}
+% \end{figure}
+
+\subsection{Generative adversarial learning}
+% introduce adversarial relation / game between D and G
+The discriminator and the generator are neural networks and each network tries to reduce their own objective function. This adversarial relationship is a game between the models rather than two optimisation problems. The optimum in this case is a Nash equilibrium~\cite{NIPS16} rather than a local minimum given by optimisation in the case of a singular neural network. In this equilibrium the returns of the objective functions only change by indirect influence of the other network and at this stage the gradients for backpropagation to either model have vanished.
+
+% WHAT ARE D AND G? HOW DO D AND G WORK?
+The discriminator and generator models can be represented as functions $D$ and $G$ respectively because of their mappings as neural networks and parameter dependencies. The discriminator $D$ has input $\mathbf{x}$ and parameters $\bm{\theta}^{(D)}$. The generator $G$ takes a latent space vector $\mathbf{z}$ as input and uses parameters $\bm{\theta}^{(G)}$. Information flows through the network and its parameters to create the outputs $D(\mathbf{x})$ or $D(G(\mathbf{z}))$ for the discriminator and $G(\mathbf{z})$ for the generator. This is the forward-propagation from an input to an output. The model performances are calculated with the objective functions $J^{(D)}$ or $J^{(G)}$. %Neural networks learn through changes to their parameters and the weights are adjusted using the value of the objective function~\cite{gf_book}. 
+% The process that changes the model weights to achieve a lower value of the objective function is back-propagation~\cite{backprop}. This algorithm computes the gradients of the objective function with respect to the model parameters. %Figure~\ref{fig:gan_game} shows the value function in the parameter space for which the gradients of backpropagation are calculated in the adversarial opposition of $D$ and $G$. %This means the performance of a neural network model depends on parameters $\bm{\theta}$. 
+% The backpropagation adjustment to the model parameters $\bm{\theta}$ is obtained from stochastic gradient descent (SGD) (see Appendix~\ref{appendix:sgd}) of the objective function in the parameter space of either model. 
+
+% HOW DO D AND G WORK TOGETHER IN A GAN AND PLAY THE GAME?
+In the case of a GAN, the optimisation landscape is more complex because of the simultaneous learning of the two neural networks that both constantly adjust their parameters. The discriminator and generator models in a GAN depend on parameters $\bm{\theta}^{(D)}$ and $\bm{\theta}^{(G)}$ respectively. The models typically consist of multi-layer perceptrons with the potential for other parametric components such as convolutional layers and the parameters are the state of these components at an epoch of training. The generator $G$ draws noise vectors $\mathbf{z}$ from a prior distribution $p_{\mathbf{z}}$. The vectors $\mathbf{z}$ are passed through the generator architecture to create a sample $\mathbf{x}=G(\mathbf{z};\bm{\theta}^{(G)})$ that is now a sample $\mathbf{x}$ from the model distribution $p_{model}$. The model distribution is the distribution of generated samples $G(\mathbf{z})$ obtained from passing latent vectors $\mathbf{z}$ through $G$ such that $\mathbf{z} \sim p_{\mathbf{z}}$. The learning of the generator means that the samples evolve over the training process. Eventually, the samples will appear to have been drawn from the true data distribution $p_{data}$ so that $G(\mathbf{z}) \sim p_{data}$. The generated samples $\mathbf{x} \sim p_{model}$ and real samples $\mathbf{x} \sim p_{data}$ become indistinguishable. 
+
+The mapping learnt by the generator is expressed as $G \! : \! \mathbf{z} \! \mapsto \! \mathbf{x}$. The discriminator $D$ is a map from an input of real $\mathbf{x}$ and fake samples $G(\mathbf{z})$ to an output of as many probabilities. The values of  $D(\mathbf{x})$ and $D(G(\mathbf{z}))$ signify the discriminator's confidence in the validity of the sample. This mapping is expressed as $D \! : \! \mathbf{x} \!  \mapsto \! [0,1]$. 
+% The networks are differentiable with respect to their inputs and parameters because of their dependence on these objects.
+
+\subsubsection{Formulation of GAN learning}
+% D vs G in adversarial environment, value function and game in parameter space
+The objective functions of $D$ and $G$ are defined in terms of both players' parameters and are denoted by $J^{(D)}(\bm{\theta}^{(D)}, \bm{\theta}^{(G)})$ and $J^{(G)}(\bm{\theta}^{(D)}, \bm{\theta}^{(G)})$~respectively. In the most basic adversarial setting for the GAN models, $D$ and $G$ play a zero-sum game where $J^{(D)} = - J^{(G)}$.
+
+During training the discriminator minimises $J^{(D)}$ only through feedback from backpropagation to its parameters $\bm{\theta}^{(D)}$. The generator $G$ minimises $J^{(G)}$ by only affecting its parameters $\bm{\theta}^{(G)}$ through returns from backpropagation related to the discriminator classifications. The minimization objectives are simultaneous between two networks in search of a Nash equilibrium and added together the objectives for the discriminator and generator give a value function $V(\bm{\theta}^{(D)}, \bm{\theta}^{(G)})$ in the combined parameter space $(\bm{\theta}^{(D)}, \bm{\theta}^{(G)})$. Figure~\ref{fig:gan_game} shows the value function in the combined parameter space for which the backpropagation gradients are calculated with $D$ and $G$ as adversaries of each other. The optimum parameters for each network are shown at the Nash equilibrium. The game between the models is described with the value function $V$ as 
+\begin{eqnarray}\label{eqn:value}
+    \min_G \max_D V(D,G) &=& \mathbb{E}_{\mathbf{x}\sim p_{data}}\log D(\mathbf{x})                                                           \nonumber \\
+                         &+& \mathbb{E}_{G(\mathbf{z}) \sim p_{model}}\log(1-D(G(\mathbf{z}))) \nonumber \\
+\end{eqnarray}
+
+in the combined parameter space. This equation shows the opposition between the maximization of the correct classifications by $D$ and the minimisation of the classifications by $D$ of the generator products that are made by $G$. 
+
+The Nash equilibrium is satisfied by a pair of parameter sets $(\bm{\theta}^{(D)*}, \bm{\theta}^{(G)*})$ for which no further changes occur to the objective functions $J^{(D)}$ and $J^{(G)}$ of both networks~\cite{NIPS16}. Equation~\ref{eqn:value} means that the zero-sum game for the models returns an adjustment $+V$ for the discriminator and $-V$ for the generator. Figure~\ref{fig:gan_game} shows the equilibrium point in the parameter space and the returns $V(\bm{\theta}^{(D)}, 0)$ and $V(0, \bm{\theta}^{(G)})$ for the discriminator and generator with optimum parameters $\bm{\theta}^{(D)*}$ and $\bm{\theta}^{(G)*}$ respectively in the zero-sum game. The zero-sum game between $D$ and $G$ defines an objective function $J^{(D)}$ for the discriminator
+\begin{eqnarray}\label{eq:J_D}
+    J^{(D)} &=& \mathbb{E}_{\mathbf{x} \sim p_{data}}\log D(\mathbf{x})  \nonumber \\
+            &+&\mathbb{E}_{G(\mathbf{z}) \sim p_{model}}\log (1 - D(G(\mathbf{z})))
+\end{eqnarray}
+
+this is from the cross-entropy discriminator objective function for the binary classification of real and fake samples. Appendix~\ref{appendix:cross_entropy} defines cross-entropy in this context. The expectation operators $\mathbb{E}_{\mathbf{x} \sim p_{data}}$ and $\mathbb{E}_{G(\mathbf{z}) \sim p_{model}}$ correspond to the ensemble averages over the classifications of real and fake samples respectively. Equation~\ref{eq:J_D} shows that the first term cannot be influenced by the generator $G$ because here the samples are drawn from the data distribution to which it has no access to. Inputs to the generator $\mathbf{z}$ are drawn from the prior distribution $p_\mathbf{z}$ over the latent-space to the model. The discriminator is given a generator sample $G(\mathbf{z})$ to classify it as fake, so $D(G(\mathbf{z})) \! \rightarrow \! 0$ whereas the generator $G$ tries to make $D(G(\mathbf{z})) \!  \rightarrow \! 1$. The Nash equilibrium is satisfied for the model and data distributions becoming identical (in the ideal case) so that $G(\mathbf{z})$ is drawn from $p_{data}$. This means the discriminator classification tends to $D(\mathbf{x}) = \frac{1}{2}$ for all samples~$\mathbf{x}$~\cite{gf_gan}. The optimum of the generator $G$ parameters $\bm{\theta}^{(G)*}$ is 
+
+\begin{equation}
+    \bm{\theta}^{(G)*} = \argmin_{\mathbf{\theta}^{(G)}}\max_{\mathbf{\theta}^{(D)}}V({\mathbf{\theta}^{(D)}},{\mathbf{\theta}^{(G)}})
+\end{equation}
+
+This motivates the generator to increase the likelihood of the discriminator incorrectly classifying a sample. The discriminator tries to increase its own likelihood of correctly classifying a sample by minimising the binary cross-entropy objective. The local minima of the value function $V$ are not necessarily Nash equilibrium points, rather they are points that simultaneously minimise the objective functions $J^{(D)}$ and $J^{(G)}$. Whilst both networks search the parameter space via SGD of the value function, there is no guarantee of a Nash equilibrium, this is part of what makes training an adversarial network a difficult task.
+
+The cross-entropy for the discriminator classification of a sample against the true label of the sample is numerically effective for a GAN in practice because this objective does not saturate for an incorrect identification. Because the networks try to minimize their opposing objectives, if the discriminators performance increases enough, the generator objective function tends to zero. This causes the generator performance to become static. At all points in the parameter space the generator objective minimization is guided by the gradients from backpropagation which will reduce to zero. At this point the discriminator cannot improve and less information is back-propagated through the networks.
+
+The solution, shown in~\cite{gf_gan}, is to deviate from the zero-sum ideal by inverting the target used to create the cross-entropy objective function for the generator. The generator's objective function becomes
+
+\begin{equation}\label{eqn:J_G}
+    J^{(G)} = \mathbb{E}_{G(\mathbf{z}) \sim p_{model}} \log D(G(\mathbf{z}))  
+\end{equation}
+
+Now the generator tries to maximize the log-probability of the discriminator wrongly classifying a given sample. This objective with the original objective for the discriminator $J^{(D)}$ means there are always non-vanishing gradients for backpropagation despite any imbalance in discriminator and generator performance. 
+
+\subsubsection{Experimental design of GANs} 
+The opposing players in the zero-sum game are assumed by two deep convolutional neural network (DCNN) models. These networks use convolutional layers to extract features from grid-like data. Deep Convolutional Generative Adversarial Networks (DCGANs), first implemented by Radford et al. 2015~\cite{dcgan}, use these layers to create images. The DCGAN model has shown excellent results on natural image generation using the CelebA~\cite{celebA} and the LSUN-Bedrooms~\cite{LSUN} datasets. The DCNNs in this work are based on the AlexNet models for image classification~\cite{dcnn}. Despite most of the architectural features, such as convolutional layers, being used in deep learning models prior to this publication the DCGAN architecture improved previous GAN architectures for increased performance in image generation tasks. 
+% See Appendix~\ref{appendix:gan_parts} for details on the relevant tools used in DCGANs. 
+The models in the methods of this work borrow from the ideas of this architectural basis.
+
+\subsection{Auxiliary-Classifier GANs}
+The ability to generate different classes of an object does not require separate and independent GANs. The GAN framework may be supplemented by an auxiliary classifier model that is attached to the discriminator model, which still classifies the samples as real and fake, whilst additionally characterising the pre-designated class of the object. This augmented GAN was derived by Odena et al. 2017 \cite{acgan} and is referred to as an Auxiliary Classifier Generative Adversarial Network (ACGAN). The application to this method is that the different redshift data available from N-body simulations can be classified and given to an ACGAN. The generator component of this model can create samples at different redshifts. These samples could be tessellated together to form a larger distribution across a continuous range of  redshifts. A very similar method known as a Conditional-GAN (CGAN)~\cite{cgan} is known to work well at the same task.
+
+In the ACGAN framework each generated sample has a corresponding label $c \sim p_c$ and noise vector $z \sim p_z$ which make the generator create a sample $G(c, z)$. The discriminator $D$ gives probability distributions $P(S|X)$ and $P(C|X) = D(X)$ over the sources of the samples $S$ and class labels $C$. The objective function is made of two parts; the likelihood of a correct source $L_S$ and the log-likelihood of the correct class $L_C$
+
+\begin{eqnarray}
+    L_S &=& \EE [\log P(S = \textup{real} | X_{real})] \nonumber \\
+        &+& \EE [\log P(S = \textup{fake} | X_{fake})]
+\end{eqnarray}
+
+\begin{eqnarray}
+    L_C &=& \EE [\log P(C = c | X_{real})] \nonumber \\
+        &+& \EE [\log P(C = c | X_{fake})]
+\end{eqnarray}
+
+In this case $D$ tries to maximize $L_S + L_C$ and $G$ tries to minimise $L_C + L_S$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Related work}\label{sec:related_work}
+Over the last few years research has accumulated on the different applications of GANs to emulating data samples. An example of GANs being able to provide new data for further statistical insight is in the domain of particle physics. Here, GANs have been used to generate particle beams~\cite{muon_beams_gan}, particle interaction-showers~\cite{particle_showers_gan} and 2D images of jets~\cite{particle_jets_gan}. The DCGAN architecture has consistently shown that it could generalise well in astrophysical applications. The ability for GANs to transfer to new data and generalise to different types of data has been founded by many publications with a variety of target data.
+
+Aside from the research into GANs for image based tasks, less work exists that uses generative AI in astrophysics. One application of GANs to astrophysical data concerns subverting the point spread function (PSF) that describes the effect of noise on the clarity of images~\cite{gal_im_gen3}. Typically the deconvolution of the separate noise and true light distributions are limited by the Nyquist sampling effect. The findings indicate the GAN approach successfully obtains artefacts within images that have low signal-to-noise ratios. See~\cite{gal_im_gen2} for a similar example of research using GANs in generating astronomical images.
+
+Rodriguez et al. 2018~\cite{web_gan} use GANs to generate realistic 2D samples of N-body simulation mass distributions of size $100 \: h^{-1} \,\textup{Mpc}$ and $500 \: h^{-1} \,\textup{Mpc}$. This paper is the closest to the work presented in this report. N-body simulation data was obtained from the particle distribution of the L-PICOLA simulation~\cite{LPICOLA} at $z=0$. This simulation is based on the $\Lambda \text{CDM}$ cosmological model with the Hubble constant $H_0=70\textup{ km s}^{-1}\textup{ Mpc}^{-1}$, dark energy density $\Omega_\Lambda=0.72$ and matter density $\Omega_m=0.28$. The method of Rodriguez et al. 2018 differs from this report in the statistical tests of the generator output. The generated samples are cross-correlated with each other in pairs to quantify their mutual independence. This estimates the effect of a weakness of GANs against other generative models, known as mode collapse~\cite{gf_gan}, where generated samples can often be very similar if not identical. The generated 2D slices are compared to simulation samples in a cosmological context by calculating the automatic and cross (sample-to-sample) power spectrum of the 2D images using a discrete Fourier transform. The power spectra $P_k$ (see Appendix~\ref{appendix:power_spectrum}) of the generated samples against the training samples agree to 1-2\% for the majority of $k$ values. This work shows the potential for GAN methods to subvert N-body simulations. 
+
+Work by Mustafa et al.~\cite{cosmogan} uses a GAN to generate weak lensing convergence maps. The lensing maps are generated from GADGET2 N-body simulation code~\cite{gadget2} that are then ray-traced using Inspector Gadget weak lensing simulation procedures~\cite{mink_funcs, lens_peaks, lens_peak_counts} to produce a collection of ray-traced lensing maps at $z=1.0$. The viability of replacing simulations with generative models is discussed, with detail on the nature of the separation between the model and data distributions after training. This is quantified by measuring the statistical confidence in the null hypothesis; the statement that the summary statistics in the generated maps and the validation maps originate from the same distribution. The summary statistics are the pixel intensities, the power spectrum of a map and a non-Gaussian statistic pertaining to the nature of the structure in a given map. The Kolmogorov-Smirnov (KS) test for the pixel intensities of the generated maps gives a p-value of $p_{\textup{KS}} > 0.999$ in comparison to the real data. The generation of completely new maps that are distinct from the training set is verified. The referenced research shows the strengths of GANs in generalising to new data and in emulating the distributions that are native to different cosmological datasets.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Applications of an artificial universe}\label{sec:universe_applications}
+% WHY IS THIS IMPORTANT, WHAT COULD IT BE FOR, WHAT RESEARCH WILL COME OF IT 
+\subsection{Cosmological simulations}
+The Millennium Project simulation~\cite{millsim} and the successive Millennium-XXL~\cite{millxxlsim} and Millennium-II~\cite{mill2sim} simulations made foundations for the comparison of observation to theory-based simulation. Research using the simulations has provided new insight into high-redshift quiescent galaxies~\cite{mill_quiescent}, dark-matter haloes~\cite{mill_dm_haloes}, weak lensing~\cite{mill_weak_lensing}, galaxy clustering~\cite{mill_gal_clustering} and the direct comparison of galaxy surveys with galaxy groups predicted in the simulation volumes\cite{mill_sdss}. These applications in the GAN-generated galaxy distributions depend on extending the depth of the method presented in this report but they are strong motivations for the use of GANs in simulating cosmological data. The direct comparison of survey data and generated data is the more likely once the objective of this work is completed. The approach in this report can generate a similar volume to the Millennium simulation in around an hour (GPU time) as opposed to three-hundred years (CPU time) for the Millennium simulation.\footnotemark.
+\footnotetext{\url{wwmpa.mpa-garching.mpg.de/galform/virgo/millennium}}
+
+\subsection{Gravitational wave sources} % Rachel Gray paper
+Measurements of cosmological parameters from observations of gravitational wave events are independent of the electromagnetic (EM) spectrum and any obstacles to the transmission of EM radiation. Because these measurements do not use EM radiation, they provide alternative estimates that do not depend on cosmological distance scale~\cite{gw_distance_scale}. Information on dark energy density at $z>0.1$, past the edge of the local universe, could be obtained to better constrain cosmological parameters. At this distance, the cosmological distance-redshift relation depends on more than just $H_0$~\cite{gw_cosmology}. A further dependency is on the matter and dark energy densities $\Omega_m$ and $\Omega_\Lambda$. The values of these parameters could be constrained by measurements of the background rate of expansion from gravitational wave (GW) events at non-local redshifts. Next generation GW detectors such as Cosmic Explorer~\cite{cosmic_explorer} and the Einstein Telescope~\cite{einstein_telescope} as well as space based detectors such as LISA~\cite{lisa} will be at the forefront of such observations.
+There are also gravitational waves from epochs in the early universe. These are known as relic gravitational waves and they can be attributed to GWs in the paradigm of quintessential inflation~\cite{relic_gws}. GW astrophysics has potential in the future to open new windows onto the conditions of the early universe.
+
+Gravitational waves were first observed in 2015 with the detection of the binary black hole merger GW150914~\cite{gw_detection}. A separate GW observation was of the binary neutron star merger event GW170817~\cite{GW170817} and later the optical redshift measurement of its electromagnetic counterpart, the host galaxy NGC4993~\cite{em_counterpart1, em_counterpart2}. This event was used to constrain the value of the Hubble constant $H_0$. The value of $H_0$ was found to be $H_0 = 70^{+12}_{-8}\text{ km s}^{-1} \text{ Mpc}^{-1}$. This was the first application of gravitational wave sirens in obtaining cosmological parameters such as $H_0$. A separate analysis that improved on the X-ray and radio emission modelling from GW170817~\cite{GW170817_m2} obtained a value $H_0 = 74.0^{+11.5}_{-7.5}\text{ km s}^{-1} \text{ Mpc}^{-1}$. The consensus for the true value of $H_0$ from electromagnetic spectrum observations is a contentious issue. Assuming the $\Lambda \text{CDM}$ cosmology, the Planck experiment found a value of $H_0 =~ 67.4 \pm~0.5 \text{ km s}^{-1} \text{ Mpc}^{-1}$~\cite{planck}. 
+
+The same event GW170817 had a degeneracy between the source distance and the viewing angle to the radio counterpart that limited the initial certainty in the EM localization of the GW source. This degeneracy was broken from radio interferometry~\cite{GW170817_source_radio} and a value of $H_0$ that disagrees with the previous values was found to be $68.9^{+4.7}_{-4.6} \text{ km s}^{-1} \text{ Mpc}^{-1}$~\cite{GW170817_jet_H0}. A recent survey calibrates Type Ia supernovae (SNe Ia) against a set of Tip of the Red Giant Branch (TRGB) stars~\cite{H0_redgiant}. These are bright stars that have just initiated helium burning in their cores and $H_0$ from this calibration was found to be $69.8 \pm 0.8 \, (\pm1.1\% \text{ stat}) \pm 1.7 \, (\pm2.4\% \text{ sys})$. The disagreement between the competing values of $H_0$ could be decided using more measurements from GW event observations and it is expected that accuracy similar to the level of measurements by Planck is possible if between $10^6$ and $10^7$ gravitational wave events are observed~\cite{chris_planck_gw}.
+
+Gray et al. 2019~\cite{gray} consider GW observations where the electromagnetic counterpart to the GW source is unobservable so the distance to the electromagnetic counterpart is inferred as well as the GW source distance. This may become the norm for future searches into narrowing the uncertainties on cosmological parameters. The paper describes Bayesian methods used to obtain posteriors on $H_0$ from GW events.
+
+The process involves the creation of a series of mock data challenges (MDCs). The MDCs are simulations of GW events in mock galaxy catalogues. Between the separate MDCs there are varying conditions of GW and EM selection effects (GW selection effects correspond to detector sensitivity and EM effects are due to observed flux limitations). The effects of clustering and large scale cosmological structure are ignored in the simulation of co-moving volumes of uniformly distributed galaxies that the GW events occur in. These mock catalogs show different comparisons to certain properties of true galaxy distributions from surveys for locating GW events, such as GLADE~\cite{GLADE}. %For the complete galaxy catalogue in one such MDC a uniform simulated distribution of galaxies is added past the limit of the catalog. 
+A larger testing volume could be generated from a routine, such as the one described in this report, with the summary statistics that are similar to survey or simulation data with added realistic cosmological structure. The EM information from outside the volume specified in the catalogs could not be replaced by the GAN method shown in this report because at present it only returns positional data. This could increase the understanding of how current techniques for observed GW events perform so that tighter constraints on the source-observer separation could be obtained in the future. This would help to accumulate more data for posteriors to further constrain $H_0$.
+
+\begin{figure}[hbt!]
+\includegraphics[width=\columnwidth]{figures/diagrams/mill_catalog_comparison.png}
+\centering
+\caption[]{A comparative diagram of Millennium simulation data against galaxy survey data\protect\footnotemark.}
+\label{fig:gal_catalogs}
+\end{figure}
+\footnotetext{Image from \url{wwmpa.mpa-garching.mpg.de/millennium}.}
+
+
+In short, expanding the range for credible inferences of GW event localizations with increased understanding of GW event analyses would provide a more accurate estimate on the value of $H_0$ and other important parameters. This will be important in the next runs of LIGO~\cite{future_ligo}. The completed runs have already shown the higher frequency of binary black holes found at larger distances compared to binary neutron stars~\cite{GW_BNS_BBH_catalog}, where current galaxy catalogs are incomplete. The true substitute of the incompleteness could be replaced by a fast and realistic simulation from a conditional generative model that is given a redshift value. It should be noted that there is no reason such a generative model could not generalise to higher redshift simulation data for this purpose. This is left to the discussion of future work in Section~\ref{sec:future_work}. This idea shows the direct link between generative AI and new discoveries in astrophysics.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Methods}\label{sec:methods}
+
+\subsection{Simulation data}
+Hydrodynamical simulations of particles with masses on the order of a typical galaxy are the best way to emulate cosmological phenomena for testing without observational complications. Cosmological simulations model the physics in the evolution of baryonic and dark-matter in a self-consistent way that does not depend on observations.
+
+The Millennium Project Simulation was used to sample training data for the generative models. The Millennium simulation was published in 2005 by Springel et al.~\cite{millsim} and remains active in research today. The simulation was run using the GADGET2 code~\cite{gadget2} and it contains $2160^3$ particles of mass $8.6 \times 10^8 \, h^{-1}  \, M_{Sun}$ in a box of side length $512  \: h^{-1} \,\textup{Mpc}$. The cosmological parameters of the Millennium simulation are based on WMAP-1 data~\cite{wmap1} and the 2dF Galaxy Redshift Survey~\cite{2df}. These are $\Omega_m=0.25$, $\Omega_{\Lambda}=0.75$, $\Omega_b=0.045$ and $h=0.73$. Figure \ref{fig:gal_catalogs} shows a comparison of the Millennium simulation to the large scale structure and redshifts of the 2dF Galaxy Redshift Survey. 
+
+The galaxy catalogs containing physical properties of galaxies in the Millennium simulation were derived with the Semi-Analytic Galaxy Evolution (SAGE) codebase by Croton et al. 2016~\cite{Croton2016} that improves on the earlier model of Croton et al. 2006~\cite{Croton2006}. The SAGE catalogs were sourced from the Theoretical Astrophysical Observatory (TAO)~\cite{TAO}. SAGE modelling adds baryonic processes into N-body simulations of halos after the simulations have been run. The baryonic particle properties are from information in the simulation run such as mass, size, spin and their merger history. SAGE models account for different mechanisms that affect the evolutions of galaxies and therefore the evolution of cosmological structure. The N-body particle positions of the Millennium-SAGE data were taken at snapshots at discrete redshifts $z=\{0.0, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training data for the ACGAN. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Extraction of training data} % TRAINING DATA MANUFACTURE AND PREPROCESSING
+Position vector components for the centres of cube samples in the simulation volume were drawn from a uniform distribution along each axis of each redshift-snapshot. If the addition or subtraction of half the side length of the cube to any of the components resulted in a point outside of the simulation volume, the point was discarded. The galaxy cube samples were obtained by sorting the position vectors of galaxies in the simulation that were within the cube volume. Each point inside the cube was recorded in an array. From each simulation volume of $512 \: h^{-1} \,\textup{Mpc}$ ensembles of 64 array samples of size $80 \: h^{-1} \,\textup{Mpc}$ were selected. The galaxy positions in each array for every cube were scaled to the range $[-1,+1]$. 3D-histograms with 32 bins per axis were made on each cube across the same range for each axis. The densities in each bin cell were also scaled to this range to fit the output ranges of the GAN models. 
+% After testing different sizes, a cube size of $160 \: h^{-1} \,\textup{Mpc}$ was found to balance the selection of unique samples in the simulation volume against featuring the same features in the simulation structure.
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/diagrams/tt_scaled.png}% scaling2.png
+\centering
+\caption{The application of the scaling $s$ to a 3D-histogram training sample. The cube on the left shows an image $x$ and on the right is a scaled image $s(x)$.}
+\label{fig:scaling}
+\end{figure}
+
+\subsection{Initial data transformations} 
+The 3D-histograms have pixel densities that span across many orders of magnitude from voids to dense clusters of galaxies for each redshift value. The origin of GANs from image generation tasks has optimised them for the general statistical structure of these images - the pixel densities in natural images are typically more uniformly distributed over the same scales. To help the GAN in generating sparsely distributed densities a transform, first utilised in~\cite{web_gan}, was used on the histograms to enhance the contrast between the density features. The transform from the original histogram $x$ to the scaled histogram $s(x)$ is 
+
+\begin{equation}
+    s(x) = \frac{2x}{x+a} - 1
+\end{equation}
+
+where $a$ is a free parameter that depends on the sparsity of the histogram densities. The value of $a=1.25$ was found to be optimal for the $160 \:  \: h^{-1} \,\textup{Mpc}$ histograms at all redshifts $z$. This parameter remains fixed during training. The value of $a$ controls the median pixel density of the scaled image. Figure \ref{fig:scaling} shows the difference between scaled images $s(x)$ and the original images $x$. The inverse transformation $s^{-1}(x)$ can be applied to obtain the original image. 
+% A logarithmic scaling was used originally, but this did not provide good results with the GAN architecture that used the hyperbolic tangent ($\tanh$) activation because the logarithm of a negative number is undefined. The models using $\tanh$ activations achieved much better results than models without these activations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Networks, architectures and training}\label{training}
+
+% \subsubsection{2D-GAN implementation} % DESCRIBE SPECIFICS OF THIS IMPLEMENTATION
+% \textit{Architecture} --- 
+% The networks follow the structuring of the DCGAN models~\cite{dcgan} and are written in Keras~\cite{keras}. A full description of the layers in the 2D-GAN architecture is given in Table~\ref{table:2dgan_archi} of Appendix~\ref{appendix:gan_setups}. The generator transforms a 100-dimensional vector drawn from a Gaussian prior $\mathbf{z}\sim \mathcal{N} (0,1)$ into a $32\times 32$ single-channel image. The latent-space vector is followed by a fully connected layer that is reshaped to a stack of feature maps for the two convolutional layers. Batch-normalisation is only used after the fully connected layer. Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} for more detail on batch-normalisation and activation functions. 
+
+% The discriminator network has two convolutional layers and two fully connected layers. The image samples have features extracted by the first two convolutional layers and the features are flattened for the final fully connected layers. Hyperbolic tangent functions are used throughout the model and a sigmoid activation function (see Appendix~\ref{appendix:app_acts}) is used for the final single neuron layer that outputs the probability for a given sample being real. 
+
+% Both networks use the same number of filters for the corresponding layers in either model. Together the discriminator and generator models have $3.8\times 10^7$ trainable parameters. The discriminator and generator objectives of Equations~\ref{eq:J_D} and \ref{eqn:J_G} are minimized using the Adam optimiser~\cite{adam}. Each model uses a learning rate of $2\times 10^{-4}$ and momentum $\beta_1 = 0.5$. The models use a batch size of 64 histograms out of a set of 128 training histograms, where the batch size is the number of samples given to the discriminator at each iteration of training. Refer to Table~\ref{table:2dgan_params} of Appendix~\ref{appendix:gan_setups} for a complete listing of the 2D-GAN hyper-parameters used in each model. The hyper-parameters of a model are set outside of training and they shape how the training proceeds.\\
+
+% {\setlength{\parindent}{0cm}
+% \textit{Training} --- GANs are notoriously difficult to train. This means that the state of the models can generate realistic samples for a single epoch at a time. The GAN was made to record the parameters of the generator model at these epochs by using a statistical check (see Section~\ref{sec:stats_and_diags}) of the generated histograms against the training data histograms in the training loop. The loss (the objective function value) and accuracy values of the discriminator for each epoch were recorded during training.
+% }
+
+% An indicator for the performance of a GAN is the classification accuracy of the discriminator model. This metric is the average classification accuracy of the discriminator on two separate batches of real and fake samples. The accuracy metric for the generator is given by the same accuracy subtracted from one. However, in this case the accuracy is the discriminator's accuracy in classifying a batch of fake cubes labelled as real. This is because the generator is trying to make the discriminator classify its products as real. The best results were obtained when the losses of the networks diverged and the accuracies of the networks slowly increased and were at approximately the same value. A training loop of $3.0\times 10^4$ epochs for the $80\:h^{-1} \textup{ Mpc}$ cubes sectioned into $32 \times 32$ pixel projections took approximately 2 hours on an NVIDIA Tesla V100 GPU with 32GB capacity.
+
+% % \begin{figure*}[!ht]%[hbt!]
+% % \includegraphics[width=17cm]{figures/cubes/t_g_3d.png}
+% % \centering
+% % \caption{Training data histograms and GAN-generated histograms from the 3D-GAN implementation.}
+% % \label{fig:3dgan_imgs}
+% % \end{figure*}
+% % \begin{figure*}[!ht]%[hbt!]
+% % \label{fig:2dgan_imgs}
+% % \includegraphics[width=16.5cm]{figures/cubes/t_g_2d.png}
+% % \centering
+% % \caption{Training data histograms and GAN-generated histograms from the 2D-GAN implementation.}
+% % \label{fig:2dgan_imgs}
+% % \end{figure*}
+
+
+\subsubsection{3D-GAN implementation} % DESCRIBE SPECIFICS OF THIS IMPLEMENTATION
+\textit{Architecture} --- 
+Table~\ref{table:3dgan_archi} of Appendix~\ref{appendix:gan_setups} shows the architectures of the 3D-GAN discriminator and generator models. The hyper-parameters used in the 3D-GAN are also given in Table~\ref{table:3dgan_params} of Appendix~\ref{appendix:gan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers for the discriminator model. \\
+
+{\setlength{\parindent}{0cm}
+\textit{Training} --- 
+The networks follow the structuring of the DCGAN models~\cite{dcgan} and are written in Tensorflow~\cite{tensorflow} and Keras~\cite{keras}. The generator transforms a 256-dimensional vector drawn from a Gaussian prior $\mathbf{z}\sim \mathcal{N} (0,1)$ into a $32 \times 32 \times 32$ single-channel image. The latent-space vector is followed by a fully connected layer that is reshaped to a stack of feature maps for the convolutional layers. 
+% Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} for more detail on batch-normalisation and activation functions. 
+
+The 3D-ACGAN implementation was limited by the GPU memory capacity - the parameters and architectures together with the sample batch sizes meant that the GPU was easily saturated. Deeper models with more convolutional units were implemented but these tended to stall the GPU. A training loop for $10^5$ epochs for the $160 \: h^{-1}\: \textup{Mpc}$ cubes formatted to $32 \times 32 \times 32$ pixel histograms took approximately 72 hours on an NVIDIA Tesla V100 GPU with 32GB capacity. 
+}
+
+Generative adversarial networks are harder to train with three-dimensional input data because of the increase in the number of configurations of interest in the data. There are a number of tricks and techniques for moving toward more convergent and stable training. A compilation of these resulted from testing GANs in natural image tasks. The techniques that were used to train the 3D-GAN in this work were one-sided label smoothing, historical averaging and a decaying noise input which were borrowed from~\cite{gantricks_sali, gan_noise_decay}. The exact implementations stem only from the original theoretical basis. One-sided label smoothing adds scalar values sampled from a uniform distribution $\mathcal{U}(-0.1,0)$ to the real labels only. Historical averaging adds a penalty $L_H$ to the objective functions of the discriminator and generator. The addition is
+
+\begin{equation}
+    L_H = \Bigl\lvert\Bigl\lvert \, \bm{\theta} - \frac{1}{t} \sum_i^t\bm{\theta}[i] \,  \Bigr\rvert\Bigr\rvert^2
+\end{equation}
+
+where $\bm{\theta}$ and $\bm{\theta}[i]$ are the model parameters at the present and previous epochs respectively. This cost term helps the networks avoid mode collapse. The decaying noise input temporarily slows the discriminator training by showing it less clear real samples. This in turn allows a strong discriminator model that doesn't overwhelm the generator early in training. The decaying noise input samples noise at each epoch to add to every histogram pixel in an ensemble of samples. The Gaussian noise $\mathbf{n}$ has standard deviation $\sigma_i$ that depends on epoch $i$ such that 
+
+\begin{equation}
+    \mathbf{n} \sim \mathcal{N}(0,\sigma_i), \: \: \sigma_i = A \textup{e}^{-\gamma i}
+\end{equation}
+
+where the free parameters $A=10^{-2}$ and $\gamma=10^{-3}$ were found to work well. These techniques were not necessary in the 2D-GAN implementation. This is likely due to the relative information content between the 2D and 3D samples. Diluting the real and fake batches of samples to $1\%$ of the batch-size with the opposite validity of samples helped the training process stabilise.
+
+Minibatch discrimination~\cite{gantricks_sali} was implemented to help avoid mode collapse by discriminating over a collection of samples given to the discriminator as opposed to a single sample at a time. The original work describes the `closeness' of samples in a collection as follows: Let $\mathbf{f}(\bm{x}_i) \in \mathbb{R}^A$ represent a vector of features extracted by $D$ for sample $\mathbf{x}_i$. Multiplying $\mathbf{f}(\bm{x}_i)$ by a tensor $T \in \mathbb{R}^{A\times B\times C}$ results in a matrix $M_i^{B\times C}$. The $L_1$-distance is calculated between each row of $M_i$ for each sample $i$ in the collection. The distances are exponentiated as
+
+\begin{equation}
+    c_b(\mathbf{x}_i, \mathbf{x}_j) = \exp({- ||M_{i,b} - M_{j,b}||_{L_1}}) \in \mathbb{R} \nonumber
+\end{equation}
+
+The output $o(\mathbf{x}_i)$ of the minibatch discrimination layer for a sample $\mathbf{x}_i$ is defined as the sum of each $c_b(\mathbf{x}_i, \mathbf{x}_j)$ for $B$ samples in a minibatch
+
+\begin{eqnarray}
+    o(\mathbf{x}_i)_b &=& \sum_{j=1}^n c_b(\mathbf{x}_i, \mathbf{x}_j) \nonumber \\
+    o(\mathbf{x}_i) &=& [o(\mathbf{x}_i)_1, o(\mathbf{x}_i)_2, ..., o(\mathbf{x}_i)_B] \in \mathbb{R}^B \nonumber\\
+    % o(\mathbf{x}_i) &=& \sum_{b=1}^B o(\mathbf{x}_i)_b\\ 
+    o(\mathbf{X}) &\in& \mathbb{R}^{n \times B} \nonumber
+\end{eqnarray}
+
+Where $\mathbf{X}$ denotes a minibatch of samples. The minibatch discrimination output is concatenated to the flattened-features from the last convolutional layers in the discriminator. This is done separately for the real and fake samples. The discriminator is able to designate the validity of a sample with additional information from samples in a collection.
+
+\subsubsection{Auxiliary Classification}
+The ACGAN uses a secondary classification model to designate the discriminators belief in the type of image it has been shown. This model is nothing more than a classification neural network that is connected to the feature-extracting convolutions of the discriminator model. The model is optimised together with the discriminator using a sparse categorical cross entropy function that calculates the cross entropy between two one-hot-encoded classification vectors that pertain to the class of an image. In practice a softmax activation function is used, which defines a discrete probability distribution over the discrete class labels.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{figure*}[!ht]%[hbt!]
+% \includegraphics[width=16.5cm]{figures/cubes/t_g_3d2d_2.png}
+% %\includegraphics[width=12cm]{figures/mrobs.png}
+% \centering
+% %\captionsetup{justification=centering}
+% \caption{Two-dimensional projections of the 3D-GAN generated histograms.}
+% \label{fig:3dgan_2dimgs}
+% \end{figure*}
+
+
+
+\section{Statistics and diagnostics}\label{sec:stats_and_diags}
+% WHAT ARE THESE MEASURES FOR? WHY ARE THEY IMPORTANT TO THE EXPERIMENT ? WHAT DO THE STATS CONSITS OF IN MAKING? WHAT DO THEY SHOW?
+\subsection{Comparison of distributions with Kullback-Leibler Divergences}
+Generative Adversarial Networks reduce the difference of the model probability distribution between the generated samples $p_{model}$ and the probability distribution of the training data samples $p_{data}$. This reduction quantifies how well $p_{model}$ estimates $p_{data}$. An estimate on the suitability of this replacement was made using a comparison with different ensembles of samples. The ensembles were collected from the training, generated and uniform distributions of histograms denoted $t$, $g$ and $u$. The uniform distribution $u$ was a set of histograms with pixel densities drawn from a uniform distribution $\mathcal{U}(-1,1)$. The comparison of sample ensembles tested how well the generator made the discriminator associate the real and generated samples to the same distribution. The Kullback-Leibler (KL) divergence and its relevance to the comparisons is defined in Appendix~\ref{appendix:kl_div}.
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/diagrams/kernel_fig.png}
+\centering
+\caption{A histogram down-sampled with three kernels of size $k=\{1, 2, 4\}$ (from left to right).}
+\label{fig:kernel_fig}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/diagrams/kl_stat_process3.png}
+\centering
+\caption{From a single ensemble of 3D-histograms to a normalised distribution; (a) - an ensemble of 3D-histograms that will be transformed into a distribution, (b) - the flattened vector of bin-cells, (c) - the histograms of each vector-component, (d) - the final collapsed vector encoding the whole of a given distribution of 3D-histograms.}
+\label{fig:klstat}
+\end{figure}
+
+\subsubsection{Histogram distributions}
+Distributions of training and generated samples were gathered for each redshift $z$ and the average relative entropy between the ensembles was calculated to estimate how similar the generated and simulation samples were to each other. The uniform distribution $u$ was made to have samples to compare with that did not have any correlated structure on any scale. The comparison of ensembles shows the spread of the $D_{KL}$ value on samples from the original distributions $t$, $g$ and $u$ and consequently how different random groups of samples are to each other. In the case of the uniform-training and uniform-generated comparisons it shows how similar the samples are to a uniform distribution. The $D_{KL}$ values between draws of samples from distributions $a$ and $b$ were calculated for both $D_{KL}(a||b)$ and $D_{KL}(b||a)$. 
+
+\subsubsection{Deriving the KL comparative diagnostic}
+There were 64 samples in the ensembles from the distributions $t$, $g$ and $u$ that contained 128 samples each. Each histogram in the ensemble was down-sampled by iterating a kernel of size $k$ over each histogram and summing the densities. The summed densities were divided by the number of bins in the kernel after down-sampling. This is equivalent to the initial histograms having a lower sampling with larger bins. After an ensemble is down-sampled, the ensembles of two distributions are compared. The samples are individually flattened to `histogram-vectors' with $(32/k)^3$ components. This is shown in Figure~\ref{fig:kernel_fig}. One-dimensional histograms with two bins were made for each component in the histogram-vectors. The two bins represented `high' and `low' pixel densities and the boundary between them was the median of the training data pixel densities. This is because using the median meant that it was not assumed that the pixel density distributions were symmetric. The histogram-vectors were then collapsed over the ensemble and normalised to sum to one as a probability distribution. The vector was then sampling the probability density function of pixel density. This process is illustrated in Figure \ref{fig:klstat}.
+
+The distributions were compared with all the possible pairings of the set the distributions $\{ t, g, u\}$. The relative entropy, that is equivalent here to the KL divergence $D_{KL}$, was calculated between the distribution ensembles. The process was repeated for 100 separate ensembles and with the final $D_{KL}$ values logarithmically-scaled $D_{KL}$ histograms for each comparison were made. This process was repeated for each kernel size $k$ where $k \in \{1, 2, 4\}$.
+
+
+
+% \begin{figure*}[!ht]%[hbt!]
+% \includegraphics[width=17cm]{figures/cubes/t_g_3d.png}
+% \centering
+% \caption{Training data histograms and GAN-generated histograms from the 3D-GAN implementation.}
+% \label{fig:3dgan_imgs}
+% \end{figure*}
+
+\section{Results}\label{sec:results}
+
+\subsection{Generated images}
+
+% \subsubsection{2D-GAN images}
+
+% The results from the separate implementations were the generated images, the model loss and accuracy curves, the training statistic curves and the ensemble $D_{KL}$ trials. A collection of training and generated samples from the 2D-GAN implementation are shown in Figure~\ref{fig:2dgan_imgs}. The generated 2D-histograms are very similar in appearance to the training data histograms. This is the main reason for the tests of statistical structure in ensembles from either distribution. The 2D-GAN images show most of the important features of structure such as filaments, voids and dense clusters.
+
+% % \begin{figure*}[!ht]%[hbt!]
+% % \includegraphics[width=17cm]{figures/cubes/t_g_3d.png}
+% % \centering
+% % \caption{Training data histograms and GAN-generated histograms from the 3D-GAN implementation.}
+% % \label{fig:3dgan_imgs}
+% % \end{figure*}
+
+% \subsubsection{3D-GAN images}
+% A collection of 3D-histograms generated through the 3D-GAN implementation are shown in Figure~\ref{fig:3dgan_imgs}. Two-dimensional projections of these same samples are shown in Figure~\ref{fig:3dgan_2dimgs}. These projections can be compared to the 2D-GAN generated images because they are derived in the same way from the same data, though the scaling $s(x)$ is shown on the 3D projection images.
+
+% The 3D images in Figure~\ref{fig:3dgan_imgs} show that the values of the pixel densities in the generated histograms are similar to the training data. This is the easiest characteristic of the images to judge because examples of structure in these images are sampled from the distribution of all its different possible appearances. The larger scale filaments and sheets in the generated cubes are not always reproduced but they are not totally missing from the histograms. Closer inspection in an interactive environment shows realistic voids in the histograms. 
+
+% The 2D-projections of the histograms show the same agreement in the pixel densities between the training and generated samples. The main difference is in the `blur' effect on the generated projections. This could be solved by changing the kernel size and initialization in the convolutional layers of the models. The projections also show more clustering and some larger filament structure relative to the 3D-histograms. The smaller scale variation of the pixel density in the training data appears more random than the generated data if one picks a line of twenty or so pixels in an image. It could be beneficial for the GAN models to use a higher pixel count in the training data so that less of the information that records a given feature is lost in fewer pixels. The most important statistic of the generated images to test is a cosmological characteristic of the data such as the power spectrum $P_k$ or the correlation function $\xi$. This is left to the discussion of future work in Section~\ref{sec:future_work} for now. 
+
+% \begin{figure*}[!ht]%[hbt!]
+% \includegraphics[width=16.5cm]{figures/cubes/t_g_3d2d_2.png}
+% %\includegraphics[width=12cm]{figures/mrobs.png}
+% \centering
+% %\captionsetup{justification=centering}
+% \caption{Two-dimensional projections of the 3D-GAN generated histograms.}
+% \label{fig:3dgan_2dimgs}
+% \end{figure*}
+
+\subsection{Loss and $D_{KL}$ curves}
+
+% \subsubsection{2D-GAN implementation}
+% Figure~\ref{fig:2dgan_losscurve} shows the 2D-GAN objectives and accuracies over a run of training. The behaviours of the models over the training are apparent in these curves. The sharp jump at the start over the first few 100 epochs or so shows the initial learning for both models that are new to their tasks. The jagged shape over next $1.5\times 10^4$ epochs in the accuracy curve (as well as the loss curve) is where the generator fools the discriminator with half of its generated samples. The discriminator, at the same time, is only able to correctly classify half of its input of real and fake samples. There are small fluctuations in the accuracies of either model as the generator makes smaller adjustments relative to the initial training, until just after $1.5\times 10^4$ epochs. There is a sharp jump in the losses of both models, that is highest for the discriminator, which implies the generator attempted a new strategy for its objective. The accuracies here both climb to 100\% whilst the losses decrease to a lower value. At this point the generator cannot do any better. This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but instead that the architecture of the discriminator cannot extract any more useful information (and is extracting less and less) to the generator. The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode collapse and made much more similar samples.
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/metrics_2d.png}
+% \centering
+% \caption{The loss and accuracies curve for the training of the 2D-GAN implementation.}
+% \label{fig:2dgan_losscurve}
+% \end{figure}
+
+% Figure~\ref{fig:2dgan_stats} shows the KL divergences and Kolmogorov-Smirnov (KS) $p$-values $p_{KS}$ for the generated and training image comparisons over a run of training. The KS statistic and its $p$-value are a sensitive test between two distributions. The KS statistic $D_{KS}$ and the $p$-value $p_{KS}$ are defined in Appendix~\ref{appendix:ks_test}. This test is useful in monitoring the performance of the GAN, particularly near convergence where the gradient adjustments to the models tend to dissipate, causing smaller changes to be made to the samples. The KL divergences between the training and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and $D_{KL}(g||t)$, follow a path that is related to the behaviour of the models shown in loss and accuracy curve. The divergences both start at a global maximum and tend to a final convergent value. The values sharply drop at the same epoch in training as the losses and accuracies do. The initial $D_{KL}$ values of the comparison are with earlier generated images that are devoid of structure. The final value, with some intermediate values, corresponds to images that are very similar to the training data, so the $D_{KL}$ values changed over a range of $10^{-1.0}$ to $10^{-2.5}$ from structureless images to realistic images.
+% % KL values being together, not apart is good ?
+% %The KS $p$-value $p_{KS}$, because of how strict the statistic is as a test, does not provide much information towards convergence, where the differences tend to become less and less. %The change in $p_{KS}$ over the training is from $10^{-1}$ to $10^{-4}$.
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/stats_2d.png}
+% \centering
+% \caption{The training against generated KL-divergences and KS $p$-value curves for the training in the 2D-GAN implementation.}
+% \label{fig:2dgan_stats}
+% \end{figure}
+
+% \subsubsection{3D-GAN implementation}
+
+% Figure~\ref{fig:3dgan_losscurve} shows the 3D-GAN objectives and accuracies over a run of training. Both the accuracies and the losses each have similar values for all epochs and this is the behaviour of two well matched models. The accuracies of both models converge at just over 60\% which implies there is space to improve the model architectures. The separate networks are not able to fully attain their objectives against each other. At this point the discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many different models it was found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point the training would dissipate chaotically.
+
+% Figure~\ref{fig:3dgan_stats} shows the KL divergence $D_{KL}$ and KS $p$-value $p_{KS}$ over a run of training. The curves have similar features to the loss and accuracy curves as they should because of the relation of the cross-entropy to the KL divergence $D_{KL}$. The initial decrease of both $D_{KL}$ values shows the generator and discriminator learning and the spike at around $4.0\times 10^4$ epochs indicates the generator changing its strategy. The same decrease is seen with a return to similar values of $D_{KL}$. The KS $p$-value $p_{KS}$ shows a large change in value over training, particularly when compared to the 2D-GAN $p_{KS}$ curve. Even with the realistic samples of the 2D implementation the null hypothesis that either ensembles of samples originated from the same distribution was always rejected at any point in training. All the $p_{KS}$ values indicated rejection of the null hypothesis at 10\% alpha (the significance level of the test, see Appendix~\ref{appendix:ks_test}) because the $p_{KS}$ values always fell below the 20\% threshold. The small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement with each other, as opposed to a preferred replacement of one with the other. The fluctuations are larger in the 2D case. Further work is required to comment upon the relative values of the convergent $D_{KL}$ pairs in either implementation. The 3D $D_{KL}$ values changed from the comparisons with initial noisy images against training data from $10^{0.0}$ to $10^{-1.6}$ with the final realistic histograms.
+
+\subsection{KL trials}\label{sec:kl_trials}
+
+% This section presents the results of the procedure for the repeated ensemble KL divergence testing. transformed into probability distributions over the pixel density. This comparison is repeated over 100 iterations 
+
+% \subsubsection{2D-GAN implementation}
+% Figure~\ref{fig:2dgan_kltrials} shows the results of the $D_{KL}$ tests for the 2D-GAN implementation with the $D_{KL}$ values on each plot of the distribution comparisons. There is a consistent broadening of the histograms along the columns of increasing kernel size. This shows the random effect, or dispersion, on the $D_{KL}$ value from repeated tests to on separate ensembles of histograms. This is caused by the loss of information due to the down-sampling of larger areas which causes more variance in a given value of pixel density because of the averaging over the original pixels. This is predicted by the central-limit theorem. In this discussion a `mutual comparison' refers to the KL divergence $D_{KL}$ between two different ensembles from the same distribution of $t$, $g$ or $u$. The mutual $D_{KL}$ comparisons that show the broadening the most are the generated-generated and uniform-uniform comparisons which together have increasing variance and separation with kernel size. This shows that in both cases the distributions are composed very differently to the uniform distributions. The means of the mutual distributions stay the same except for the uniform-uniform comparison. This is because the median for the bin separations in the component-histograms was given by the median of the training data which has a lower mean pixel density than the uniform histogram data. 
+% % make pixel dists to show different medians?
+
+
+% % The smaller value of the generated-generated $D_KL$ average comparison with respect to the other mutual comparisons shows the tendency of generative adversarial networks to represent a few modes in the latent space most. This was affirmed by both implementations tending to mode collapse many epochs after converging. THIS WAS TRUE FOR 3D only I think 
+
+% The separate kernels cause averaging over different sized areas in the 2D case (volumes in the 3D case). By construction the histograms are already sampling a volume at a fixed resolution for every distribution and so the kernel sizes give the same volume at different levels of resolution. A histogram from any distribution with each kernel down-sampling will exhibit different scales of structure from the original unsampled histogram and this is shown in Figure~\ref{fig:kernel_fig}. The ensembles drawn from each distribution are necessary to measure the difference in the structure from the distributions that is not inherent in the individual variance of the images themselves. The latter difference does not concern the distributions of the samples and is less important for the test of the generator capability. 
+
+% The widths of the mutual comparison histograms in the 2D and 3D $D_{KL}$ trials show that there is an inherent difference in the information content of the ensembles from distributions in the 2D and 3D distributions. This comes from the differences between the samples themselves and with the fixed specifications of the histograms it would be expected that the mutual comparisons show very close values. An important characteristic of the training-generated comparisons is that the $D_{KL}$-histograms of these distribution pairs overlap. This gives evidence that the distributions can represent each other. The mean $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values are all nearly a whole order of magnitude smaller than the training-uniform and generated-uniform comparison means. These values of the training-uniform and generated-uniform together show that the generator representations are close to the training data because of their similarity in the mean, variance and mean-separations for all values of $k$. This shows the generator is able to create samples that are strongly correlated to the training data samples.
+
+% %would liked to have tried to test characteristic statistic of the original dataset
+
+% \subsubsection{3D-GAN implementation}
+% The main difference between the 2D and 3D images is in the total information content due to the number of pixels in the 2D and 3D samples. This was a difficult task for the models in the 3D-GAN and the corresponding $D_{KL}$ tests show this. Because of the differences in the total information content a direct comparison between the 2D and 3D $D_{KL}$ trials cannot be made. Given a 2D-GAN and a 3D-GAN both creating realistic samples, it would be expected that the average $D_{KL}$ trials would centre around lower means for the 2D implementation. This is the opposite to what is shown even though the changes in the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values over training shown in Figures~\ref{fig:2dgan_stats} and~\ref{fig:3dgan_stats} decrease by the nearly the same amount but for lower starting values in the 2D case.  
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/metrics_3d.png}
+% \centering
+% \caption{The loss and accuracies curve for the training in the 3D-GAN implementation.}
+% \label{fig:3dgan_losscurve}
+% \end{figure}
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/stats_3d.png}
+% \centering
+% \caption{The loss and accuracies curve for the training in the 3D-GAN implementation.}
+% \label{fig:3dgan_stats}
+% \end{figure}
+
+% The $D_{KL}$ values of the training-generated comparisons are lower by nearly a whole order of magnitude than the training-uniform and generated-uniform comparisons for all kernel sizes. This is the most important result of this report because it is evidence for the generator being able to generate samples that are statistically similar to the training data samples in the 3D configuration. These values show that much less information would be lost if the model distribution was used in place of the data distribution as opposed to the uniform distribution, the amount lost is around a factor of two more than that of the training distribution approximating itself with different ensembles. This is supported by the horizontal separations of the histogram peaks in each column of the top three rows of Figure~\ref{fig:3dgan_kltrials}. The values of the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ are nearly the same as the $D_{KL}(t_1||t_2)$ and $D_{KL}(t_2||t_1)$ values which suggests that replacing the 3D $p_{data}$ distribution with the 3D $p_{model}$ distribution would provide realistic samples for the same potential uses of the training data. This is because the $D_{KL}(t_1||t_2)$ and $D_{KL}(t_2||t_1)$ values are nearly the same as the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values as well as the fact that they are both smaller than the uniform-generated and uniform-training comparisons. 
+
+% The mutual $D_{KL}$ comparisons of the training and generated samples show agreement across the different kernels except for a difference of $10^{-3}$ in the variance of the $k=4$ comparison. This shows the generators ability to reproduce a variety of structure in the training data samples. The higher $D_{KL}$ average in the $k=1$ training-generated comparisons are expected; the $D_{KL}$ statistic has more individual pieces of information to compare and find differences with. 
+
+% The $k=4$ kernel, whilst being the largest kernel, does not completely measure the continuity of filament structures over a number of the pixels in the $k=4$ down-sampled histograms. This could be tested of a few larger kernels in histograms with a greater number of total pixels. This could also be measured using a cosmological test such as the two-point correlation function or power spectrum. An increase in the number of bins for the component-histograms would measure the similarity of the generator images to the training data images better. The values of the standard deviation of each $D_{KL}$ histogram relative to the values of the means suggests the number of trials sufficiently sampled the true $D_{KL}$ mean in each test. The empty plot of Figure~\ref{fig:3dgan_kltrials} appears this way, as in the 2D case, because the density bin boundary is lower than the median and mean of the uniform distribution over the pixel densities. The $D_{KL}$ value for this comparison is much lower than $10^{-2}$. 
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/log_kl_trials2d_v2.png}
+% \centering
+% \caption{The logarithmic histograms for the KL-trials between the 2D image distributions. Each column holds histograms from a kernel size $k=\{1,2,4\}.$}
+% \label{fig:2dgan_kltrials}
+% \end{figure}
+
+% The differences between the training-uniform and generated-uniform means and variances are similar to the same values in the 2D-comparisons. These values show the significance of the training-generated comparisons in the top row of Figure~\ref{fig:3dgan_kltrials}, which are a nearly a whole order of magnitude smaller. The mean $D_{KL}$ values of these comparisons are almost at the value of the training-training comparison means which is more evidence for the understandings of the training data by the generator. The similarity shown by the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values may mostly be due to the similar pixel density distributions of the training and generated data. Considering that the lack of filament structure in the larger scales of the generated data compared to the training data is not shown in the $D_{KL}$ comparisons, this may be true. The pixel density distribution is an important characteristic of the images but the just obtaining the similarity between the $t$ and $g$ distrubitions with this property would not guarantee that all the structure in the training data was present. There are many combinations of pixels that make up a matching pixel-density distribution for two histogram distributions, but far less of those show the structure of the cosmic web. The higher standard deviations in the $D_{KL}$ histograms for the 2D case in all the kernel sizes compared to the 3D cases is due to the larger size of features relative to total size of the image that shows them in either case.
+
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/graphs/log_kl_trials3d_v2.png}
+% \centering
+% \caption{The logarithmic histograms for the KL-trials between the 3D image distributions. Each column holds histograms from a kernel size $k=\{1,2,4\}.$}
+% \label{fig:3dgan_kltrials}
+% \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Future work}\label{sec:future_work}
+% HPC resources on GANs 
+At this outset the capability to generate independent 3D galaxy distributions is the beginning of the full application of generative modelling in teaching a machine to generate an artificial universe. The proceeding sections will show potential research into achieving the full objective.
+
+\subsection{Improvements to the present method}
+The strongest dependence of the quality and realism of the generator product are the GAN models and hyper-parameters. It should be noted that each of these should really be tested independently but it is quite possible that a lifetime is not long enough to do so. The author's opinion is that the best route is to improve the current architecture by increasing the number of pixels in the cubes, allowing the depth of the models to increase with more layers, whilst also better translating the variance in the structure inside the histograms. It has been found that in amplifying the initial parameterised units in the first layer of the generator model requires that there are at least $\sim \! 10^4$ units in the 3D case. The use of fewer units does not allow the generator to draw enough permutations from the potentials  `proto-cubes' allowed by the initial layer. The kernels in the convolutional layers were found to be most effective at size $5 \times 5 \times 5$ in the 3D case and the equivalent for the 2D case. Though it is expected that some combination of higher kernel sizes would better characterise the histogram structures. 
+
+A larger original simulation with which to sample training data would help the networks process differences between individual samples. The larger volume would give more homogeneous samples with less variance in the summary statistics per sample. The means, total densities and variances of the pixel distributions in each cube were calculated in each iteration of training. Monitoring these statistics showed that the their variance was up to 10\% of their total values each. Increasing the homogeneity of the samples would decrease this value. The sizes of the samples relative to the original simulation volume could also be increased from the tested value to increase the homogeneity of the samples. Increasing the sample cube size would also allow the $D_{KL}$ testing to consider more varied structure in the kernel sizes. 
+
+The $D_{KL}$ trials could be repeated to compare the 3D two-dimensional cube projections with the 2D generated images and training data. This would connect the results of the separate 2D and 3D implementations. For both of the implementations the $p_{KS}$ testing could have been repeated in the same way as the $D_{KL}$ tests to give more understanding of the differences between the distributions. In this work the $p_{KS}$-values would be better understood if they were compared to other distribution comparison $p_{KS}$-values.
+
+The other available galaxy properties from the Millennium-SAGE catalogs could also be folded into the generator analysis to create distributions weighted by luminosity or another characteristic. 
+%Some of the filaments in the 3D-histograms are around 4 or 5 k
+% A far lower learning rate than the commonly used value of $2\times 10^-4$ was found to be 
+
+
+% \subsection{Conditional Generative Adversarial Networks}
+% The ability to generate different classes of an object does not require separate and independent GANs. The GAN framework may be supplemented by an auxiliary classifier that is attached to the discriminator model, that still classifies the samples as real and fake, whilst additionally characterising the type of the object. This augmented GAN was derived by Odena et al. 2017~\cite{acgan} and is referred to as an Auxiliary Classifier Generative Adversarial Network (ACGAN). The application to an artificial universe is that the different redshift data available from N-body simulations could be given to an ACGAN. Once this model was trained and had achieved convergence the generator component could create samples at different redshifts. These samples could be tessellated together to form a larger distribution across redshifts. This could follow the environment envisioned by the Millennium Run Observatory (MRObs)~\cite{MRObs}. This work sets out to bring together the comparisons of observations and simulations on the same plane of comparison - the perspective of the observer. Figure~\ref{fig:MRObs} shows a schematic of how the smaller-scale distributions could be pieced together along the line-of-sight of the observer.
+
+\subsection{Redshift and structure interpolation} The latent space from which the generator model samples noise-vectors to change into samples from the model distribution encodes informative features in the natural data samples. This latent space can be navigated, typically along the separate axes, to interpolate through the features. This could be implemented in the latent space of an ACGAN that is trained on data with different redshifts to interpolate between different values of redshift in an inexpensive procedure. This interpolation may hold the ability to evolve a collection of samples simultaneously by interpolating through redshift values in a continuous way. The problem of mode collapse for the generator model could be estimated by interpolating the latent space to create a sample of images to test with each other for similarity. A simple test would be to create the mean-image of this sample to test for overlaps but more advanced cross-correlations could show more detail of the overlaps.  
+
+\subsection{Universe generation} To create a cosmological volume on order of the size of the Millennium-SAGE volume, with the tested default cube-size, a generator would need to create around $10^2$ cubes. The generator model in this work once trained can do so within 30 seconds. Whilst in the process of fusing the samples together coherently avoiding density discontinuities would not be a trivial task. It is logical to assume that it is a process that is maximally as intensive as generating the cubes themselves. It is expected that the GAN would be able to generalise well to higher resolution or larger volume sample data.  
+
+The scaled volumes produced by the GAN require the value of the total number of galaxies contained in the cubes to transform the cubes back into coordinate tensors. This would be done by uniformly distributing the number of galaxy positions required for each histogram cell into each cell. The value of the total number of galaxies can be passed to the GAN framework and detached to a separate `route' in the models. This value, like the histogram cells, would be correctly posited just as the histograms are in training. 
+
+
+% \subsection{Generative variants}
+% Some of the other possible architectures and variants of the GAN framework could be implemented to see if there was a efficient or more successful model for the objective in this report. A Wasserstein Generative Adversarial Network (WGAN)~\cite{wgan} was tested but it was not found to work as well as the original GAN. The Wasserstein loss function cannot be extended to a categorical version for use in a conditional GAN so if different redshift samples are required for an application the WGAN method would not work anyway. %More advanced GAN variants such as
+% % GAN VAEs for 3D OBJECT GENERATION
+
+% % \subsection{Parallelised GANs} 
+% % One of the problems of training GANs is being sure that the most profitable convergence, best performing architectures and greatest accuracies are obtained. If further work is able to prove that the use of generative models can mimic cosmological structure with enough variety and realism, then the High Performance Computing (HPC) resources used for simulations could be used for creating even larger and more detailed cosmological simulations. The concept has been shown to work for smaller datasets and generative models in~\cite{parallel_gan1, parallel_gan2}. This is particularly important for the case of cosmological simulations because previous simulations involve using assumptions such as the Zel'dovich Approximations~\cite{zeld_approx} and complex numerical codes~\cite{FPM, gadget2}. Deep learning models are not limited to using low order representations for structural phenomena such as clustering~\cite{lagrangian_approx}. The datasets available to parallelised generative models can also be far larger and with HPC resources they can use deeper models to process structure at higher resolution. 
+
+% % The ideal, computationally intractable, way to train a GAN to achieve the most statistically sound convergence of the model distribution with the data distribution could be to train an ensemble of GANs. Each GAN could be built up from a single layer with minimal units and an array of separate hyper-parameters for each model. The ensemble system could be tested and at each additional advancement, perhaps the introduction of another layer, the highest achieving GAN could be the root-blueprint for the next series.
+
+% % \subsubsection{Different encodings of data (P_k...)}
+% % \subsection{P_k, FFT}
+
+\subsection{Simulation transfer}
+It is expected that the GAN could perform well on another simulation. The simulations in this work originate from the same $\Lambda \text{CDM}$ cosmology and the webbed structure is consistent. An informative transfer would be to a future simulation operating at a higher resolution with a greater number of total simulation particles such as the Millennium-XXL simulation~\cite{millxxlsim}. The Millennium-XXL simulation uses $6720^3$ particles in a volume of $3000 \: h^{-1} \,\textup{Mpc}$. Assuming a larger set of samples from this simulation, the GAN would be recreating the distributions of smaller scale cosmological structure that could be tested further. From the experience of obtaining the strongest model in the 3D-GAN implementations, increasing the number of pixels increased the performance of the models. This could be due to a lower loss of information between an increase in the number of pixels for a pixel in the previous resolution. The apperance of the structure is better defined in this way. The lower the number of pixels, the more randomly distributed the pixel densities will be when they average over similar features such as filaments. This is the most difficult obstacle for the GAN as this problem is obviously much greater with the 3D samples. The analog to this problem for images would be the randomness of a set of pixelated images of flowers compared to the same images but in higher resolution. The structure is consistent between the samples in the latter distribution. 
+
+With the description above it would also be informative to test the GAN models on a far larger simulation volume with larger cube sizes. The structure is better exemplified if the spectrum of density values is more continuous because larger samples tend to less biased sampling. The improved sampling implies a higher statistical significance of the separate examples of structure in the training data. This is the product of a much more advanced simulation. Different cosmological structure could be definitively shown, some of which could have unexplored origins. 
+
+\begin{figure}[hbt!]
+\includegraphics[width=\columnwidth]{figures/diagrams/mrobs3.png}
+%\includegraphics[width=12cm]{figures/mrobs.png}
+\centering
+%\captionsetup{justification=centering}
+\caption{A diagram depicting the pencil beams of an observer outward from their location; (a) - the pencil beam and the required volumes (green) to span the beam with unrepeated galaxy samples, (b) - the highest efficiency for obtaining the volumes of a beam from a distribution volume. From Overzier et al. 2012~\cite{MRObs}.}
+\label{fig:MRObs}
+\end{figure}
+
+% \subsubsection{Power Spectrum}
+% The power spectrum $P_k$ is described in Appendix~\ref{appendix:power_spectrum}. This provides a new way of encoding the input simulation data to GAN. It is possible that the GAN could use a procedure outside of training to populate a volume with galaxies if it is given the power spectrum as input data. The three-dimensional fast Fourier transform that would need to be calculated for this task could be done with the \texttt{Nbodykit}~\cite{nbodykit} in future work. 
+
+\subsection{Statistical diagnostics}
+
+The next stage for confirming that the generated data could take the place of the simulation data would be to test the generated data as though it were natural data once the model and data distributions were similar enough. At this point it would be possible for the generated data to offer new insights. The cross-correlations of individual images as well as the derivation of the power-spectra are two methods of further testing the generated data.
+
+An important task for this method is to estimate the potential for replacing simulation data with generated data. The generator is a fit to the simulation data and sampling a fit does not generate statistically independent samples. In the application of generating a large volume of generated samples it is possible this would not be an issue if the factor of the increase in the total generated volume was not too large.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}\label{sec:conclusions}
+This work has demonstrated the potential of Generative Adversarial Networks in reproducing large-scale cosmological structure with deep convolutional neural networks. The generator model can create realistic samples and this has been achieved in both implementations, but it is still early in terms of stating the generative models as being perfect. In particular this is due to the lack of consistent filament structures in the 3D images. The 2D and 3D implementations have been referenced to each other in rational comparisons, with the generator showing it can imitate simulated cosmological structure. %This is shown in the galaxy distributions with respect to N-body simulation data. 
+This realism is not limited to a single example, it is present across a large sample of histograms tested over many ensembles from this distribution. This assertion is founded on the statistical tests of Section~\ref{sec:kl_trials} on generated data and simulation-data samples. These tests show that rigorous statistical methods native to natural science are a potential step forward in profiling the behaviour and function of the generative adversarial framework and the field of artificial intelligence at large. 
+
+Future work has been outlined that builds on the foundations of the reported work, moving towards generating an artificial universe at higher levels of statistical agreement with both observation and simulation. The methods of deep learning and generative adversarial networks have been shown to be a valuable tool to extend the expanses of N-body simulations and it seems likely their power will be utilised in the next few years of cosmology. 
+
+
+
+{\footnotesize \bibliographystyle{ieeetr} %\bibliographystyle{acm}
+\bibliography{refs}}
+
+
+%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{section}{0}
+\section*{Appendices}
+
+\addcontentsline{toc}{section}{Appendices}%
+% \renewcommand{\section}{A\arabic{section}}
+% \section*{Appendixes}
+% \setcounter{section}{1}
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Power Spectrum $P_k$}\label{appendix:power_spectrum} %http://www.astro.caltech.edu/~george/ay21/eaa/eaa-powspec.pdf
+The Cosmological Principle states that the Universe is homogeneous and isotropic. The appearance of the universe in the scales of the images in this report shows that there are voids without luminous matter as well as filaments and clusters of galaxies.
+
+% Considering the difference between the appearance of the early Universe and the present day displayed in the relic CMBR~\cite{wmap1} and its characterisation of primordial temperature fluctuation it is
+
+The evolution of the small fluctuations in the early Universe into the webbed volumes of the present day is called structure formation. The exact origins are not well understood and the following argument assumes small perturbations in the energy density of the early universe which were amplified by gravity over cosmic time. These density perturbations obey the wave equation 
+
+\begin{equation}
+    \bigg ( \frac{\partial^2}{\partial t^2} - c_s^2\nabla^2\bigg )\delta n
+\end{equation}
+
+where $c_s^2$ is the sound speed in the cosmological fluid medium (which at this scale is a fluid regardless of its material composition) and $\delta n$ is the small change in number density $n$ caused by the perturbation. The complex solutions to the wave equation are 
+
+\begin{equation}
+    \delta n = C(\mathbf{k})\exp(i(\omega t - \mathbf{k}\cdot\mathbf{x}))
+\end{equation}
+
+for complex amplitude $C$, where $\mathbf{k}$ is the co-moving wave vector of the density perturbation in the cosmological fluid, $\mathbf{x}$ is the co-moving vector displacement of the fluid and $\omega$ is the angular frequency of this oscillation. A perturbation of this fluid can be described as
+
+\begin{equation}
+    n(\mathbf{x},t) = \bar{n}(t)[1+\delta(\mathbf{x},t)]
+\end{equation}
+
+where $\bar{n}$ is the spatially homogeneous number density and $\delta(\mathbf{x},t)$ is the density contrast given by
+
+\begin{equation}
+    \delta = \frac{\delta n}{\bar{n}}=\frac{\delta \rho}{\bar{\rho}}
+\end{equation}
+
+where $\rho$ and $\bar{\rho}$ are the mass density and its average respectively. The transform to Fourier space is 
+
+\begin{equation}
+    \delta(\mathbf{k}, t) = \int d^3x \: \textup{e}^{i\mathbf{k}\cdot\mathbf{x}} \: \delta(\mathbf{x},t)
+\end{equation}
+
+where $\delta(\mathbf{k})$ is the Fourier transform of $\delta(\mathbf{x})$. The density perturbations in the early Universe can be seen through the spatial distribution of galaxies in the universe. The spatial average of the density contrast $\langle \delta(\mathbf{x},t) \rangle$ is zero at any time $t$ from the isotropy of the universe. The correlation function $\xi(|\mathbf{x} - \mathbf{y}|,t)$ is defined as
+
+\begin{equation}
+    \xi(|\mathbf{x} - \mathbf{y}|,t) = \langle \delta(\mathbf{x}, t), \delta(\mathbf{y},t) \rangle
+\end{equation}
+
+This function can be interpreted as the probability of another galaxy at position $\mathbf{y}$ being a distance $|\mathbf{x} - \mathbf{y}|$ from a galaxy at $\mathbf{x}$. $\xi(|\mathbf{x} - \mathbf{y}|,t)$ depends only on $|\mathbf{x} - \mathbf{y}|$ since the universe is homogeneous and isotropic. The scalar value of the separation gives the isotropic probability. The correlation function is a measure of the degree of clustering in the spatial distribution of galaxies compared to a random distribution of the galaxies.
+
+Returning to the Fourier transform of the density contrast $\delta(\mathbf{x},t)$, the correlation function in $\mathbf{k}$-space is 
+
+\begin{equation}
+    \langle \delta(\mathbf{k},t), \delta(\mathbf{k}',t) \rangle = 8\pi^3 \delta^3_D(\mathbf{k} + \mathbf{k}') \int d^3 r \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
+\end{equation}
+
+where $\delta_D^3$ is the three-dimensional Dirac-delta function and $\mathbf{r} = \mathbf{x}-\mathbf{y}$. The definition of the power spectrum $P_k$ is 
+
+\begin{equation}
+    P_k = \int d^3 r \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
+\end{equation}
+
+which shows the power spectrum is the three-dimensional Fourier transform of the correlation function. This quantity in either a two or three-dimensional space, with the density field fluctuations being drawn from a Gaussian distribution, means that the power spectrum gives a distribution of the fluctuations. The power spectrum describes the amplitude of fluctuations on different length scales or equivalently mass scales.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{GAN architectures and hyper-parameters}\label{appendix:gan_setups}
+
+The model architectures of the 3D-GAN models are shown in Table~\ref{table:3dgan_archi}. The hyper-parameters of the 3D-GAN implementation are shown in Table~\ref{table:3dgan_params} respectively. 
+
+
+\begin{table}[h!]
+\centering
+\begin{tabularx}{\columnwidth}{@{}YYY@{}}%{XXX}%{|p{0.5cm} c c c|} 
+ \hline
+ & \textbf{Activation} & \textbf{Output Shape}  \\ %[0.5ex] 
+ \hline\hline
+ \bf{\textit{Generator}} & & \\
+ \hline\hline
+$\mathbf{z}$ & &  (200) \\
+ \hline
+Linear & BatchNorm  & $(16, 16, 16, 512)$ \\ 
+     &  Relu &  \\ 
+ \hline
+ Conv3D & BatchNorm  & $(16, 16, 16, 512)$ \\ 
+     ($5\times5\times5$)&   Relu  &                                                  \\
+ \hline
+Conv3D & BatchNorm  & $(32, 32, 32, 256)$ \\ 
+    ($5\times5\times5$)&  Relu &                                                     \\
+ \hline
+Conv3D  & BatchNorm  & $(32, 32, 32, 1)$ \\ 
+ ($5\times5\times5$)& tanh&                                                    \\ [1ex] 
+ \hline\hline
+ 
+ \bf{\textit{Discriminator}} & &  \\
+ \hline
+ $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\
+ \hline
+ Conv3D & BatchNorm & $(32, 32, 32, 1)$ \\
+  ($5\times5\times5$)&   LeakyRelu&   \\
+ \hline
+ Conv3D & BatchNorm & $(16, 16, 16, 256)$ \\ 
+ ($5\times5\times5$)&  LeakyRelu   \\
+ \hline
+ Conv3D & BatchNorm &  $(8, 8, 8, 512)$ \\ 
+ ($5\times5\times5$)&  LeakyRelu   \\
+ \hline
+ Linear & sigmoid & $ 1 $ \\ [1ex] 
+ \hline
+\end{tabularx}
+\caption{Architectures for the generator and discriminator networks in the 3D-GAN.}
+\label{table:3dgan_archi}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\begin{tabularx}{\columnwidth}{@{}l *5{>{\centering\arraybackslash}X}@{}}%{||c c||} 
+ \hline
+  \textbf{Hyper-parameter} & \textbf{Value}  \\ [0.5ex] 
+ \hline\hline
+ Discriminator learning rate & $2 \times 10^{-6}$   \\ 
+ Discriminator dropout factor & 0.3  \\
+ Generator learning rate & $2 \times 10^{-6}$   \\ 
+ $\mathbf{z}$ dimension & 200  \\
+ Prior bounds & $[-1,+1]$  \\
+ Batch size / total samples & 64 / 128   \\ [1ex]
+\hline
+\end{tabularx}
+\caption{Hyper-parameters used in 3D-GAN implementation.}
+\label{table:3dgan_params}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Kullback-Leibler Divergence}\label{appendix:kl_div} % information theory mackay, deep learning goodfellow (relate to NIPS 2016 part about jensen-shannon)
+% \subsection{Information theory}
+% Information theory aims to quantify how much information is in a signal. The basic principle is that learning about an unlikely event is more informative than learning about a likely event - the information content of the unlikely event is higher than the unlikely event~\cite{gf_book}. This means that learning about an event that consists of two unlikely events contains more information content than learning of one of the two events alone. The quantity of information content is expressed by definition of the self-information of an event $\textup{x}=x$ as 
+% \begin{equation}
+%     I(x) = - \log P(x)
+% \end{equation}
+% where the units of the self-information are depend on the base of the logarithm this equation. The same definition of information for continuous events $\textup{x}$ applies as for the discrete events. 
+
+% Self-information is associated with outcomes from singular events. The amount of uncertainty in a probability distribution is given by the Shannon entropy~\cite{mackay_book}
+
+% \begin{equation}
+%     H(x) = \mathbb{E}_{\text{x}\sim P} [I(x)] 
+%     = % _\textup{x \sim P}_\textup{x \sim P}
+%     -  \mathbb{E}_{\text{x}\sim P} [\log P(x)]
+% \end{equation}
+
+% this definition shows that the Shannon entropy is the expectation value of the amount of information in an event drawn from that distribution. When $\textup{x}$ is continuous the Shannon entropy is called the differential entropy. 
+
+\subsection{The Kullback-Leibler Divergence}\label{appendix:kl_div_section}
+
+A measure for the difference in the information content of two probability distributions $P(\textup{x})$ and $Q(\textup{x})$ over the same random variable $\textup{x}$ is given by the Kullback-Leibler (KL) divergence 
+
+\begin{eqnarray}
+  D_{KL}(P||Q) &=& \mathbb{E}_{\text{x}\sim P} \bigg [\log \frac{P(x)}{Q(x)} \bigg ]\nonumber \\ 
+               &=& \mathbb{E}_{\text{x}\sim P} [\log P(x) - \log Q(x)]  % \\
+               %&=& \Big \langle \log P(x) \Big \rangle - \Big \langle \log Q(x) \Big \rangle
+\end{eqnarray}
+The KL divergence is clearly only positive and only equal to zero if the distributions are exactly the same. For continuous variables the zero value for the case of two identical distributions is for `almost everywhere' - the relation holds everywhere in space except on a set of measure zero. The KL divergence is not a symmetric quantity; $D_{KL}(P||Q) \neq  D_{KL}(Q||P)$.
+
+
+
+%\subsection{Information and entropy}
+\subsection{Cross-entropy}\label{appendix:cross_entropy}
+% To diagnose the exact function of the GAN in determining its adjustments toward a Nash equilibrium one must consider the objective functions that the models independently optimise. 
+% In on Appendix~\ref{appendix:kl_div_section}, 
+The sum of the KL divergence for $P$ and $Q$ with the Shannon entropy of $P$ gives the cross-entropy $H(P,Q)$ of $P$ and $Q$ as
+
+\begin{eqnarray}
+    H(P,Q) &=& H(P) + D_{KL}(P||Q) \nonumber \\
+           &=& -\mathbb{E}_{\text{x}\sim P} \log Q(x)
+\end{eqnarray}
+
+Note that minimizing the cross-entropy with respect to $Q$ is equivalent to minimizing the KL divergence because the differential entropy of $P$ is independent of $Q$~\cite{gf_book}. 
+
+The objective function $J^{(D)}$ defined in Section~\ref{sec:gans} means the discriminator tries to maximize the probability of correctly classifying real and fake samples. This is the same as maximizing two separate cross-entropies. The first is the cross-entropy of the discriminator classifying the real samples from the data distribution $p_{data}$ as real. The second is the cross-entropy of the discriminator of classifying the fake samples from the generator distribution $p_{model}$ as fake. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Kolmogorov-Smirnov Test}\label{appendix:ks_test}
+% The Kolmogorov-Smirnov (KS) test can show whether a sample comes from a population with a specific distribution or not. It is based on the empirical distribution function (EDF) which is defined, for $N$ magnitude-ordered data points $\{x_i\}$, as
+
+% \begin{equation}
+%     E_N = \frac{n(i)}{N}
+% \end{equation}
+
+% where $n(i)$ is the number of points with values less than $x_i$. It has been assumed that $\{x_i\}$ are independent and identically distributed; in other words, that the samples $\{x_i\}$ are independent of each other and are all drawn from the same probability distribution. With a model cumulative distribution function (CDF) $R(x)$ to test the cumulative data distribution function against, the KS test statistic $D_{KS}$ is 
+
+% \begin{equation}
+%     D_{KS} = \max |R(x) - S(x)|
+% \end{equation}
+
+% So $D_{KS}$ is the greatest difference between the model CDF $R(x)$ and the EDF of the data $S(x)$. The model CDF represents the distribution to test for the null hypothesis. For this work this is the comparison of the mean image of the data-generating distribution $p_{data}$ to the mean image of the generated data distribution $p_{model}$. The null hypothesis is the default statement on the comparison that there is no significant correlation. Figure~\ref{fig:ks_diagram} shows two data distributions and a model distribution with comparisons of the corresponding EDFs and CDF.
+
+% \begin{figure}[!ht]
+% \includegraphics[width=0.8\columnwidth]{figures/graphs/ks_diagram.png}
+% \centering
+% \caption{An illustration of the KS statistic for two data distributions $f(x)$ and $g(x)$ and one model distribution $h(x)$. The model cumulative distribution function (CDF) and data empricial distribution functions (EDFs) are shown.}
+% \label{fig:ks_diagram}
+% \end{figure}
+
+% The KS test $p$-value $p_{KS}$ is calculated during GAN training. The $p$-value is defined as the probability of obtaining test results at least as extreme as the results actually observed during the test, assuming that the null hypothesis is correct. This translates to quoting the probability of obtaining the KS test statistic $D_{KS}$ given that the distributions are not correlated. The strength of the KS test is that no underlying population distribution function is asserted before calculating $p_{KS}$. The $p_{KS}$ value is referenced against an $\alpha$-value that thresholds the value to reject the null hypothesis with. For $\alpha=0.01$ and a sample size of 64 for each of the compared ensembles in the training loop determinations of $p_{KS}$, this provides a $p$-value of $0.20$. In this work all the KS $p$-values were calculated using the SciPy~\cite{scipy} \texttt{stats.ks\_2samp}~function. 
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % \section{GAN components}\label{appendix:gan_parts}
+
+% % \subsection{Convolutional layers}\label{app_convs}
+% % The standard unit in the layers of neural networks is the linear unit of general matrix multiplication. Convolutional neural networks (CNNs) pioneered by LeCun~\cite{LeCun_cnns} were the first design for methods that could decode grid-like data such as images. The procedures in CNNs use a linear convolution operation as opposed to the multiplications in linear units that are also known as perceptrons. The convolution operation between two functions $f$ and $g$ is defined as 
+
+% % \begin{equation}
+% %     h(x) = (f * g)(x) = \int f(\tau)  g(x - \tau)d\tau
+% % \end{equation}
+
+% % where for an image the function $f$ in the convolution is known as the input, the function $g$ is the kernel and the output function $h$ is the feature map. The grid data means the convolution is discrete so that
+
+% % \begin{equation}
+% %     h(x) = (f * g)(x) = \sum f(\tau) g(x - \tau)
+% % \end{equation}
+
+% % In machine learning the input is an array of data and the kernel is an array of parameters that the learning algorithm changes in training. In the 3D-GAN the convolution equation takes the form 
+
+% % \begin{eqnarray}
+% %     S(i,j,k) &=& (I * K)(i,j,k) \nonumber\\ 
+% %              &=& \sum_{l, m, n} I(i+l, j+m, k+n)K(l,m,n) \nonumber\\ 
+% % \end{eqnarray}
+
+% % for the 3D case, where $I$ and $K$ are the image and kernel grids and $S$ is the feature map from the convolution. A similar equation holds for the 2D case. The indices $l$, $m$ and $n$ are the kernel size in each dimension. Because convolutions are commutative, the kernel in the discrete convolutions passes over the image (the kernel and image have been commuted), these features can be recorded in a network. Figure \ref{fig:3d_conv} shows how a feature map is taken from an image.
+
+% % \begin{figure}[hbt!]
+% % \includegraphics[width=\columnwidth]{figures/diagrams/3dconv_diag.png}
+% % \centering
+% % \caption{A general 3D-convolution operation; (a) - the image inputted to the convolutional layer with the kernel at one position in the image, (b) - the kernel-image convolution output at a position, (c) - the output pixel from the operation and (d) - the feature map of convolutions across the image.}
+% % \label{fig:3d_conv}
+% % \end{figure}
+
+
+% % \subsection{Activation functions}\label{appendix:app_acts}
+% % The activation functions used in each layer of the models in the generator and discriminator are important for the performance of the GAN. Figure~\ref{fig:act_funcs} shows the activation functions used in the models, plotted on $x,y \in [-1,+1]$.
+
+% % In the generator models rectified linear unit (ReLU) activation functions were put at the end of the inner layers with a hyperbolic tangent activation (tanh) activation at the end of the last layer. This final activation helps the GAN match the pixel counts to the range of the training data samples. LeakyReLU activations are the same as ReLU functions for positive inputs but are scaled by a value $\alpha$ for negative inputs. The value of $\alpha=0.2$ was taken from~\cite{dcgan}. On the end of the discriminator network a sigmoid activation function was used to match the range of probabilities $P\in [0,1]$.
+
+% % \begin{figure}[hbt!]
+% % \includegraphics[width=\columnwidth]{figures/graphs/activation_functions.png} %10cm
+% % \centering
+% % \caption{The four types of activation function used in the GAN models.}
+% % \label{fig:act_funcs}
+% % \end{figure}
+
+% % % \subsection{Batch-normalisation}\label{app_BN}
+% % % The forward flow of information in a deep learning model means the parameters of the previous layer influence the parameters of the next layer through changing the inputs to the next layer. The gradients in optimisation are used to update the whole model simultaneously which can have unexpected effects because the updates are calculated under the assumption that the other layers are held constant. Ioffe and Szegedy 2015~\cite{batchnorm} proposed a reparameterization to help apply the updates across separate layers. Batch normalisation involves normalising data in the batches that it is presented to a layer in~\cite{gf_book}. For a batch of layer activations expressed as a matrix $\mathbf{H}$, normalising requires replacement of $\mathbf{H}$ by
+
+% % % \begin{equation}\label{H}
+% % %     \mathbf{H}' = \frac{\mathbf{H} - \mathbf{\mu}}{\mathbf{\sigma}}
+% % % \end{equation}
+
+% % % where $\mathbf{\mu}$ is a vector containing the mean of each activation and $\mathbf{\sigma}$ is a vector containing the standard deviation of each activation. Each row in $\mathbf{H}$ corresponds to the activations of some layer for every example in the batch. This means Equation \ref{H} applies $\mathbf{\sigma}$ and $\mathbf{\mu}$ to each row in $\mathbf{H}$. The network operates on $\mathbf{H}'$ just as it did on $\mathbf{H}$. In the training loop
+
+% % % \begin{eqnarray}
+% % %     \mathbf{\mu} &=& \frac{1}{m}\sum_i \mathbf{H}_i \nonumber \\
+% % %     \mathbf{\sigma} &=& \sqrt{ \delta + \frac{1}{m}\sum_i (\mathbf{H} - \mathbf{\mu})_i^2 }
+% % % \end{eqnarray}
+% % % % and 
+% % % % \begin{equation}
+% % % %     \mathbf{\sigma} = \sqrt{ \delta + \frac{1}{m}\sum_i (\mathbf{H} - \mathbf{\mu})_i^2 }
+% % % % \end{equation}
+
+% % % where $\delta$ is a constant. These equations give the same parameters in Equation~\ref{H} for a normalised and reparameterized $\mathbf{H}$.
+
+% % % % \subsection{Optimisers}\label{optimiser}
+% % % % The component for each model that searches for the Nash equilibrium in a GAN model is the optimiser. This algorithm finds the parameters $\mathbf{\theta}$ that reduce the objective function $J(\mathbf{\theta})$ in the parameter space at an epoch. The objective function is the performance of the model for a collection of samples. 
+
+% % % % The complexity of machine learning optimisation, even without the adversarial relationship in the GAN framework, comes from the indirect effect the optimisation has on the objective function. This is indirect because the objective function is defined on test data (training data and generated samples for the GAN analogue) that the optimisation process has no effect on.  
+
+% % % % The Adam optimiser Kingma and Ba, 2014 \cite{adam} is an optimiser that adapts the learning rate of the optimisation process. The learning rate of the machine learning system is related to the speed at which the optimiser searches for the best gradient step at a given epoch. 
+
+% % % % \subsubsection{Stochastic Gradient Descent}\label{appendix:sgd}
+% % % % A gradient descent algorithm outlines the process of minimizing an objective function for a model. The function may be distributive over a set of samples so that it is the same as the sum of the function acting on each sample. Stochastic gradient descent (SGD) is a common optimisation algorithm. It uses a constant learning rate (a step to move through the parameter space with) per iteration of training, though in practice this value depends on the value of the iteration for more advanced algorithms. 
+
+% % % % In SGD a sample of $m$ latent-space vectors $\{ \textbf{z}^{(1)}, \ldots, \textbf{z}^{(m)} \}$ are drawn from $p_\textbf{z}$ with a sample of $m$ samples of real data $\{ \textbf{x}^{(1)}, \ldots, \textbf{x}^{(m)} \}$. The discriminator parameters are updated the ascension of the stochastic gradient
+
+% % % % \begin{equation}
+% % % %     \nabla_{\theta^{(D)}} \frac{\epsilon}{m} \sum_{i=1}^m \bigg [ \log D(\mathbf{x}^{(i)}) + \log ( 1 - D( G(\mathbf{z}^{(i)}))) \bigg ]
+% % % % \end{equation}
+
+% % % % and generator is updated by the descension of its stochastic gradient 
+
+% % % % \begin{equation}
+% % % %     \nabla_{\theta^{(G)}} \frac{\epsilon}{m} \sum_{i=1}^m \log ( 1 - D( G(\mathbf{z}^{(i)})))
+% % % % \end{equation}
+
+% % % % where $\epsilon$ is the learning rate and $\nabla_\bm{\theta}$ is the directional derivative in the direction of increasing or decreasing gradient. 
+
+% % % % % \begin{algorithm}[ht]
+% % % % % \caption{\small Minibatch stochastic gradient descent training of generative adversarial nets.
+% % % % % }
+% % % % % \begin{algorithmic}
+% % % % % \label{alg:AGF}
+% % % % % \FOR{number of training iterations}
+% % % % %   \FOR{$k$ steps}
+% % % % %     \STATE{$\bullet$ Sample minibatch of $m$ noise samples $\{ \bm{z}^{(1)}, \dots, \bm{z}^{(m)} \}$ from noise prior $p_g(\bm{z})$.}
+% % % % %     \STATE{$\bullet$ Sample minibatch of $m$ examples $\{ \bm{x}^{(1)}, \dots, \bm{x}^{(m)} \}$ from data generating distribution $p_\text{data}(\bm{x})$.}
+% % % % %     \STATE{$\bullet$ Update the discriminator by ascending its stochastic gradient:
+% % % % %         \[
+% % % % %             \nabla_{\theta_d} \frac{1}{m} \sum_{i=1}^m \left[
+% % % % %             \log D\left(\bm{x}^{(i)}\right)
+% % % % %             + \log \left(1-D\left(G\left(\bm{z}^{(i)}\right)\right)\right)
+% % % % %             \right].
+% % % % %         \]}
+% % % % %     %parameters $\theta_d$ of discriminator $D$
+% % % % %   %in the direction of the stochastic gradient of the binomial cross-entropy
+% % % % %   %for $D$ predicting whether its argument comes from $p_\text{data}(\bm{x})$ (target = 1, input = $\bm{x}$) or
+% % % % %   %$P_g$ (target = 0, input = $G(\bm{z})$), i.e., towards minimizing
+% % % % %   % \mbox{$-\log D(\bm{x}) - \log(1 - D(G(\bm{z})))$}.}
+% % % % %   \ENDFOR
+% % % % %   \STATE{$\bullet$ Sample minibatch of $m$ noise samples $\{ \bm{z}^{(1)}, \dots, \bm{z}^{(m)} \}$ from noise prior $p_g(\bm{z})$.}
+% % % % %     \STATE{$\bullet$ Update the generator by descending its stochastic gradient:
+% % % % %         \[
+% % % % %             \nabla_{\theta_g} \frac{1}{m} \sum_{i=1}^m
+% % % % %             \log \left(1-D\left(G\left(\bm{z}^{(i)}\right)\right)\right)
+% % % % %             .
+% % % % %         \]}
+% % % % %   \ENDFOR
+% % % % %   \\The gradient-based updates can use any standard gradient-based learning rule. We used momentum in our experiments.
+% % % % % \end{algorithmic}
+% % % % % \end{algorithm}
+
+
+
+
+% % % % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % % % %           references
+% % % % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% % % % % \small
+% % % % % \bibliographystyle{bibstyle}
+% % % % % \bibliography{refs}
+
+\section*{Acknowledgements}
+
+Thank you to Prof. Martin Hendry and Dr. Chris Messenger for their time and guidance. I learnt a lot that I will use in the future. I am inspired and I look forward to researching AI in cosmology in the future. Thank you to Michael Williams and Jordan `McGAN' McGinn for their insights and discussions. 
+%Thanks also goes to my friends Hamish Potokar, Ellie Wright, Emma Carli, Gaspard Poulot and Calum Gordon who I really enjoy talking all things astrophysics with. I also owe a lot to TCA Glasgow.
+
+\footnotesize
+
+% \section*{Declarations}
+\subsection*{Data and code availability}
+All code can be found at
+\url{https://github.com/JedHmr/universe_gen}.
+%\footnote{url date:2020-03-21}. 
+Some extra material can be found on
+\url{http://www.astro.gla.ac.uk/users/jed/} 
+%\footnote{url date:2020-03-21} 
+
+
+% \subsection*{Acknowledgements} 
+
+
+\end{document}

@@ -1,0 +1,10 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Methods}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Dataset}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Generative Adversarial Networks}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Network architecture and training}{section.2}% 5
+\BOOKMARK [1][-]{section.3}{Results}{}% 6
+\BOOKMARK [2][-]{subsection.3.1}{Evaluation of generator fidelity}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.2}{Is the generator creating novel maps?}{section.3}% 8
+\BOOKMARK [1][-]{section.4}{Discussion and future work}{}% 9
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 10

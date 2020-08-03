@@ -1,0 +1,367 @@
+\begin{thebibliography}{10}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem{Planck2018}
+{Planck Collaboration}, et~al.
+\newblock {Planck 2018 results. VI. Cosmological parameters}.
+\newblock \emph{arXiv e-prints}, arXiv:1807.06209 (2018).
+
+\bibitem{Alam2017}
+{Alam}, S., et~al.
+\newblock {The clustering of galaxies in the completed SDSS-III Baryon
+  Oscillation Spectroscopic Survey: cosmological analysis of the DR12 galaxy
+  sample}.
+\newblock \emph{Monthly Notices of Royal Astronomical Society}, 470, 2617--2652
+  (2017).
+\newblock \doi{10.1093/mnras/stx721}.
+
+\bibitem{Bautista2018}
+{Bautista}, J.E., et~al.
+\newblock {The SDSS-IV Extended Baryon Oscillation Spectroscopic Survey: Baryon
+  Acoustic Oscillations at Redshift of 0.72 with the DR14 Luminous Red Galaxy
+  Sample}.
+\newblock \emph{The Astrophysical Journal}, 863, 110 (2018).
+\newblock \doi{10.3847/1538-4357/aacea5}.
+
+\bibitem{Dumas2017}
+{du Mas des Bourboux}, H., et~al.
+\newblock {Baryon acoustic oscillations from the complete SDSS-III
+  Ly{\ensuremath{\alpha}}-quasar cross-correlation function at z = 2.4}.
+\newblock \emph{Astronomy and Astrophsyics}, 608, A130 (2017).
+\newblock \doi{10.1051/0004-6361/201731731}.
+
+\bibitem{Carlson2009}
+Carlson, J., White, M., and Padmanabhan, N.
+\newblock Critical look at cosmological perturbation theory techniques.
+\newblock \emph{Phys. Rev. D}, 80, 043531 (2009).
+\newblock \doi{10.1103/PhysRevD.80.043531}.
+
+\bibitem{Bartelmann2001}
+{Bartelmann}, M. and {Schneider}, P.
+\newblock {Weak gravitational lensing}.
+\newblock \emph{Physics Reports}, 340, 291--472 (2001).
+\newblock \doi{10.1016/S0370-1573(00)00082-X}.
+
+\bibitem{euclid}
+{Laureijs}, R., et~al.
+\newblock {Euclid Definition Study Report}.
+\newblock \emph{ArXiv e-prints} (2011).
+
+\bibitem{lsst}
+{LSST Dark Energy Science Collaboration}.
+\newblock {Large Synoptic Survey Telescope: Dark Energy Science Collaboration}.
+\newblock \emph{ArXiv e-prints} (2012).
+
+\bibitem{wfirst}
+{Spergel}, D., et~al.
+\newblock {Wide-Field InfrarRed Survey Telescope-Astrophysics Focused Telescope
+  Assets WFIRST-AFTA 2015 Report}.
+\newblock \emph{ArXiv e-prints} (2015).
+
+\bibitem{Metropolis1953}
+Metropolis, N., et~al.
+\newblock Equation of state calculations by fast computing machines.
+\newblock \emph{Journal of Chemical Physics}, 21(6), 1087--1092 (1953).
+
+\bibitem{Gelman2004}
+Gelman, A., et~al.
+\newblock \emph{Bayesian Data Analysis}.
+\newblock Chapman and Hall/CRC, 3rd ed. edition (2013).
+
+\bibitem{coyote2}
+{Heitmann}, K., et~al.
+\newblock {The Coyote Universe. II. Cosmological Models and Precision Emulation
+  of the Nonlinear Matter Power Spectrum}.
+\newblock \emph{The Astrophysical Journal}, 705, 156--174 (2009).
+\newblock \doi{10.1088/0004-637X/705/1/156}.
+
+\bibitem{coyote3}
+{Lawrence}, E., et~al.
+\newblock {The Coyote Universe. III. Simulation Suite and Precision Emulator
+  for the Nonlinear Matter Power Spectrum}.
+\newblock \emph{The Astrophysical Journal}, 713, 1322--1331 (2010).
+\newblock \doi{10.1088/0004-637X/713/2/1322}.
+
+\bibitem{universalapproximator}
+Cs{\'a}ji, B.C.
+\newblock Approximation with artificial neural networks.
+\newblock \emph{MSc Thesis, E{\"o}tv{\"o}s Lor{\'a}nd University (ELTE),
+  Budapest, Hungary} (2001).
+
+\bibitem{Schawinski2017}
+{Schawinski}, K., et~al.
+\newblock {Generative adversarial networks recover features in astrophysical
+  images of galaxies beyond the deconvolution limit}.
+\newblock \emph{Monthly Notices of Royal Astronomical Society}, 467, L110--L114
+  (2017).
+\newblock \doi{10.1093/mnrasl/slx008}.
+
+\bibitem{webgan}
+Rodr{\'i}guez, A.C., et~al.
+\newblock Fast cosmic web simulations with generative adversarial networks.
+\newblock \emph{Computational Astrophysics and Cosmology}, 5(1), 4 (2018).
+\newblock \doi{10.1186/s40668-018-0026-4}.
+
+\bibitem{Gupta2018}
+{Gupta}, A., et~al.
+\newblock {Non-Gaussian information from weak lensing data via deep learning}.
+\newblock \emph{Physical Review D}, 97, 103515 (2018).
+\newblock \doi{10.1103/PhysRevD.97.103515}.
+
+\bibitem{Ribli2019}
+{Ribli}, D., {Pataki}, B.{\'A}., and {Csabai}, I.
+\newblock {An improved cosmological parameter inference scheme motivated by
+  deep learning}.
+\newblock \emph{Nature Astronomy}, 3, 93--98 (2019).
+\newblock \doi{10.1038/s41550-018-0596-8}.
+
+\bibitem{Fluri2018}
+{Fluri}, J., et~al.
+\newblock {Cosmological constraints from noisy convergence maps through deep
+  learning}.
+\newblock \emph{Physical Review D}, 98, 123518 (2018).
+\newblock \doi{10.1103/PhysRevD.98.123518}.
+
+\bibitem{Peel2018}
+{Peel}, A., et~al.
+\newblock {Distinguishing standard and modified gravity cosmologies with
+  machine learning}.
+\newblock \emph{arXiv e-prints}, arXiv:1810.11030 (2018).
+
+\bibitem{Shirasaki2018}
+{Shirasaki}, M., {Yoshida}, N., and {Ikeda}, S.
+\newblock {Denoising Weak Lensing Mass Maps with Deep Learning}.
+\newblock \emph{arXiv e-prints}, arXiv:1812.05781 (2018).
+
+\bibitem{domainadaptation}
+Wang, M. and Deng, W.
+\newblock Deep visual domain adaptation: {A} survey.
+\newblock \emph{CoRR}, abs/1802.03601 (2018).
+
+\bibitem{gan}
+Goodfellow, I., et~al.
+\newblock Generative adversarial nets.
+\newblock In Z.~Ghahramani, M.~Welling, C.~Cortes, N.D. Lawrence, and K.Q.
+  Weinberger (editors), \emph{Advances in Neural Information Processing Systems
+  27}, pages 2672--2680. Curran Associates, Inc. (2014).
+
+\bibitem{Kratochvil-MF-sims}
+{Kratochvil}, J.M., et~al.
+\newblock {Probing cosmology with weak lensing Minkowski functionals}.
+\newblock \emph{Physics Review D}, 85(10), 103513 (2012).
+\newblock \doi{10.1103/PhysRevD.85.103513}.
+
+\bibitem{Yang:2011zzn}
+{Yang}, X., et~al.
+\newblock Cosmological information in weak lensing peaks.
+\newblock \emph{Phys. Rev. D}, 84, 043529 (2011).
+\newblock \doi{doi:10.1103/PhysRevD.84.043529}.
+
+\bibitem{Gadget2}
+{Springel}, V.
+\newblock {The cosmological simulation code GADGET-2}.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 364,
+  1105--1134 (2005).
+\newblock \doi{10.1111/j.1365-2966.2005.09655.x}.
+
+\bibitem{Kratochvil:2009wh}
+{Kratochvil}, J.M., {Haiman}, Z., and {May}, M.
+\newblock Probing cosmology with weak lensing peak counts.
+\newblock \emph{Phys. Rev. D}, 84, 043519 (2010).
+
+\bibitem{BJ}
+{Bernstein}, G.M. and {Jarvis}, M.
+\newblock {Shapes and Shears, Stars and Smears: Optimal Measurements for Weak
+  Lensing}.
+\newblock \emph{Astronomical Journal}, 123, 583--618 (2002).
+\newblock \doi{10.1086/338085}.
+
+\bibitem{gantutorial}
+Goodfellow, I.J.
+\newblock {NIPS} 2016 tutorial: Generative adversarial networks.
+\newblock \emph{CoRR}, abs/1701.00160 (2017).
+
+\bibitem{largeganstudy}
+Lu\v{c}i\'c, M., et~al.
+\newblock Are gans created equal? a large-scale study.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS)}
+  (2018).
+
+\bibitem{cosmoreview}
+Kilbinger, M.
+\newblock Cosmology with cosmic shear observations: a review.
+\newblock \emph{Reports on Progress in Physics}, 78(8), 086901 (2015).
+
+\bibitem{allconv}
+Springenberg, J.T., et~al.
+\newblock Striving for simplicity: The all convolutional net.
+\newblock \emph{CoRR}, abs/1412.6806 (2014).
+
+\bibitem{Radford2015}
+Radford, A., Metz, L., and Chintala, S.
+\newblock Unsupervised representation learning with deep convolutional
+  generative adversarial networks.
+\newblock \emph{CoRR}, abs/1511.06434 (2015).
+
+\bibitem{batchnorm}
+Ioffe, S. and Szegedy, C.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock In F.~Bach and D.~Blei (editors), \emph{Proceedings of the 32nd
+  International Conference on Machine Learning}, volume~37, pages 448--456.
+  PMLR, Lille, France (2015).
+
+\bibitem{relu}
+Nair, V. and Hinton, G.E.
+\newblock Rectified linear units improve restricted {Boltzmann} machines.
+\newblock In J.~F{\"u}rnkranz and T.~Joachims (editors), \emph{Proceedings of
+  the 27th International Conference on Machine Learning (ICML-10)}, pages
+  807--814. Omnipress, Haifa, Israel (2010).
+
+\bibitem{lrelu}
+Maas, A.L., Hannun, A.Y., and Ng, A.Y.
+\newblock Rectifier nonlinearities improve neural network acoustic models.
+\newblock In S.~Dasgupta and D.~McAllester (editors), \emph{Proceedings of the
+  30th International Conference on Machine Learning}, volume~28. PMLR, Atlanta,
+  Georgia, USA (2013).
+
+\bibitem{adam}
+Kingma, D.P. and Ba, J.
+\newblock Adam: {A} method for stochastic optimization.
+\newblock \emph{CoRR}, abs/1412.6980 (2014).
+
+\bibitem{tf}
+Abadi, M., et~al.
+\newblock Tensorflow: Large-scale machine learning on heterogeneous distributed
+  systems (2015).
+
+\bibitem{arjovsky2017a}
+{Arjovsky}, M. and {Bottou}, L.
+\newblock {Towards Principled Methods for Training Generative Adversarial
+  Networks}.
+\newblock \emph{ArXiv e-prints} (2017).
+
+\bibitem{theis2015}
+{Theis}, L., {van den Oord}, A., and {Bethge}, M.
+\newblock {A note on the evaluation of generative models}.
+\newblock \emph{ArXiv e-prints} (2015).
+
+\bibitem{wgan}
+{Arjovsky}, M., {Chintala}, S., and {Bottou}, L.
+\newblock {Wasserstein GAN}.
+\newblock \emph{ArXiv e-prints} (2017).
+
+\bibitem{ROOT}
+Brun, R. and Rademakers, F.
+\newblock Root — an object oriented data analysis framework.
+\newblock \emph{Nuclear Instruments and Methods in Physics Research Section A:
+  Accelerators, Spectrometers, Detectors and Associated Equipment}, 389(1), 81
+  -- 86 (1997).
+\newblock \doi{https://doi.org/10.1016/S0168-9002(97)00048-X}.
+\newblock New Computing Techniques in Physics Research V.
+
+\bibitem{scipy}
+Jones, E., et~al.
+\newblock {SciPy}: Open source scientific tools for {Python} (2001--).
+
+\bibitem{CFHTLenS-PS}
+{Liu}, J., et~al.
+\newblock {Cosmology constraints from the weak lensing peak counts and the
+  power spectrum in CFHTLenS data}.
+\newblock \emph{Physics Review D}, 91(6), 063507 (2015).
+\newblock \doi{10.1103/PhysRevD.91.063507}.
+
+\bibitem{DES-PS}
+{Abbott}, T., et~al.
+\newblock {Cosmology from cosmic shear with Dark Energy Survey Science
+  Verification data}.
+\newblock \emph{Physics Review D}, 94(2), 022001 (2016).
+\newblock \doi{10.1103/PhysRevD.94.022001}.
+
+\bibitem{DLS-PS}
+{Jee}, M.J., et~al.
+\newblock {Cosmic Shear Results from the Deep Lens Survey. I. Joint Constraints
+  on {$\Omega$}$_{ M }$ and {$\sigma$}$_{8}$ with a Two-dimensional Analysis}.
+\newblock \emph{Astrophysics Journal}, 765, 74 (2013).
+\newblock \doi{10.1088/0004-637X/765/1/74}.
+
+\bibitem{lenstools}
+Petri, A.
+\newblock Mocking the weak lensing universe: The lenstools python computing
+  package.
+\newblock \emph{Astronomy and Computing}, 17, 73 -- 79 (2016).
+\newblock \doi{https://doi.org/10.1016/j.ascom.2016.06.001}.
+
+\bibitem{minkowski}
+{Mecke}, K.R., {Buchert}, T., and {Wagner}, H.
+\newblock {Robust morphological measures for large-scale structure in the
+  Universe}.
+\newblock \emph{Astronomy and Astrophysics}, 288, 697--704 (1994).
+
+\bibitem{CFHTLenS-MF}
+{Petri}, A., et~al.
+\newblock {Emulating the CFHTLenS weak lensing data: Cosmological constraints
+  from moments and Minkowski functionals}.
+\newblock \emph{Physics Review D}, 91(10), 103511 (2015).
+\newblock \doi{10.1103/PhysRevD.91.103511}.
+
+\bibitem{slerp}
+White, T.
+\newblock Sampling generative networks: Notes on a few effective techniques.
+\newblock \emph{CoRR}, abs/1609.04468 (2016).
+
+\bibitem{bdayp}
+Arora, S. and Zhang, Y.
+\newblock Do gans actually learn the distribution? an empirical study.
+\newblock \emph{CoRR}, abs/1706.08224 (2017).
+
+\bibitem{bourgan}
+Xiao, C., Zhong, P., and Zheng, C.
+\newblock Bourgan: Generative networks with metric embeddings.
+\newblock \emph{CoRR}, abs/1805.07674 (2018).
+
+\bibitem{ravanbakhsh}
+Ravanbakhsh, S., et~al.
+\newblock {Enabling Dark Energy Science with Deep Generative Models of Galaxy
+  Images}.
+\newblock \emph{arXiv:1609.05796"} (2016).
+
+\bibitem{calogan1}
+de~Oliveira, L., Paganini, M., and Nachman, B.
+\newblock {Learning Particle Physics by Example: Location-Aware Generative
+  Adversarial Networks for Physics Synthesis}.
+\newblock \emph{arXiv:1701.05927} (2017).
+
+\bibitem{calogan2}
+Paganini, M., de~Oliveira, L., and Nachman, B.
+\newblock {CaloGAN: Simulating 3D High Energy Particle Showers in Multi-Layer
+  Electromagnetic Calorimeters with Generative Adversarial Networks}.
+\newblock \emph{arXiv:1705.02355} (2017).
+
+\bibitem{mosser2017reconstruction}
+Mosser, L., Dubrule, O., and Blunt, M.J.
+\newblock Reconstruction of three-dimensional porous media using generative
+  adversarial neural networks.
+\newblock \emph{arXiv:1704.03225} (2017).
+
+\bibitem{Salimans2016}
+Salimans, T., et~al.
+\newblock Improved techniques for training gans.
+\newblock \emph{CoRR}, abs/1606.03498 (2016).
+
+\bibitem{cgan}
+Mirza, M. and Osindero, S.
+\newblock Conditional generative adversarial nets.
+\newblock \emph{CoRR}, abs/1411.1784 (2014).
+
+\bibitem{distill-feature-wise}
+Dumoulin, V., et~al.
+\newblock Feature-wise transformations.
+\newblock \emph{Distill} (2018).
+\newblock \doi{10.23915/distill.00011}.
+\newblock Https://distill.pub/2018/feature-wise-transformations.
+
+\end{thebibliography}
