@@ -22,7 +22,7 @@ allcolors=blue]{hyperref}
 
 \usepackage[normalem]{ulem}
 %\usepackage[switch]{lineno} \linenumbers
-\usepackage{amsmath,amsfonts,amssymb}       % blackboard math symbols
+\usepackage{amsmath,amsfonts,amssymb}  % blackboard math symbols
 \usepackage{bm}
 \usepackage{color}
 \usepackage{fancyhdr}
@@ -54,17 +54,35 @@ allcolors=blue]{hyperref}
 \author[1]{Christopher Messenger}
 \author[1]{Martin Hendry}
 \affil[1]{Institute for Gravitational Research, School of Physics and Astronomy, University of Glasgow, G12 8QQ, UK}
-%Institute for Gravitational Research, 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 \date{}
 %\lhead{\textbf{Version $2.7$}}
+
 \twocolumn[
 	\begin{@twocolumnfalse}
 		\maketitle
 		\begin{abstract}
-		    This work presents separate two- and three-dimensional generative frameworks that use Generative Adversarial Networks to create realistic samples of cosmological structure. Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to volumes and projections of size $80 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate a high degree of coherence with their simulated counterparts and the distinction cannot be made visually by human experts. The nature of the separation between generated and N-body simulation samples is quantified with repeated tests of the Kullback-Leibler divergence on ensembles of samples alongside samples with uniformly distributed pixel densities. It is found that the implementations secure a coherence to within the same order of magnitude as a self comparison of the simulation samples. The main advantage of the generative approach to simulating large volumes of cosmological structure is that much less time is required than creating N-body simulations on high performance computing resources. Future explorations of the method that are relevant to the next paradigm in cosmological simulations are also outlined. The most pertinent application being for a generator that can produce samples that maintain high statistical coherence to simulation data at various redshifts. At this stage, the generative artificial intelligence can then be said to be capable of generating an artificial universe.
+		    This work presents separate two- and three-dimensional generative frameworks that use Generative Adversarial 
+		    Networks to create realistic samples of cosmological structure. Provisional samples of the virtual cosmic web 
+		    are obtained from N-body simulation data that is restricted to volumes and projections of size $80 \, h^{-1} 
+		    \, \text{Mpc}$. The generated samples are shown to demonstrate a high degree of coherence with their simulated
+		    counterparts and the distinction cannot be made visually by human experts. The nature of the separation between
+		    generated and N-body simulation samples is quantified with repeated tests of the Kullback-Leibler divergence on
+		    ensembles of samples alongside samples with uniformly distributed pixel densities. It is found that the 
+		    implementations secure a coherence to within the same order of magnitude as a self comparison of the simulation
+		    samples. The main advantage of the generative approach to simulating large volumes of cosmological structure is 
+		    that much less time is required than creating N-body simulations on high performance computing resources. 
+		    Future explorations of the method that are relevant to the next paradigm in cosmological simulations are also 
+		    outlined. The most pertinent application being for a generator that can produce samples that maintain high 
+		    statistical coherence to simulation data at various redshifts. At this stage, the generative artificial 
+		    intelligence can then be said to be capable of generating an artificial universe.
 		
-            %\textit{Nbody data, GANs, coherence, main results, implications and amplications, }
+            %\textit{}
             
 		\end{abstract}
 	\end{@twocolumnfalse}
