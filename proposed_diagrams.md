@@ -8,11 +8,11 @@ Diagrams to be included in the paper.
 ### From thesis
 
 - [x]  scaling
-- [ ]  down-sampling
+- [ ]  down-sampling (re-do)
 - [ ]  Mill simulation
-    - [ ]  sage diagram?
-    - [ ]  GAN game
-- [ ]  GAN diagram
+    - [ ]  sage diagram? (not really necessary)
+    - [x]  GAN game (could save space by omitting this)
+- [x]  GAN diagram (need ACGAN diagram instead)
 
 ---
 
@@ -32,4 +32,4 @@ Diagrams to be included in the paper.
 - [ ]  Loss curve
 - [ ]  KL / KS curve
 - [ ]  KL Trials
-    - [ ]  per class etc ?
+    - [ ]  per class etc ? averaged over classes ?
