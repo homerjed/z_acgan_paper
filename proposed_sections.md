@@ -1,7 +1,7 @@
 # Sections for paper
 
 [x] --> section done
-[x] --> section in progress
+[ ] --> section in progress
 
 ## Sections
 
@@ -27,9 +27,11 @@
     - [ ]  Generating a universe
         - [ ]  redshift interpolation
             - [ ]  latent space navigation
-                - [ ]  maths behind it
+                - [ ] quick intro to the latent space of a generator
+                - [ ] maths behind it
         - [ ]  big universe generating
-            - [ ]  
+            - [ ] describe the basic process
+            - [ ] comment on edge effects 
 6. **Statistics and Diagnostics**
     - [ ]  KL divergences for distributions
     - [ ]  *Cross Correlation* Nbody kit?
