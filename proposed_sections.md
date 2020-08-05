@@ -16,7 +16,7 @@
     - [x]  Rodriguez et al.
     - [x]  Mustafa et al.
 4. **Applications of an artificial universe**
-    1. LIGO *Gray et al.*
+    - [x] LIGO *Gray et al.*
 5. **Methods**
     - [x]  Simulation data
     - [x]  Initial data transformations
@@ -29,6 +29,7 @@
             - [ ]  latent space navigation
                 - [ ] quick intro to the latent space of a generator
                 - [ ] maths behind it
+                - [ ] fixed latent point, variable label
         - [ ]  big universe generating
             - [ ] describe the basic process
             - [ ] comment on edge effects 
@@ -41,7 +42,7 @@
     - [ ]  Universe Generation
         - [ ]  show some sizes
     - [ ]  Simulation Transfer
-        1. talk about different hi/low res simulations being used.
+        - [ ] talk about different hi/low res simulations being used.
 8. **Future work**
     - [ ]  add: redshift extension
     - [ ]  add: latent space structuring (INFOGAN)
