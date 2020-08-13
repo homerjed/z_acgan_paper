@@ -67,20 +67,21 @@ allcolors=blue]{hyperref}
 	\begin{@twocolumnfalse}
 		\maketitle
 		\begin{abstract}
-		    This work presents separate two- and three-dimensional generative frameworks that use Generative Adversarial 
-		    Networks to create realistic samples of cosmological structure. Provisional samples of the virtual cosmic web 
-		    are obtained from N-body simulation data that is restricted to volumes and projections of size $80 \, h^{-1} 
-		    \, \text{Mpc}$. The generated samples are shown to demonstrate a high degree of coherence with their simulated
-		    counterparts and the distinction cannot be made visually by human experts. The nature of the separation between
-		    generated and N-body simulation samples is quantified with repeated tests of the Kullback-Leibler divergence on
-		    ensembles of samples alongside samples with uniformly distributed pixel densities. It is found that the 
-		    implementations secure a coherence to within the same order of magnitude as a self comparison of the simulation
-		    samples. The main advantage of the generative approach to simulating large volumes of cosmological structure is 
-		    that much less time is required than creating N-body simulations on high performance computing resources. 
-		    Future explorations of the method that are relevant to the next paradigm in cosmological simulations are also 
-		    outlined. The most pertinent application being for a generator that can produce samples that maintain high 
-		    statistical coherence to simulation data at various redshifts. At this stage, the generative artificial 
-		    intelligence can then be said to be capable of generating an artificial universe.
+		    This work presents a three-dimensional generative framework that uses an Auxiliary Classifier Generative
+		    Adversarial Network to create realistic samples of cosmological structure at various values of redshift~$z$. Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to 
+		    volumes and projections of size $200 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate
+		    a high degree of coherence with their simulated counterparts and the distinction is difficult to make visually
+		    by human experts. The nature of the separation between generated and N-body simulation samples is quantified 
+		    with repeated tests of the Kullback-Leibler divergence on ensembles of samples alongside samples with 
+		    uniformly distributed pixel densities. It is found that the implementations secure a coherence to within the
+		    same order of magnitude as a self comparison of the simulation samples. The main advantage of the generative
+		    approach to simulating large volumes of cosmological structure is that much less time is required than 
+		    creating N-body simulations on high performance computing resources. This is demonstrated by the creation of
+		    large box volumes made with $\sim10^3$ generated samples for a redshift $z$ arranged on a cubic mesh. At this 
+		    stage, the generative artificial intelligence can then be said to be capable of generating an artificial 
+		    universe. Future explorations of the method that are relevant to the next paradigm in cosmological simulations 
+		    are also outlined. 
+		  %  The most pertinent application being for a generator that can produce samples that maintain high statistical coherence to simulation data at various redshifts. 
 		
             %\textit{}
             
@@ -98,9 +99,11 @@ allcolors=blue]{hyperref}
 \tableofcontents
 \endgroup
 \newpage
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}
 Beyond the distance scales of galactic diameters, toward the sizes of galaxy clusters and beyond, matter in the Universe 
 appears as a webbed structure of filaments across volumes of emptiness known as voids. This network of luminous formation 
@@ -208,9 +211,12 @@ networks at their opposing objectives. The metric that describes the performance
 the model and data distributions. There is no need for a validation subset external to the training data because the 
 generator does not have direct access to the training data. This is not the case for singular deep learning networks.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Generative adversarial learning}
 % introduce adversarial relation / game between D and G
-The discriminator and the generator are neural networks and each network tries to reduce their own objective function. 
+The discriminator and the generator are neural networks that each network try to reduce their own objective function. 
 This adversarial relationship is a game between the models rather than two optimisation problems. The optimum in this 
 case is a Nash equilibrium~\cite{NIPS16} rather than a local minimum given by optimisation in the case of a singular 
 neural network. In this equilibrium the returns of the objective functions only change by indirect influence of the 
@@ -297,7 +303,8 @@ $G(\mathbf{z})$ is drawn from $p_{data}$. This means the discriminator classific
 $\bm{\theta}^{(G)*}$ is 
 
 \begin{equation}
-    \bm{\theta}^{(G)*} = \argmin_{\mathbf{\theta}^{(G)}}\max_{\mathbf{\theta}^{(D)}}V({\mathbf{\theta}^{(D)}},{\mathbf{\theta}^{(G)}})
+    \bm{\theta}^{(G)*} = \argmin_{\mathbf{\theta}^{(G)}}\max_{\mathbf{\theta}^{(D)}}
+                          V({\mathbf{\theta}^{(D)}},{\mathbf{\theta}^{(G)}})
 \end{equation}
 
 This motivates the generator to increase the likelihood of the discriminator incorrectly classifying a sample. The 
@@ -307,12 +314,12 @@ they are points that simultaneously minimise the objective functions $J^{(D)}$ a
 the parameter space via SGD of the value function, there is no guarantee of a Nash equilibrium, this is part of what makes 
 training an adversarial network a difficult task.
 
-The cross-entropy for the discriminator classification of a sample against the true label of the sample is numerically 
-effective for a GAN in practice because this objective does not saturate for an incorrect identification. Because the 
-networks try to minimize their opposing objectives, if the discriminators performance increases enough, the generator 
-objective function tends to zero. This causes the generator performance to become static. At all points in the parameter 
-space the generator objective minimization is guided by the gradients from backpropagation which will reduce to zero. At 
-this point the discriminator cannot improve and less information is back-propagated through the networks.
+% The cross-entropy for the discriminator classification of a sample against the true label of the sample is numerically 
+% effective for a GAN in practice because this objective does not saturate for an incorrect identification. Because the 
+% networks try to minimize their opposing objectives, if the discriminators performance increases enough, the generator 
+% objective function tends to zero. This causes the generator performance to become static. At all points in the parameter 
+% space the generator objective minimization is guided by the gradients from backpropagation which will reduce to zero. At 
+% this point the discriminator cannot improve and less information is back-propagated through the networks.
 
 The solution, shown in~\cite{gf_gan}, is to deviate from the zero-sum ideal by inverting the target used to create the 
 cross-entropy objective function for the generator. The generator's objective function becomes
@@ -338,6 +345,9 @@ classification~\cite{dcnn}. Despite most of the architectural features, such as 
 learning models prior to this publication the DCGAN architecture improved previous GAN architectures for increased 
 performance in image generation tasks. The models in the methods of this work borrow from the ideas of this architectural 
 basis.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Auxiliary-Classifier GANs}
 The ability to generate different classes of an object does not require separate and independent GANs. The GAN framework 
@@ -365,6 +375,15 @@ likelihood of a correct source $L_S$ and the log-likelihood of the correct class
 \end{eqnarray}
 
 In this case $D$ tries to maximize $L_S + L_C$ and $G$ tries to minimise $L_C + L_S$.
+
+% Label embedding, one hot encoding, cross entropy
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Fourier Transform ACGAN (FT-ACGAN)}
+% write this if I get it to work
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -416,7 +435,6 @@ distributions that are native to different cosmological datasets.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \section{Applications of an artificial universe}\label{sec:universe_applications}
 % WHY IS THIS IMPORTANT, WHAT COULD IT BE FOR, WHAT RESEARCH WILL COME OF IT 
 
@@ -440,7 +458,7 @@ three-hundred years (CPU time) for the Millennium simulation.\footnotemark.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Gravitational wave sources} % Rachel Gray paper
+\subsection{Gravitational wave sources} % Rachel Gray et al. paper
 Measurements of cosmological parameters from observations of gravitational wave events are independent of the 
 electromagnetic (EM) spectrum and any obstacles to the transmission of EM radiation. Because these measurements 
 do not use EM radiation, they provide alternative estimates that do not depend on cosmological distance 
@@ -521,7 +539,11 @@ new discoveries in astrophysics.
 
 \section{Methods}\label{sec:methods}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection{Simulation data}
+% Basic intro to Cosmology simulations, describe simulation being used, redshift details
 Hydrodynamical simulations of particles with masses on the order of a typical galaxy are the best way to emulate 
 cosmological phenomena for testing without observational complications. Cosmological simulations model the physics in 
 the evolution of baryonic and dark-matter in a self-consistent way that does not depend on observations.
@@ -547,7 +569,8 @@ data for the ACGAN.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Extraction of training data} % TRAINING DATA MANUFACTURE AND PREPROCESSING
+\subsection{Extraction of training data} 
+% TRAINING DATA AND PREPROCESSING
 Position vector components for the centres of cube samples in the simulation volume were drawn from a uniform distribution 
 along each axis of each redshift-snapshot. If the addition or subtraction of half the side length of the cube to any of 
 the components resulted in a point outside of the simulation volume, the point was discarded. The galaxy cube samples were 
@@ -566,6 +589,9 @@ The densities in each bin cell were also scaled to this range to fit the output 
 image $x$ and on the right is a scaled image $s(x)$.}
 \label{fig:scaling}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Initial data transformations} 
 The 3D-histograms have pixel densities that span across many orders of magnitude from voids to dense clusters of galaxies 
@@ -652,9 +678,9 @@ applied to obtain the original image.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textit{Architecture} --- 
-Table~\ref{table:3dgan_archi} of Appendix~\ref{appendix:gan_setups} shows the architectures of the 3D-GAN discriminator 
-and generator models. The hyper-parameters used in the 3D-GAN are also given in Table~\ref{table:3dgan_params} of 
-Appendix~\ref{appendix:gan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
+Table~\ref{table:3dgan_archi} of Appendix~\ref{appendix:gan_setups} shows the architectures of the ACGAN discriminator 
+and generator models. The hyper-parameters used in the ACGAN are also given in Table~\ref{table:acgan_params} of 
+Appendix~\ref{appendix:acgan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
 parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers 
 for the discriminator model. \\
 
@@ -663,25 +689,25 @@ for the discriminator model. \\
 The networks follow the structuring of the DCGAN models~\cite{dcgan} and are written in Tensorflow~\cite{tensorflow} and 
 Keras~\cite{keras}. The generator transforms a 256-dimensional vector drawn from a Gaussian prior $\mathbf{z}\sim 
 \mathcal{N}(0,1)$ into a $32 \times 32 \times 32$ single-channel image. The latent-space vector is followed by a fully 
-connected layerthat is reshaped to a stack of feature maps for the convolutional layers. 
+connected layer that is reshaped to a stack of feature maps for the convolutional layers. 
 % Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} 
 % for more detail on batch-normalisation and activation functions. 
+}
 
-The 3D-ACGAN implementation was limited by the GPU memory capacity - the parameters and architectures together with the 
+The ACGAN implementation was limited by the GPU memory capacity - the parameters and architectures together with the 
 sample batch sizes meant that the GPU was easily saturated. Deeper models with more convolutional units were implemented 
-but these tended to stall the GPU. A training loop for $10^5$ epochs for the $160 \: h^{-1}\: \textup{Mpc}$ cubes 
+but these tended to stall the GPU. A training loop for $10^5$ epochs for the $200 \: h^{-1}\: \textup{Mpc}$ cubes 
 formatted to $32 \times 32 \times 32$ pixel histograms took approximately 72 hours on an NVIDIA Tesla V100 GPU with 
 32GB capacity. 
-}
 
 Generative adversarial networks are harder to train with three-dimensional input data because of the increase in the 
 number of configurations of interest in the data. There are a number of tricks and techniques for moving toward more 
-convergent and stable training. A compilation of these resulted from testing GANs in natural image tasks. The techniques 
-that were used to train the 3D-GAN in this work were one-sided label smoothing, historical averaging and a decaying noise 
+convergent and stable training. A compilation of these has resulted from testing GANs in natural image tasks. The techniques
+that were used to train the ACGAN in this work were one-sided label smoothing, historical averaging and a decaying noise 
 input which were borrowed from~\cite{gantricks_sali, gan_noise_decay}. The exact implementations stem only from the 
 original theoretical basis. One-sided label smoothing adds scalar values sampled from a uniform distribution $\mathcal{U}
-(-0.1,0)$ to the real labels only. Historical averaging adds a penalty $L_H$ to the objective functions of the discriminator
-and generator. The addition is
+(-0.1,0)$ to the real labels only. Historical averaging~\cite{gantricks_sali} adds a penalty $L_H$ to the objective functions 
+of the discriminator and generator. The addition is
 
 \begin{equation}
     L_H = \Bigl\lvert\Bigl\lvert \, \bm{\theta} - \frac{1}{t} \sum_i^t\bm{\theta}[i] \,  \Bigr\rvert\Bigr\rvert^2
@@ -697,10 +723,8 @@ samples. The Gaussian noise $\mathbf{n}$ has standard deviation $\sigma_i$ that 
     \mathbf{n} \sim \mathcal{N}(0,\sigma_i), \: \: \sigma_i = A \textup{e}^{-\gamma i}
 \end{equation}
 
-where the free parameters $A=10^{-2}$ and $\gamma=10^{-3}$ were found to work well. These techniques were not necessary in 
-the 2D-GAN implementation. This is likely due to the relative information content between the 2D and 3D samples. Diluting 
-the real and fake batches of samples to $1\%$ of the batch-size with the opposite validity of samples helped the training 
-process stabilise.
+where the free parameters $A=10^{-2}$ and $\gamma=10^{-3}$ were found to work well. Diluting the real and fake batches of 
+samples to $1\%$ of the batch-size with the opposite validity of samples helped the training process stabilise.
 
 Minibatch discrimination~\cite{gantricks_sali} was implemented to help avoid mode collapse by discriminating over a 
 collection of samples given to the discriminator as opposed to a single sample at a time. The original work describes 
@@ -737,7 +761,8 @@ shown. This model is nothing more than a classification neural network that is c
 convolutions of the discriminator model. The model is optimised together with the discriminator using a sparse categorical
 cross entropy function that calculates the cross entropy between two one-hot-encoded classification vectors that pertain 
 to the class of an image. In practice a softmax activation function is used, which defines a discrete probability 
-distribution over the discrete class labels.
+distribution over the class labels for each redshift value. 
+% This auxiliary classifier model is optimised and trained externally to the discriminator and generator models.
 
 % \begin{figure*}[!ht]%[hbt!]
 % \includegraphics[width=16.5cm]{figures/cubes/t_g_3d2d_2.png}
@@ -748,13 +773,62 @@ distribution over the discrete class labels.
 % \label{fig:3dgan_2dimgs}
 % \end{figure*}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generating a universe}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% {\setlength{\parindent}{0cm}
+% \textit{Redshift interpolation} --- 
+% To observe the A fixed point in the latent space is chosen and 
+% }
+\subsubsection{Redshift interpolation}
+% talk about what this is in our method, what comes out of doing it 
+The latent space of a generator in a typical GAN framework stores a compressed representation of the statistical structure
+of the distribution of the real data. By choosing different points in this space and supplying them to the generator, 
+samples can be derived with different characteristics that have been extracted from the training process of the discriminator
+and generator models.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+An array of latent-space vectors and class labels of a given redshift are passed to the trained ACGAN generator to create a
+collection of cube samples. These are placed together face-to-face to create larger samples of cosmic structure. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Latent space navigation}
+% show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
+In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is less than the total parameters that constitute the training set. This means the discriminator and generator must find 
+condensed representations of the training data. The generator model is sampled from a set of latent variables in the latent
+space. Vector space arithmetic with points in the latent space allows interpolation between tenable examples of learned 
+representations of the training data the GAN is exposed to in training. 
+% With the inherent structuring of the latent space by GANs, these operations can allow complex 
+
+Interpolation is the transit between two distinct points in the latent space. In this work, spherical interpolation is used
+as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation uses a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by % (Shoemake 85)
+
+\begin{equation}
+    S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
+\end{equation}
+
+where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples with. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Building larger volumes from generated samples}
+% say how the larger volumes are made from smaller generated cubes, talk about 
+A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial generated cube side-lengths). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Statistics and diagnostics}\label{sec:stats_and_diags}
-% WHAT ARE THESE MEASURES FOR? WHY ARE THEY IMPORTANT TO THE EXPERIMENT ? WHAT DO THE STATS CONSITS OF IN MAKING? WHAT DO THEY SHOW?
+% WHAT ARE THESE MEASURES FOR? WHY ARE THEY IMPORTANT TO THE EXPERIMENT ? 
+% WHAT DO THE STATS CONSIST OF IN MAKING? WHAT DO THEY SHOW?
+
 \subsection{Comparison of distributions with Kullback-Leibler Divergences}
 Generative Adversarial Networks reduce the difference of the model probability distribution between the generated samples 
 $p_{model}$ and the probability distribution of the training data samples $p_{data}$. This reduction quantifies how well 
@@ -775,9 +849,11 @@ its relevance to the comparisons is defined in Appendix~\ref{appendix:kl_div}.
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/diagrams/kl_stat_process3.png}
 \centering
-\caption{From a single ensemble of 3D-histograms to a normalised distribution; (a) - an ensemble of 3D-histograms that 
-will be transformed into a distribution, (b) - the flattened vector of bin-cells, (c) - the histograms of each 
-vector-component, (d) - the final collapsed vector encoding the whole of a given distribution of 3D-histograms.}
+\caption{From a single ensemble of 3D-histograms to a normalised distribution; 
+         (a) - an ensemble of 3D-histograms that will be transformed into a distribution, 
+         (b) - the flattened vector of bin-cells, 
+         (c) - the histograms of each vector-component, 
+         (d) - the final collapsed vector encoding the whole of a given distribution of 3D-histograms.}
 \label{fig:klstat}
 \end{figure}
 
@@ -823,6 +899,12 @@ histograms for each comparison were made. This process was repeated for each ker
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Power spectrum correlation}
+% I have a code to generate power spectra for a set of cubes. compare training / generated / uniform spectra?
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}\label{sec:results}
@@ -830,7 +912,36 @@ histograms for each comparison were made. This process was repeated for each ker
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
 \subsection{Generated images}
+% show generated images at various redshifts, compare with training data
+
+\begin{figure*}[hbt!]
+\includegraphics[width=15cm]{figures/cubes/classes3d.jpg}
+\centering
+\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the redshift value given above each cube. The scaling $s(x)$ is applied to each cube $x$.}
+\label{fig:gan_game}
+\end{figure*}
+
+\subsubsection{Redshift interpolation}
+% show grid of cubes ranging from z=0 to z=(highest z in training data classes)
+
+\subsubsection{Universe generation}
+% show three scales (side lengths in terms of generated cubes - e.g. 7, 9, 11) of generated-cube-universes. 
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/cubes/mill_box_3.png}
+\centering
+\caption{A box made of generated cubes at redshift $z=3.19$}
+\label{fig:kernel_fig}
+\end{figure}
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/cubes/gen_box_9_z3.png}
+\centering
+\caption{A box made of generated cubes at redshift $z=3.0$.}
+\label{fig:kernel_fig}
+\end{figure}
 
 % \subsubsection{2D-GAN images}
 
@@ -965,6 +1076,7 @@ histograms for each comparison were made. This process was repeated for each ker
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{KL trials}\label{sec:kl_trials}
+% do the same as before (in thesis) but average over classes?
 
 % This section presents the results of the procedure for the repeated ensemble KL divergence testing. transformed into 
 % probability distributions over the pixel density. This comparison is repeated over 100 iterations 
@@ -1112,24 +1224,24 @@ number of pixels in the cubes, allowing the depth of the models to increase with
 the variance in the structure inside the histograms. It has been found that in amplifying the initial parameterised units 
 in the first layer of the generator model requires that there are at least $\sim \! 10^4$ units in the 3D case. The use of
 fewer units does not allow the generator to draw enough permutations from the potentials  `proto-cubes' allowed by the 
-initial layer. The kernels in the convolutional layers were found to be most effective at size $5 \times 5 \times 5$ in 
-the 3D case and the equivalent for the 2D case. Though it is expected that some combination of higher kernel sizes would 
-better characterise the histogram structures. 
+initial layer. The kernels in the convolutional layers were found to be most effective at size $5 \times 5 \times 5$. 
+Though it is expected that some combination of higher kernel sizes would better characterise the histogram structures. 
 
 A larger original simulation with which to sample training data would help the networks process differences between 
 individual samples. The larger volume would give more homogeneous samples with less variance in the summary statistics 
-per sample. The means, total densities and variances of the pixel distributions in each cube were calculated in each 
-iteration of training. Monitoring these statistics showed that the their variance was up to 10\% of their total values 
-each. Increasing the homogeneity of the samples would decrease this value. The sizes of the samples relative to the 
-original simulation volume could also be increased from the tested value to increase the homogeneity of the samples. 
-Increasing the sample cube size would also allow the $D_{KL}$ testing to consider more varied structure in the kernel 
-sizes. 
+per sample. 
+% The means, total densities and variances of the pixel distributions in each cube were calculated in each 
+% iteration of training. Monitoring these statistics showed that the their variance was up to 10\% of their total values 
+% each. Increasing the homogeneity of the samples would decrease this value. 
+The sizes of the samples relative to the original simulation volume could also be increased from the tested value to
+increase the homogeneity of the samples. Increasing the sample cube size would also allow the $D_{KL}$ testing to consider
+more varied structure in the kernel sizes. 
 
-The $D_{KL}$ trials could be repeated to compare the 3D two-dimensional cube projections with the 2D generated images 
-and training data. This would connect the results of the separate 2D and 3D implementations. For both of the 
-implementations the $p_{KS}$ testing could have been repeated in the same way as the $D_{KL}$ tests to give more 
-understanding of the differences between the distributions. In this work the $p_{KS}$-values would be better understood
-if they were compared to other distribution comparison $p_{KS}$-values.
+% The $D_{KL}$ trials could be repeated to compare the 3D two-dimensional cube projections with the 2D generated images 
+% and training data. This would connect the results of the separate 2D and 3D implementations. For both of the 
+% implementations the $p_{KS}$ testing could have been repeated in the same way as the $D_{KL}$ tests to give more 
+% understanding of the differences between the distributions. In this work the $p_{KS}$-values would be better understood
+% if they were compared to other distribution comparison $p_{KS}$-values.
 
 The other available galaxy properties from the Millennium-SAGE catalogs could also be folded into the generator analysis
 to create distributions weighted by luminosity or another characteristic. 
@@ -1150,28 +1262,33 @@ to create distributions weighted by luminosity or another characteristic.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Redshift and structure interpolation} The latent space from which the generator model samples noise-vectors
-to change into samples from the model distribution encodes informative features in the natural data samples. This latent
-space can be navigated, typically along the separate axes, to interpolate through the features. This could be implemented
-in the latent space of an ACGAN that is trained on data with different redshifts to interpolate between different values
-of redshift in an inexpensive procedure. This interpolation may hold the ability to evolve a collection of samples 
-simultaneously by interpolating through redshift values in a continuous way. The problem of mode collapse for the 
-generator model could be estimated by interpolating the latent space to create a sample of images to test with each other
-for similarity. A simple test would be to create the mean-image of this sample to test for overlaps but more advanced 
-cross-correlations could show more detail of the overlaps.  
+\subsection{Redshift and structure interpolation} 
+The latent space from which the generator model samples noise-vectors to change into samples from the model distribution 
+encodes informative features in the natural data samples. This latent space can be navigated, typically along the separate 
+axes, to interpolate through the features. This could be implemented in the latent space of an ACGAN that is trained on 
+data with different redshifts to interpolate between different values of redshift in an inexpensive procedure. This 
+interpolation may hold the ability to evolve a collection of samples simultaneously by interpolating through redshift 
+values in a continuous way. The problem of mode collapse for the generator model could be estimated by interpolating the 
+latent space to create a sample of images to test with each other for similarity. A simple test would be to create the 
+mean-image of this sample to test for overlaps but more advanced cross-correlations could show more detail of the overlaps.  
 
-\subsection{Universe generation} To create a cosmological volume on order of the size of the Millennium-SAGE volume, with 
-the tested default cube-size, a generator would need to create around $10^2$ cubes. The generator model in this work once
-trained can do so within 30 seconds. Whilst in the process of fusing the samples together coherently avoiding density 
-discontinuities would not be a trivial task. It is logical to assume that it is a process that is maximally as intensive 
-as generating the cubes themselves. It is expected that the GAN would be able to generalise well to higher resolution or 
-larger volume sample data.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Universe generation} 
+To create a cosmological volume on order of the size of the Millennium-SAGE volume, with the tested default cube-size, a 
+generator would need to create around $10^2$ cubes. The generator model in this work once trained can do so within 30 
+seconds. Whilst in the process of fusing the samples together coherently avoiding density discontinuities would not be a 
+trivial task. It is logical to assume that it is a process that is maximally as intensive as generating the cubes 
+themselves. It is expected that the GAN would be able to generalise well to higher resolution or larger volume sample data.  
 
 The scaled volumes produced by the GAN require the value of the total number of galaxies contained in the cubes to 
 transform the cubes back into coordinate tensors. This would be done by uniformly distributing the number of galaxy 
 positions required for each histogram cell into each cell. The value of the total number of galaxies can be passed to 
 the GAN framework and detached to a separate `route' in the models. This value, like the histogram cells, would be 
 correctly posited just as the histograms are in training. 
+
+% Find a way to co-interpolate a massive volume of cubes between different redshifts
 
 
 % \subsection{Generative variants}
@@ -1255,6 +1372,14 @@ An important task for this method is to estimate the potential for replacing sim
 generator is a fit to the simulation data and sampling a fit does not generate statistically independent samples. In the 
 application of generating a large volume of generated samples it is possible this would not be an issue if the factor of 
 the increase in the total generated volume was not too large.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Structuring the latent space}
+% as in INFOGAN. I might be able to do this for this ACGAN. Would be really good.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
