@@ -68,7 +68,8 @@ allcolors=blue]{hyperref}
 		\maketitle
 		\begin{abstract}
 		    This work presents a three-dimensional generative framework that uses an Auxiliary Classifier Generative
-		    Adversarial Network to create realistic samples of cosmological structure at various values of redshift~$z$. Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to 
+		    Adversarial Network to create realistic samples of cosmological structure at various values of redshift~$z$. 
+		    Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to 
 		    volumes and projections of size $200 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate
 		    a high degree of coherence with their simulated counterparts and the distinction is difficult to make visually
 		    by human experts. The nature of the separation between generated and N-body simulation samples is quantified 
@@ -81,7 +82,8 @@ allcolors=blue]{hyperref}
 		    stage, the generative artificial intelligence can then be said to be capable of generating an artificial 
 		    universe. Future explorations of the method that are relevant to the next paradigm in cosmological simulations 
 		    are also outlined. 
-		  %  The most pertinent application being for a generator that can produce samples that maintain high statistical coherence to simulation data at various redshifts. 
+		  %  The most pertinent application being for a generator that can produce samples that maintain high statistical 
+		  %coherence to simulation data at various redshifts. 
 		
             %\textit{}
             
@@ -799,14 +801,17 @@ collection of cube samples. These are placed together face-to-face to create lar
 
 \subsubsection{Latent space navigation}
 % show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
-In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is less than the total parameters that constitute the training set. This means the discriminator and generator must find 
-condensed representations of the training data. The generator model is sampled from a set of latent variables in the latent
-space. Vector space arithmetic with points in the latent space allows interpolation between tenable examples of learned 
+In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is less 
+than the total parameters that constitute the training set. This means the discriminator and generator must find condensed 
+representations of the training data. The generator model is sampled from a set of latent variables in the latent space. 
+Vector space arithmetic with points in the latent space allows interpolation between tenable examples of learned 
 representations of the training data the GAN is exposed to in training. 
 % With the inherent structuring of the latent space by GANs, these operations can allow complex 
 
 Interpolation is the transit between two distinct points in the latent space. In this work, spherical interpolation is used
-as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation uses a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by % (Shoemake 85)
+as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in 
+this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation uses a great circle arc on the 
+N-dimensional hypersphere in the latent space, with a path given by % (Shoemake 85)
 
 \begin{equation}
     S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
@@ -819,7 +824,10 @@ where a discrete set of points between points $q_1$ and $q_2$ are passed to the 
 
 \subsubsection{Building larger volumes from generated samples}
 % say how the larger volumes are made from smaller generated cubes, talk about 
-A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial generated cube side-lengths). 
+A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ drawn 
+from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic mesh to 
+create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial generated 
+cube side-lengths). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -919,7 +927,8 @@ histograms for each comparison were made. This process was repeated for each ker
 \begin{figure*}[hbt!]
 \includegraphics[width=15cm]{figures/cubes/classes3d.jpg}
 \centering
-\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the redshift value given above each cube. The scaling $s(x)$ is applied to each cube $x$.}
+\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the 
+	 redshift value given above each cube. The scaling $s(x)$ is applied to each cube $x$.}
 \label{fig:gan_game}
 \end{figure*}
 
@@ -1105,7 +1114,8 @@ histograms for each comparison were made. This process was repeated for each ker
 % The separate kernels cause averaging over different sized areas in the 2D case (volumes in the 3D case). By 
 % construction the histograms are already sampling a volume at a fixed resolution for every distribution and so the kernel
 % sizes give the same volume at different levels of resolution. A histogram from any distribution with each kernel 
-% down-sampling will exhibit different scales of structure from the original unsampled histogram and this is shown in Figure~\ref{fig:kernel_fig}. The ensembles drawn from each distribution are necessary to measure the difference in the 
+% down-sampling will exhibit different scales of structure from the original unsampled histogram and this is shown in 
+% Figure~\ref{fig:kernel_fig}. The ensembles drawn from each distribution are necessary to measure the difference in the 
 % structure from the distributions that is not inherent in the individual variance of the images themselves. The latter 
 % difference does not concern the distributions of the samples and is less important for the test of the generator capability. 
 
