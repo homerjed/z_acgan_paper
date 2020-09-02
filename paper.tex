@@ -53,7 +53,9 @@ allcolors=blue]{hyperref}
 \author[1]{Jed Homer\thanks{}}
 \author[1]{Christopher Messenger}
 \author[1]{Martin Hendry}
-\affil[1]{Institute for Gravitational Research, School of Physics and Astronomy, University of Glasgow, G12 8QQ, UK}
+\affil[1]{Institute for Gravitational Research, 
+          School of Physics and Astronomy, 
+          University of Glasgow, G12 8QQ, UK}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,7 +72,7 @@ allcolors=blue]{hyperref}
 		    This work presents a three-dimensional generative framework that uses an Auxiliary Classifier Generative
 		    Adversarial Network to create realistic samples of cosmological structure at various values of redshift~$z$. 
 		    Provisional samples of the virtual cosmic web are obtained from N-body simulation data that is restricted to 
-		    volumes and projections of size $200 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate
+		    volumes of size $200 \, h^{-1} \, \text{Mpc}$. The generated samples are shown to demonstrate
 		    a high degree of coherence with their simulated counterparts and the distinction is difficult to make visually
 		    by human experts. The nature of the separation between generated and N-body simulation samples is quantified 
 		    with repeated tests of the Kullback-Leibler divergence on ensembles of samples alongside samples with 
@@ -84,9 +86,7 @@ allcolors=blue]{hyperref}
 		    are also outlined. 
 		  %  The most pertinent application being for a generator that can produce samples that maintain high statistical 
 		  %coherence to simulation data at various redshifts. 
-		
             %\textit{}
-            
 		\end{abstract}
 	\end{@twocolumnfalse}
 ]
@@ -172,10 +172,11 @@ future work and conclusions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}
-\includegraphics[width=\columnwidth]{figures/diagrams/GAN_diagram1.png}
+\includegraphics[width=\columnwidth]{figures/diagrams/ACGAN_diagram_box.png}
 \centering
 \caption{Schematic of the GAN framework; including discriminator and generator networks, the latent-space vector, dataset 
-of samples and the backpropagation feedback to model parameters.}
+         of samples and the backpropagation feedback to model parameters. \textit{Source} and \textit{Class} refer to the
+         values of $p_\mathbf{x}$ and $p_\mathbf{c}$ designated by the discriminator on a sample $\mathbf{x}$.}
 \label{fig:GAN_diagram}
 \end{figure}
 
@@ -197,19 +198,19 @@ maximization objective for $G$ with $\theta^{(D)}=0$ and (c) - the minimization 
 % what are GANs, what do D and G do, how do D and G work, how does this change over training,
 % GANS ARE GOOD, EXAMPLES OF GANS
 
-The type of generative model chosen for the objective of this work was the Generative Adversarial Network (GAN) invented 
-by Goodfellow et al. 2014~\cite{gf_gan}. The successes of GANs are well established in a wide range of applications on 
-natural images~\cite{wgan, karrasgan, largegan} and there are many extensions to GANs that open up a wide range of other
-successful models~\cite{pix2pix, hiresgan, lapgan}. 
+The type of generative model chosen for the objective of this work was the Auxiliary Classifier Generative Adversarial 
+Network (ACGAN) created by Odena et al. 2017~\cite{acgan} which is an extension to the original GAN invented by Goodfellow 
+et al. 2014~\cite{gf_gan}. The successes of GANs are well established in a wide range of applications on natural 
+images~\cite{wgan, karrasgan, largegan} and there are many extensions to GANs that open up a wide range of other successful models~\cite{pix2pix, hiresgan, lapgan}. 
 
 % BASICS: WHAT DO D AND G DO?
 Generative Adversarial Networks consist of two models known as the generator and the discriminator. The generator must 
 create samples that are allegedly drawn from the same distribution as the real samples dataset. The discriminator assigns 
-scalars to a collection of input data and generated samples that represent the probability that each sample is real and 
-from the data distribution $p_{data}$ or fake and from the model distribution  $p_{model}$. The discriminator has access 
-to both real and fake samples. The training of a GAN involves navigating the combined parameter space of the generator 
-and discriminator network parameters to find the optimal value of a function that gives the best performance of the 
-networks at their opposing objectives. The metric that describes the performance is related to the distance between 
+scalars to a collection of input data and generated samples, each representing the probability that a sample is either real 
+and from the data distribution $p_{data}$ or fake and from the model distribution  $p_{model}$. The discriminator has 
+access to both real and fake samples. The training of a GAN involves navigating the combined parameter space of the 
+generator and discriminator network parameters to find the optimal value of a function that gives the best performance of
+the networks at their opposing objectives. The metric that describes the performance is related to the distance between 
 the model and data distributions. There is no need for a validation subset external to the training data because the 
 generator does not have direct access to the training data. This is not the case for singular deep learning networks.
 
@@ -226,7 +227,7 @@ other network and at this stage the gradients for backpropagation to either mode
 
 % WHAT ARE D AND G? HOW DO D AND G WORK?
 The discriminator and generator models can be represented as functions $D$ and $G$ respectively because of their 
-mappings as neural networks and parameter dependencies. The discriminator $D$ has input $\mathbf{x}$ and parameters 
+mappings as neural networks and parameter dependencies. The discriminator $D$ has image input $\mathbf{x}$ and parameters 
 $\bm{\theta}^{(D)}$. The generator $G$ takes a latent space vector $\mathbf{z}$ as input and uses parameters 
 $\bm{\theta}^{(G)}$. Information flows through the network and its parameters to create the outputs $D(\mathbf{x})$ or 
 $D(G(\mathbf{z}))$ for the discriminator and $G(\mathbf{z})$ for the generator. This is the forward-propagation from 
@@ -275,8 +276,8 @@ network are shown at the Nash equilibrium. The game between the models is descri
 \end{eqnarray}
 
 in the combined parameter space. This equation shows the opposition between the maximization of the correct 
-classifications by $D$ and the minimisation of the classifications by $D$ of the generator products that are made 
-by $G$. 
+classifications by $D$ and the minimisation of the correct classifications by $D$ of the generator products that are 
+made by $G$. 
 
 The Nash equilibrium is satisfied by a pair of parameter sets $(\bm{\theta}^{(D)*}, \bm{\theta}^{(G)*})$ for which 
 no further changes occur to the objective functions $J^{(D)}$ and $J^{(G)}$ of both networks~\cite{NIPS16}. 
@@ -314,7 +315,7 @@ discriminator tries to increase its own likelihood of correctly classifying a sa
 cross-entropy objective. The local minima of the value function $V$ are not necessarily Nash equilibrium points, rather
 they are points that simultaneously minimise the objective functions $J^{(D)}$ and $J^{(G)}$. Whilst both networks search 
 the parameter space via SGD of the value function, there is no guarantee of a Nash equilibrium, this is part of what makes 
-training an adversarial network a difficult task.
+training an adversarial model such a difficult task.
 
 % The cross-entropy for the discriminator classification of a sample against the true label of the sample is numerically 
 % effective for a GAN in practice because this objective does not saturate for an incorrect identification. Because the 
@@ -357,34 +358,40 @@ may be supplemented by an auxiliary classifier model that is attached to the dis
 the samples as real and fake, whilst additionally characterising the pre-designated class of the object. This augmented 
 GAN was derived by Odena et al. 2017 \cite{acgan} and is referred to as an Auxiliary Classifier Generative Adversarial 
 Network (ACGAN). The application to this method is that the different redshift data available from N-body simulations can 
-be classified and given to an ACGAN. The generator component of this model can create samples at different redshifts. 
+be classified and given to an ACGAN. The generator component of this model can then create samples at different redshifts. 
 These samples could be tessellated together to form a larger distribution across a continuous range of  redshifts. A very 
 similar method known as a Conditional-GAN (CGAN)~\cite{cgan} is known to work well at the same task.
 
-In the ACGAN framework each generated sample has a corresponding label $c \sim p_c$ and noise vector $\mathbf{z} \sim p_z$ which 
-make the generator create a sample $G(c, \mathbf{z})$. The discriminator $D$ gives probability distributions $P(S|X)$ and $P(C|X) 
-= D(X)$ over the sources of the samples $S$ and class labels $C$. The objective function is made of two parts; the 
-likelihood of a correct source $L_S$ and the log-likelihood of the correct class $L_C$
+In the ACGAN framework each generated sample has a corresponding label $c \sim p_c$ and noise vector $\mathbf{z} \sim p_z$ 
+which make the generator create a sample $G(c, \mathbf{z})$. The discriminator $D$ gives probability distributions $P(S|X)$ 
+and $P(C|X) = D(X)$ over the sources of the samples $S$ and class labels $C$. The objective function is made of two 
+independent parts; the likelihood of a correct source $L_S$ and the log-likelihood of the correct class $L_C$
 
 \begin{eqnarray}
     L_S &=& \EE [\log P(S = \textup{real} | X_{real})] \nonumber \\
-        &+& \EE [\log P(S = \textup{fake} | X_{fake})]
-\end{eqnarray}
-
-\begin{eqnarray}
+        &+& \EE [\log P(S = \textup{fake} | X_{fake})] \\ 
+        & & \nonumber \\ 
     L_C &=& \EE [\log P(C = c | X_{real})] \nonumber \\
         &+& \EE [\log P(C = c | X_{fake})]
 \end{eqnarray}
 
-In this case $D$ tries to maximize $L_S + L_C$ and $G$ tries to minimise $L_C + L_S$.
+In this case $D$ tries to maximize $L_S + L_C$ and $G$ tries to minimise $L_C - L_S$.
 
 % Label embedding, one hot encoding, cross entropy
 
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/diagrams/ACGAN_diagram.png}
+\centering
+\caption{Schematic of the ACGAN framework; including discriminator and generator networks, the latent-space 
+         vector~$\mathbf{z}$, the class label~$\mathbf{c}$, image~$\mathbf{x}$ and the discriminator 
+         classifications of the class and source of an image $p_{\mathbf{x}}$ and $p_\mathbf{c}$.}
+\label{fig:GAN_diagram}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Fourier Transform ACGAN (FT-ACGAN)}
+% \subsection{Fourier Transform ACGAN (FT-ACGAN)}
 % write this if I get it to work
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -565,7 +572,7 @@ Observatory (TAO)~\cite{TAO}. SAGE modelling adds baryonic processes into N-body
 simulations have been run. The baryonic particle properties are from information in the simulation run such as mass, 
 size, spin and their merger history. SAGE models account for different mechanisms that affect the evolutions of 
 galaxies and therefore the evolution of cosmological structure. The N-body particle positions of the Millennium-SAGE 
-data were taken at snapshots at discrete redshifts $z=\{0.0, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
+data were taken at snapshots at discrete redshifts $z=\{0.00, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
 data for the ACGAN. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -577,18 +584,19 @@ Position vector components for the centres of cube samples in the simulation vol
 along each axis of each redshift-snapshot. If the addition or subtraction of half the side length of the cube to any of 
 the components resulted in a point outside of the simulation volume, the point was discarded. The galaxy cube samples were 
 obtained by sorting the position vectors of galaxies in the simulation that were within the cube volume. Each point inside 
-the cube was recorded in an array. From each simulation volume of $512 \: h^{-1} \,\textup{Mpc}$ ensembles of 64 array 
-samples of size $80 \: h^{-1} \,\textup{Mpc}$ were selected. The galaxy positions in each array for every cube were scaled
-to the range $[-1,+1]$. 3D-histograms with 32 bins per axis were made on each cube across the same range for each axis. 
-The densities in each bin cell were also scaled to this range to fit the output ranges of the GAN models. 
+the cube was recorded in an array. The data was augmented by rotating the simulation box through random Euler angles to 
+extend the number of possible unique cubes. From each simulation volume of $512 \: h^{-1} \,\textup{Mpc}$ ensembles of 64 
+array samples of size $200 \: h^{-1} \,\textup{Mpc}$ were selected. The galaxy positions in each array for every cube were 
+scaled to the range $[-1,+1]$. 3D-histograms with 32 bins per axis were made on each cube across the same range for each 
+axis. The densities in each bin cell were also scaled to this range to fit the output ranges of the GAN models. 
 % After testing different sizes, a cube size of $160 \: h^{-1} \,\textup{Mpc}$ was found to balance the selection of unique 
 % samples in the simulation volume against featuring the same features in the simulation structure.
 
 \begin{figure}
-\includegraphics[width=\columnwidth]{figures/diagrams/tt_scaled.png}% scaling2.png
+\includegraphics[width=\columnwidth]{figures/diagrams/scale_fig.png}% scaling2.png
 \centering
 \caption{The application of the scaling $s$ to a 3D-histogram training sample. The cube on the left shows an 
-image $x$ and on the right is a scaled image $s(x)$.}
+image $\mathbf{x}$ and on the right is a scaled image $s(\mathbf{x})$.}
 \label{fig:scaling}
 \end{figure}
 
@@ -597,21 +605,22 @@ image $x$ and on the right is a scaled image $s(x)$.}
 
 \subsection{Initial data transformations} 
 The 3D-histograms have pixel densities that span across many orders of magnitude from voids to dense clusters of galaxies 
-for each redshift value. The origin of GANs from image generation tasks has optimised them for the general statistical 
-structure of these images - the pixel densities in natural images are typically more uniformly distributed over the same 
-scales. To help the GAN in generating sparsely distributed densities a transform, first utilised in~\cite{web_gan}, was 
-used on the histograms to enhance the contrast between the density features. The transform from the original histogram 
-$x$ to the scaled histogram $s(x)$ is 
+for each redshift value. The origin of GANs from image generation tasks has optimised the various architectures present in 
+the literature for the general statistical structure of these images - the pixel densities in natural images are typically 
+more uniformly distributed over the same scales. To help the GAN in generating sparsely distributed densities a transform, 
+first utilised in~\cite{web_gan}, was used on the histograms to enhance the contrast between the density features. The 
+transform from the original histogram $\mathbf{x}$ to the scaled histogram $s(\mathbf{x})$ is 
 
 \begin{equation}
-    s(x) = \frac{2x}{x+a} - 1
+    s(\mathbf{x}) = \frac{\mathbf{x} - a}{\mathbf{x} + a}
 \end{equation}
 
-where $a$ is a free parameter that depends on the sparsity of the histogram densities. The value of $a=1.25$ was found 
-to be optimal for the $160 \:  \: h^{-1} \,\textup{Mpc}$ histograms at all redshifts $z$. This parameter remains fixed 
-during training. The value of $a$ controls the median pixel density of the scaled image. Figure \ref{fig:scaling} shows 
-the difference between scaled images $s(x)$ and the original images $x$. The inverse transformation $s^{-1}(x)$ can be 
-applied to obtain the original image. 
+where $a$ is a free parameter that depends on the sparsity of the histogram densities. This is applied element-wise across 
+the training data for all redshifts $z$. The value of $a=1.25$ was found to be optimal for the 
+$200 \:  \: h^{-1} \,\textup{Mpc}$ histograms at all redshifts $z$. This parameter remains fixed during training. The value 
+of $a$ controls the median pixel density of the scaled image. Figure \ref{fig:scaling} shows the difference between scaled 
+images $s(\mathbf{x})$ and the original images $\mathbf{x}$. The inverse transformation $s^{-1}(\mathbf{x})$ can be applied 
+to obtain the original image. 
 % A logarithmic scaling was used originally, but this did not provide good results with the GAN architecture that used 
 % the hyperbolic tangent ($\tanh$) activation because the logarithm of a negative number is undefined. The models using 
 % $\tanh$ activations achieved much better results than models without these activations.
@@ -680,9 +689,9 @@ applied to obtain the original image.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \textit{Architecture} --- 
-Table~\ref{table:3dgan_archi} of Appendix~\ref{appendix:gan_setups} shows the architectures of the ACGAN discriminator 
+Table~\ref{table:acgan_archi} of Appendix~\ref{appendix:acgan_setup} shows the architectures of the ACGAN discriminator 
 and generator models. The hyper-parameters used in the ACGAN are also given in Table~\ref{table:acgan_params} of 
-Appendix~\ref{appendix:acgan_setups}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
+Appendix~\ref{appendix:acgan_setup}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
 parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers 
 for the discriminator model. \\
 
@@ -698,8 +707,8 @@ connected layer that is reshaped to a stack of feature maps for the convolutiona
 
 The ACGAN implementation was limited by the GPU memory capacity - the parameters and architectures together with the 
 sample batch sizes meant that the GPU was easily saturated. Deeper models with more convolutional units were implemented 
-but these tended to stall the GPU. A training loop for $10^5$ epochs for the $200 \: h^{-1}\: \textup{Mpc}$ cubes 
-formatted to $32 \times 32 \times 32$ pixel histograms took approximately 72 hours on an NVIDIA Tesla V100 GPU with 
+but these tended to stall the GPU. A training loop for $10^5$ epochs for the $200 \: h^{-1} \: \textup{Mpc}$ cubes 
+formatted to $32 \times 32 \times 32$ pixel histograms took approximately 144 hours on an NVIDIA Tesla V100 GPU with 
 32GB capacity. 
 
 Generative adversarial networks are harder to train with three-dimensional input data because of the increase in the 
@@ -785,43 +794,55 @@ distribution over the class labels for each redshift value.
 % \textit{Redshift interpolation} --- 
 % To observe the A fixed point in the latent space is chosen and 
 % }
-\subsubsection{Redshift interpolation}
+\subsubsection{Redshift interpolation}\label{methods:z_interp}
 % talk about what this is in our method, what comes out of doing it 
 The latent space of a generator in a typical GAN framework stores a compressed representation of the statistical structure
 of the distribution of the real data. By choosing different points in this space and supplying them to the generator, 
-samples can be derived with different characteristics that have been extracted from the training process of the discriminator
-and generator models.
+samples can be derived with different characteristics that have been extracted from the training process of the 
+discriminator and generator models.
+
+An array of latent-space vectors and class labels of a given redshift are passed to the trained ACGAN generator to create
+a collection of cube samples. These are placed together face-to-face to create larger samples of cosmic structure. A 
+discussion on the viability of this approach is left to Section~\ref{sec:results}.
+
+In the specific case of interpolating through redshift $z$ values, a single point in the latent-space was chosen. This was 
+repeatedly supplied to the generator with a class label $c$ that was changed by a small amount $\textup{d}c \sim 0.01$. 
+This demonstrates the understanding of the generative model on the relationship between realisations of cosmic structure 
+at different values of $z$. The results of this are left to Section~\ref{sec:results}.
+% might be bad because of not enough training data, normalisation, parameter capacity in G, z-dim value
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-An array of latent-space vectors and class labels of a given redshift are passed to the trained ACGAN generator to create a
-collection of cube samples. These are placed together face-to-face to create larger samples of cosmic structure. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsubsection{Latent space navigation}
+\subsubsection{Latent space navigation}\label{methods:z_navig}
 % show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
-In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is less than the total parameters that constitute the training set. This means the discriminator and generator must find 
-condensed representations of the training data. The generator model is sampled from a set of latent variables in the latent
-space. Vector space arithmetic with points in the latent space allows interpolation between tenable examples of learned 
-representations of the training data the GAN is exposed to in training. 
+In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is 
+less than the total parameters that constitute the training set. This means the discriminator and generator must find 
+condensed representations of the training data. The generator model is sampled from a set of latent variables in the 
+latent space that constitute the latent-vectors $\mathbf{z}$. Vector space arithmetic with points in the latent space 
+allows interpolation between tenable examples of learned representations of the training data the GAN is exposed to in 
+training. 
 % With the inherent structuring of the latent space by GANs, these operations can allow complex 
 
 Interpolation is the transit between two distinct points in the latent space. In this work, spherical interpolation is used
-as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation uses a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by % (Shoemake 85)
+as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in
+this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation~\cite{spherical_interp} uses 
+a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by 
 
 \begin{equation}
     S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
 \end{equation}
 
-where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples with. 
+where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Building larger volumes from generated samples}
+\subsubsection{Building larger volumes from generated samples}\label{methods:volume_building}
 % say how the larger volumes are made from smaller generated cubes, talk about 
-A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial generated cube side-lengths). 
+A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ 
+drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic 
+mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial 
+generated cube side-lengths). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -836,13 +857,14 @@ Generative Adversarial Networks reduce the difference of the model probability d
 $p_{model}$ and the probability distribution of the training data samples $p_{data}$. This reduction quantifies how well 
 $p_{model}$ estimates $p_{data}$. An estimate on the suitability of this replacement was made using a comparison with 
 different ensembles of samples. The ensembles were collected from the training, generated and uniform distributions of 
-histograms denoted $t$, $g$ and $u$. The uniform distribution $u$ was a set of histograms with pixel densities drawn from 
-a uniform distribution $\mathcal{U}(-1,1)$. The comparison of sample ensembles tested how well the generator made the 
-discriminator associate the real and generated samples to the same distribution. The Kullback-Leibler (KL) divergence and 
-its relevance to the comparisons is defined in Appendix~\ref{appendix:kl_div}.
+histograms denoted $t$, $g$ and $u$ at each redshift $z$. The uniform distribution $u$ was a set of histograms with pixel 
+densities drawn from a uniform distribution $\mathcal{U}(-1,1)$ so the samples are not discriminated for a redshift value 
+in any comparison. The comparison of sample ensembles tested how well the generator made the discriminator associate the 
+real and generated samples to the same distribution. The Kullback-Leibler (KL) divergence and its relevance to the 
+comparisons is defined in Appendix~\ref{appendix:kl_div}.
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/cubes/kernel_fig.png}
+\includegraphics[width=\columnwidth]{figures/diagrams/kernel_fig.png}
 \centering
 \caption{A histogram down-sampled with three kernels of size $k=\{1, 2, 4\}$ (from left to right).}
 \label{fig:kernel_fig}
@@ -875,10 +897,10 @@ between draws of samples from distributions $a$ and $b$ were calculated for both
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Deriving the KL comparative diagnostic}
-There were 64 samples in the ensembles from the distributions $t$, $g$ and $u$ that contained 128 samples each. Each 
-histogram in the ensemble was down-sampled by iterating a kernel of size $k$ over each histogram and summing the densities. 
-The summed densities were divided by the number of bins in the kernel after down-sampling. This is equivalent to the 
-initial histograms having a lower sampling with larger bins. After an ensemble is down-sampled, the ensembles of two 
+There were 32 samples in the ensembles from the distributions $t$, $g$ and $u$ that contained 64 samples each for each $z$ 
+value. Each histogram in the ensemble was down-sampled by iterating a kernel of size $k$ over each histogram and summing 
+the densities. The summed densities were divided by the number of bins in the kernel after down-sampling. This is equivalent 
+to the initial histograms having a lower sampling with larger bins. After an ensemble is down-sampled, the ensembles of two 
 distributions are compared. The samples are individually flattened to `histogram-vectors' with $(32/k)^3$ components. 
 This is shown in Figure~\ref{fig:kernel_fig}. One-dimensional histograms with two bins were made for each component in the 
 histogram-vectors. The two bins represented `high' and `low' pixel densities and the boundary between them was the median 
@@ -917,13 +939,27 @@ histograms for each comparison were made. This process was repeated for each ker
 
 \subsection{Generated images}
 % show generated images at various redshifts, compare with training data
+Figures~\ref{fig:t_z_imgs} and ~\ref{fig:g_z_imgs} show separate collections of simulated cosmic web and GAN-generated 
+cosmic web for each class of redshift in the Millennium-SAGE training data. Across each value of redshift the ACGAN 
+demonstrates its ability to evaluate each point in the latent space to a strong representation 
 
 \begin{figure*}[hbt!]
 \includegraphics[width=15cm]{figures/cubes/classes3d.jpg}
 \centering
-\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the redshift value given above each cube. The scaling $s(x)$ is applied to each cube $x$.}
-\label{fig:gan_game}
+\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the 
+         redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
+\label{fig:t_z_imgs}
 \end{figure*}
+
+\begin{figure*}[hbt!]
+\includegraphics[width=15cm]{figures/cubes/g_classes3d.png}
+\centering
+\caption{A collection of generated cubes extracted created by the generator model. Each row corresponds to the 
+         redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
+\label{fig:g_z_imgs}
+\end{figure*}
+
+
 
 \subsubsection{Redshift interpolation}
 % show grid of cubes ranging from z=0 to z=(highest z in training data classes)
@@ -934,14 +970,14 @@ histograms for each comparison were made. This process was repeated for each ker
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/cubes/mill_box_3.png}
 \centering
-\caption{A box made of generated cubes at redshift $z=3.19$}
+\caption{A box made of generated cubes at redshift $z=3.19$.}
 \label{fig:kernel_fig}
 \end{figure}
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/cubes/gen_box_9_z3.png}
 \centering
-\caption{A box made of generated cubes at redshift $z=3.0$.}
+\caption{A box made of generated cubes at redshift $z=3.00$.}
 \label{fig:kernel_fig}
 \end{figure}
 
@@ -996,6 +1032,64 @@ histograms for each comparison were made. This process was repeated for each ker
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Loss and $D_{KL}$ curves}
+% separation of D and G losses because of number of images shown to models in one training step
+
+% LOSSES AND ACCURACIES
+Figure~\ref{fig:acgan_losscurve} shows the ACGAN objectives and accuracies over a run of training. The behaviours of the 
+models over the training are apparent in these curves. The sharp jump at the start over the first few 100 epochs or so 
+shows the initial learning for both models that are new to their tasks.
+
+There is a sharp jump in the losses of both models, that is highest for the discriminator, which implies the generator 
+attempted a new strategy for its objective. 
+
+There are small fluctuations in the accuracies of either model as the generator makes smaller adjustments 
+relative to the initial training, until just after ?$\times $? epochs
+
+This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but 
+instead that the architecture of the discriminator cannot extract any more useful information (and is extracting less and
+less) to the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered
+from mode collapse and made much more similar samples.
+
+Both the accuracies and the losses each have similar values for all epochs and this is the behaviour of two well matched 
+models. The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
+architectures. The separate networks are not able to fully attain their objectives against each other. At this point the discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
+which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, 
+the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many 
+different models it was found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point 
+the training would dissipate chaotically.
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/graphs/metrics.png}
+\centering
+\caption{The loss and accuracy curves for the training of the ACGAN.}
+\label{fig:2dgan_losscurve}
+\end{figure}
+
+% KL DIVERGENCES
+The KL divergences between the training and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and 
+$D_{KL}(g||t)$, follow a path that is related to the behaviour of the models shown in loss and accuracy curve. The 
+divergences both start at a global maximum and tend to a final convergent value. The values sharply drop at the same epoch
+in training as the losses and accuracies do. The initial $D_{KL}$ values of the comparison are with earlier generated images
+that are devoid of structure. The final value, with some intermediate values, corresponds to images that are very similar 
+to the training data, so the $D_{KL}$ values changed over a range of $10^{-1.0}$ to $10^{-2.5}$ from structureless images
+to realistic images.
+
+The curves have similar features to the loss and accuracy curves as they should because of the relation of the 
+cross-entropy to the KL divergence $D_{KL}$.
+
+The small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout 
+training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement
+with each other, as opposed to a preferred replacement of one with the other. The fluctuations are larger in the 2D case. 
+Further work is required to comment upon the relative values of the convergent $D_{KL}$ pairs in either implementation. 
+The 3D $D_{KL}$ values changed from the comparisons with initial noisy images against training data from $10^{0.0}$ to 
+$10^{-1.6}$ with the final realistic histograms.
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/graphs/stats.png}
+\centering
+\caption{The KL divergence $D_{KL}$ curves for the training of the ACGAN.}
+\label{fig:2dgan_losscurve}
+\end{figure}
 
 % \subsubsection{2D-GAN implementation}
 % Figure~\ref{fig:2dgan_losscurve} shows the 2D-GAN objectives and accuracies over a run of training. The behaviours of 
@@ -1010,7 +1104,7 @@ histograms for each comparison were made. This process was repeated for each ker
 % do any better. This does not mean an ideal `perfect' generator has closed the distance between the model and data 
 % distributions, but instead that the architecture of the discriminator cannot extract any more useful information (and is 
 % extracting less and less) to the generator. The gradients for backpropagation have vanished. This was seen in training. 
-% The generator suffered from mode collapse and made much more similar samples.
+% The generator suffered from mode collapse and made much more similar samples. ~~~~~~~~~~~~~~~~~~~CHECKED
 
 % \begin{figure}[!ht]%[hbt!]
 % \includegraphics[width=\columnwidth]{figures/graphs/metrics_2d.png}
@@ -1033,7 +1127,7 @@ histograms for each comparison were made. This process was repeated for each ker
 % % KL values being together, not apart is good ?
 % %The KS $p$-value $p_{KS}$, because of how strict the statistic is as a test, does not provide much information 
 % towards convergence, where the differences tend to become less and less. The change in $p_{KS}$ over the training is 
-% from $10^{-1}$ to $10^{-4}$.
+% from $10^{-1}$ to $10^{-4}$. ~~~~~~~~~~~~~~~~~~~~~~CHECKED
 
 % \begin{figure}[!ht]%[hbt!]
 % \includegraphics[width=\columnwidth]{figures/graphs/stats_2d.png}
@@ -1056,7 +1150,7 @@ histograms for each comparison were made. This process was repeated for each ker
 % changing the histograms only at the scales given by its convolutional kernels. In other words, the generator is fooling 
 % the discriminator without generating the most realistic cubes it could. Through running many different models it was 
 % found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point the training would 
-% dissipate chaotically.
+% dissipate chaotically. ~~~~~~~~~~~~~~~~~~~~~ CHECKED
 
 % % Figure~\ref{fig:3dgan_stats} shows the KL divergence $D_{KL}$ and KS $p$-value $p_{KS}$ over a run of training. The 
 % curves have similar features to the loss and accuracy curves as they should because of the relation of the cross-entropy
@@ -1072,7 +1166,7 @@ histograms for each comparison were made. This process was repeated for each ker
 % with each other, as opposed to a preferred replacement of one with the other. The fluctuations are larger in the 2D case. 
 % Further work is required to comment upon the relative values of the convergent $D_{KL}$ pairs in either implementation. 
 % The 3D $D_{KL}$ values changed from the comparisons with initial noisy images against training data from $10^{0.0}$ to 
-% $10^{-1.6}$ with the final realistic histograms.
+% $10^{-1.6}$ with the final realistic histograms. ~~~~~~~~~~~~~~ CHECKED
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1097,7 +1191,6 @@ histograms for each comparison were made. This process was repeated for each ker
 % for the bin separations in the component-histograms was given by the median of the training data which has a lower mean 
 % pixel density than the uniform histogram data. 
 % % make pixel dists to show different medians?
-
 
 % % The smaller value of the generated-generated $D_KL$ average comparison with respect to the other mutual comparisons 
 % shows the tendency of generative adversarial networks to represent a few modes in the latent space most. This was 
@@ -1333,7 +1426,7 @@ simulation~\cite{millxxlsim}. The Millennium-XXL simulation uses $6720^3$ partic
 smaller scale cosmological structure that could be tested further. From the experience of obtaining the strongest model in
 the 3D-GAN implementations, increasing the number of pixels increased the performance of the models. This could be due to 
 a lower loss of information between an increase in the number of pixels for a pixel in the previous resolution. The 
-apperance of the structure is better defined in this way. The lower the number of pixels, the more randomly distributed 
+appearance of the structure is better defined in this way. The lower the number of pixels, the more randomly distributed 
 the pixel densities will be when they average over similar features such as filaments. This is the most difficult obstacle
 for the GAN as this problem is obviously much greater with the 3D samples. The analog to this problem for images would be
 the randomness of a set of pixelated images of flowers compared to the same images but in higher resolution. The structure
@@ -1509,10 +1602,10 @@ on different length scales or equivalently mass scales.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{GAN architectures and hyper-parameters}\label{appendix:gan_setups}
+\section{GAN architectures and hyper-parameters}\label{appendix:acgan_setup}
 
-The model architectures of the 3D-GAN models are shown in Table~\ref{table:3dgan_archi}. The hyper-parameters of the 3D-GAN 
-implementation are shown in Table~\ref{table:3dgan_params} respectively. 
+The model architectures of the ACGAN models are shown in Table~\ref{table:acgan_archi}. 
+The hyper-parameters of the ACGAN implementation are shown in Table~\ref{table:acgan_params}. 
 
 \begin{table}[h!]
 \centering
@@ -1522,39 +1615,54 @@ implementation are shown in Table~\ref{table:3dgan_params} respectively.
  \hline\hline
  \bf{\textit{Generator}} & & \\
  \hline\hline
-$\mathbf{z}$ & &  (200) \\
+$\mathbf{z}(\mathbf{c})$ & &  (256) \\
  \hline
-Linear & BatchNorm  & $(16, 16, 16, 512)$ \\ 
-     &  Relu &  \\ 
+Linear & BatchNorm  & $(16, 16, 16, 128)$ \\ 
+    - &  Leaky-Relu & - \\ 
  \hline
- Conv3D & BatchNorm  & $(16, 16, 16, 512)$ \\ 
-     ($5\times5\times5$)&   Relu  &                                                  \\
+ Conv3D & BatchNorm  & $(16, 16, 16, 128)$ \\ 
+     ($9\times9\times9$)&  Leaky-Relu  & strides=1 \\
  \hline
-Conv3D & BatchNorm  & $(32, 32, 32, 256)$ \\ 
-    ($5\times5\times5$)&  Relu &                                                     \\
+Conv3DTranspose & BatchNorm  & $(32, 32, 32, 128)$ \\ 
+    ($9\times9\times9$)&  Leaky-Relu & strides=2 \\
  \hline
-Conv3D  & BatchNorm  & $(32, 32, 32, 1)$ \\ 
- ($5\times5\times5$)& tanh&                                                    \\ [1ex] 
+Conv3D  & - & $(32, 32, 32, 64)$ \\ 
+ ($9\times9\times9$)& Leaky-Relu & strides=1 \\ [1ex] 
  \hline\hline
+Conv3D  & - & $(32, 32, 32, 1)$ \\ 
+ ($9\times9\times9$)& tanh & strides=1 \\ [1ex] 
+ 
+ \hline
+ \\
+ \hline
  
  \bf{\textit{Discriminator}} & &  \\
  \hline
  $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\
  \hline
- Conv3D & BatchNorm & $(32, 32, 32, 1)$ \\
-  ($5\times5\times5$)&   LeakyRelu&   \\
+ Conv3D & - & $(32, 32, 32, 32)$ \\
+  ($7\times7\times7$)&   LeakyRelu &  strides=1 \\
  \hline
- Conv3D & BatchNorm & $(16, 16, 16, 256)$ \\ 
- ($5\times5\times5$)&  LeakyRelu   \\
+  Conv3D & BatchNorm & $(16, 16, 16, 32)$ \\
+  ($7\times7\times7$) &   LeakyRelu &  strides=2 \\
  \hline
- Conv3D & BatchNorm &  $(8, 8, 8, 512)$ \\ 
- ($5\times5\times5$)&  LeakyRelu   \\
+ Conv3D & BatchNorm & $(16, 16, 16, 64)$ \\ 
+ ($7\times7\times7$) &  LeakyRelu   & strides=1 \\
  \hline
- Linear & sigmoid & $ 1 $ \\ [1ex] 
+  Conv3D & BatchNorm & $(8, 8, 8, 32)$ \\
+  ($7\times7\times7$) &   LeakyRelu &  strides=2 \\
+ \hline
+ Conv3D & BatchNorm &  $(8, 8, 8, 64)$ \\ 
+ ($7\times7\times7$) &  LeakyRelu & strides=1 \\
+ \hline
+%   \textit{Source} & &  \\
+ Linear ($p_\mathbf{x}$) & sigmoid & $ 1 $ \\ [1ex] 
+%   \textit{Classification} & &  \\
+ Linear ($p_\mathbf{c}$) & softmax & $ 6 $ \\ [1ex] 
  \hline
 \end{tabularx}
-\caption{Architectures for the generator and discriminator networks in the 3D-GAN.}
-\label{table:3dgan_archi}
+\caption{Architectures for the generator and discriminator networks in the ACGAN.}
+\label{table:acgan_archi}
 \end{table}
 
 
@@ -1567,13 +1675,13 @@ Conv3D  & BatchNorm  & $(32, 32, 32, 1)$ \\
  Discriminator learning rate & $2 \times 10^{-6}$   \\ 
  Discriminator dropout factor & 0.3  \\
  Generator learning rate & $2 \times 10^{-6}$   \\ 
- $\mathbf{z}$ dimension & 200  \\
- Prior bounds & $[-1,+1]$  \\
- Batch size / total samples & 64 / 128   \\ [1ex]
+ $\mathbf{z}$ dimension & 256  \\
+ $\mathbf{z}$ prior distribution & $\mathcal{N}(0,1)$  \\
+ Batch size / total samples & 64 / 384   \\ [1ex]
 \hline
 \end{tabularx}
-\caption{Hyper-parameters used in 3D-GAN implementation.}
-\label{table:3dgan_params}
+\caption{Values of critical hyper-parameters used in the ACGAN implementation.}
+\label{table:acgan_params}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
