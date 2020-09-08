@@ -775,15 +775,6 @@ to the class of an image. In practice a softmax activation function is used, whi
 distribution over the class labels for each redshift value. 
 % This auxiliary classifier model is optimised and trained externally to the discriminator and generator models.
 
-% \begin{figure*}[!ht]%[hbt!]
-% \includegraphics[width=16.5cm]{figures/cubes/t_g_3d2d_2.png}
-% %\includegraphics[width=12cm]{figures/mrobs.png}
-% \centering
-% %\captionsetup{justification=centering}
-% \caption{Two-dimensional projections of the 3D-GAN generated histograms.}
-% \label{fig:3dgan_2dimgs}
-% \end{figure*}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Generating a universe}
@@ -914,12 +905,6 @@ entropy, that is equivalent here to the KL divergence $D_{KL}$, was calculated b
 process was repeated for 100 separate ensembles and with the final $D_{KL}$ values logarithmically-scaled $D_{KL}$ 
 histograms for each comparison were made. This process was repeated for each kernel size $k$ where $k \in \{1, 2, 4\}$.
 
-% \begin{figure*}[!ht]%[hbt!]
-% \includegraphics[width=17cm]{figures/cubes/t_g_3d.png}
-% \centering
-% \caption{Training data histograms and GAN-generated histograms from the 3D-GAN implementation.}
-% \label{fig:3dgan_imgs}
-% \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -943,8 +928,10 @@ Figures~\ref{fig:t_z_imgs} and ~\ref{fig:g_z_imgs} show separate collections of 
 cosmic web for each class of redshift in the Millennium-SAGE training data. Across each value of redshift the ACGAN 
 demonstrates its ability to evaluate each point in the latent space to a strong representation 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{figure*}[hbt!]
-\includegraphics[width=15cm]{figures/cubes/classes3d.jpg}
+\includegraphics[width=17cm]{figures/cubes/acgan3d_t_fig.png}
 \centering
 \caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the 
          redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
@@ -952,17 +939,45 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 \end{figure*}
 
 \begin{figure*}[hbt!]
-\includegraphics[width=15cm]{figures/cubes/g_classes3d.png}
+\includegraphics[width=17cm]{figures/cubes/acgan3d_g_fig.png}
 \centering
-\caption{A collection of generated cubes extracted created by the generator model. Each row corresponds to the 
+\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs.Each row corresponds to the 
          redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
-\label{fig:g_z_imgs}
+\label{fig:t_z_imgs}
 \end{figure*}
 
+\begin{figure*}[hbt!]
+\includegraphics[width=16cm]{figures/cubes/acgan2d_t_fig.png}
+\centering
+\caption{A collection of 2D-projections of training data cubes extracted from the Millennium-SAGE catalogs. Each row 
+         corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
+         $\mathbf{x}$.}
+\label{fig:t_z_imgs}
+\end{figure*}
+
+\begin{figure*}[hbt!]
+\includegraphics[width=17cm]{figures/cubes/acgan2d_g_fig.png}
+\centering
+\caption{A collection of 2D-projections of generated data cubes extracted from the Millennium-SAGE catalogs. Each row 
+         corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
+         $\mathbf{x}$.}
+\label{fig:t_z_imgs}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \subsubsection{Redshift interpolation}
 % show grid of cubes ranging from z=0 to z=(highest z in training data classes)
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/cubes/acgan3d_interp.png}
+\centering
+\caption{A collection of images generated with an array of redshift values for a single latent-space point.}
+\label{fig:kernel_fig}
+\end{figure}
 
 \subsubsection{Universe generation}
 % show three scales (side lengths in terms of generated cubes - e.g. 7, 9, 11) of generated-cube-universes. 
@@ -981,53 +996,6 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 \label{fig:kernel_fig}
 \end{figure}
 
-% \subsubsection{2D-GAN images}
-
-% The results from the separate implementations were the generated images, the model loss and accuracy curves, the training 
-% statistic curves and the ensemble $D_{KL}$ trials. A collection of training and generated samples from the 2D-GAN 
-% implementation are shown in Figure~\ref{fig:2dgan_imgs}. The generated 2D-histograms are very similar in appearance to 
-% the training data histograms. This is the main reason for the tests of statistical structure in ensembles from either 
-% distribution. The 2D-GAN images show most of the important features of structure such as filaments, voids and dense 
-% clusters.
-
-% % \begin{figure*}[!ht]%[hbt!]
-% % \includegraphics[width=17cm]{figures/cubes/t_g_3d.png}
-% % \centering
-% % \caption{Training data histograms and GAN-generated histograms from the 3D-GAN implementation.}
-% % \label{fig:3dgan_imgs}
-% % \end{figure*}
-
-% \subsubsection{3D-GAN images}
-% A collection of 3D-histograms generated through the 3D-GAN implementation are shown in Figure~\ref{fig:3dgan_imgs}. 
-% Two-dimensional projections of these same samples are shown in Figure~\ref{fig:3dgan_2dimgs}. These projections can be 
-% compared to the 2D-GAN generated images because they are derived in the same way from the same data, though the scaling
-% $s(x)$ is shown on the 3D projection images.
-
-% The 3D images in Figure~\ref{fig:3dgan_imgs} show that the values of the pixel densities in the generated histograms 
-% are similar to the training data. This is the easiest characteristic of the images to judge because examples of structure
-% in these images are sampled from the distribution of all its different possible appearances. The larger scale filaments 
-% and sheets in the generated cubes are not always reproduced but they are not totally missing from the histograms. Closer 
-% inspection in an interactive environment shows realistic voids in the histograms. 
-
-% The 2D-projections of the histograms show the same agreement in the pixel densities between the training and generated 
-% samples. The main difference is in the `blur' effect on the generated projections. This could be solved by changing the
-% kernel size and initialization in the convolutional layers of the models. The projections also show more clustering and 
-% some larger filament structure relative to the 3D-histograms. The smaller scale variation of the pixel density in the 
-% training data appears more random than the generated data if one picks a line of twenty or so pixels in an image. It 
-% could be beneficial for the GAN models to use a higher pixel count in the training data so that less of the information 
-% that records a given feature is lost in fewer pixels. The most important statistic of the generated images to test is a 
-% cosmological characteristic of the data such as the power spectrum $P_k$ or the correlation function $\xi$. This is left 
-% to the discussion of future work in Section~\ref{sec:future_work} for now. 
-
-% \begin{figure*}[!ht]%[hbt!]
-% \includegraphics[width=16.5cm]{figures/cubes/t_g_3d2d_2.png}
-% %\includegraphics[width=12cm]{figures/mrobs.png}
-% \centering
-% %\captionsetup{justification=centering}
-% \caption{Two-dimensional projections of the 3D-GAN generated histograms.}
-% \label{fig:3dgan_2dimgs}
-% \end{figure*}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1036,22 +1004,21 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 
 % LOSSES AND ACCURACIES
 Figure~\ref{fig:acgan_losscurve} shows the ACGAN objectives and accuracies over a run of training. The behaviours of the 
-models over the training are apparent in these curves. The sharp jump at the start over the first few 100 epochs or so 
-shows the initial learning for both models that are new to their tasks.
+models over the training are apparent in these curves. The sharp jump at the start over the first few $10^3$ epochs or so 
+shows the initial learning for both models that are new to their tasks. Each sharp jump in the losses of both models shows
+the  generator attempting a new strategy for its objective. There are small fluctuations in the accuracies of either model 
+as the generator makes smaller adjustments relative to the initial training, just after $1.0\times10^4$ epochs, these are 
+in part due to the mistakes made by the discriminator in seeing new training and generated samples.
 
-There is a sharp jump in the losses of both models, that is highest for the discriminator, which implies the generator 
-attempted a new strategy for its objective. 
+The accuracies reported by the discriminator model tend very slowly toward around $55\%$. This is an ideal value because the
+discriminator and generator are both engaged in a conflict that still supplies information through gradients to the generator
+model. The samples are still being improved on at this stage. This is echoed in the convergence of the losses for each model 
+to a value of around $9.25$. 
+This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but instead 
+that the architecture of the discriminator cannot extract any more useful information (and is extracting less and less) to 
+the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode collapse and made more samples with more similarity between them.
 
-There are small fluctuations in the accuracies of either model as the generator makes smaller adjustments 
-relative to the initial training, until just after ?$\times $? epochs
-
-This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but 
-instead that the architecture of the discriminator cannot extract any more useful information (and is extracting less and
-less) to the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered
-from mode collapse and made much more similar samples.
-
-Both the accuracies and the losses each have similar values for all epochs and this is the behaviour of two well matched 
-models. The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
+The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
 architectures. The separate networks are not able to fully attain their objectives against each other. At this point the discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
 which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, 
 the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many 
@@ -1068,21 +1035,18 @@ the training would dissipate chaotically.
 % KL DIVERGENCES
 The KL divergences between the training and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and 
 $D_{KL}(g||t)$, follow a path that is related to the behaviour of the models shown in loss and accuracy curve. The 
-divergences both start at a global maximum and tend to a final convergent value. The values sharply drop at the same epoch
-in training as the losses and accuracies do. The initial $D_{KL}$ values of the comparison are with earlier generated images
-that are devoid of structure. The final value, with some intermediate values, corresponds to images that are very similar 
-to the training data, so the $D_{KL}$ values changed over a range of $10^{-1.0}$ to $10^{-2.5}$ from structureless images
-to realistic images.
+divergences both start at a global maximum and tend to a final convergent value. The initial value corresponds to the 
+comparison between batches of cubes with pixel-densities sampled from the $\mathbf{z}$-prior $\mathcal{N}(0,1)$ that are
+devoid of structure and the final value corresponds to the cubes with realistic cosmological structure in. The values 
+sharply drop at the same epoch in training as the losses and accuracies do. The initial $D_{KL}$ values of the comparison 
+are with earlier generated images that are devoid of structure. The final value, with some intermediate values, corresponds
+to images that are very similar to the training data, so the $D_{KL}$ values changed over a range of $10^{1.0}$ to 
+$10^{-1.4}$ from structureless images to realistic images.
 
 The curves have similar features to the loss and accuracy curves as they should because of the relation of the 
 cross-entropy to the KL divergence $D_{KL}$.
 
-The small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout 
-training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement
-with each other, as opposed to a preferred replacement of one with the other. The fluctuations are larger in the 2D case. 
-Further work is required to comment upon the relative values of the convergent $D_{KL}$ pairs in either implementation. 
-The 3D $D_{KL}$ values changed from the comparisons with initial noisy images against training data from $10^{0.0}$ to 
-$10^{-1.6}$ with the final realistic histograms.
+The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement with each other, as opposed to a preferred replacement of one with the other.
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/graphs/stats.png}
@@ -1091,87 +1055,81 @@ $10^{-1.6}$ with the final realistic histograms.
 \label{fig:2dgan_losscurve}
 \end{figure}
 
-% \subsubsection{2D-GAN implementation}
-% Figure~\ref{fig:2dgan_losscurve} shows the 2D-GAN objectives and accuracies over a run of training. The behaviours of 
-% the models over the training are apparent in these curves. The sharp jump at the start over the first few 100 epochs or 
-% so shows the initial learning for both models that are new to their tasks. The jagged shape over next $1.5\times 10^4$ 
-% epochs in the accuracy curve (as well as the loss curve) is where the generator fools the discriminator with half of its 
-% generated samples. The discriminator, at the same time, is only able to correctly classify half of its input of real and 
-% fake samples. There are small fluctuations in the accuracies of either model as the generator makes smaller adjustments 
-% relative to the initial training, until just after $1.5\times 10^4$ epochs. There is a sharp jump in the losses of both 
-% models, that is highest for the discriminator, which implies the generator attempted a new strategy for its objective. 
-% The accuracies here both climb to 100\% whilst the losses decrease to a lower value. At this point the generator cannot 
-% do any better. This does not mean an ideal `perfect' generator has closed the distance between the model and data 
-% distributions, but instead that the architecture of the discriminator cannot extract any more useful information (and is 
-% extracting less and less) to the generator. The gradients for backpropagation have vanished. This was seen in training. 
-% The generator suffered from mode collapse and made much more similar samples. ~~~~~~~~~~~~~~~~~~~CHECKED
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/metrics_2d.png}
-% \centering
-% \caption{The loss and accuracies curve for the training of the 2D-GAN implementation.}
-% \label{fig:2dgan_losscurve}
-% \end{figure}
-
-% Figure~\ref{fig:2dgan_stats} shows the KL divergences and Kolmogorov-Smirnov (KS) $p$-values $p_{KS}$ for the generated 
-% and training image comparisons over a run of training. The KS statistic and its $p$-value are a sensitive test between
-% two distributions. The KS statistic $D_{KS}$ and the $p$-value $p_{KS}$ are defined in Appendix~\ref{appendix:ks_test}. 
-% This test is useful in monitoring the performance of the GAN, particularly near convergence where the gradient adjustments 
-% to the models tend to dissipate, causing smaller changes to be made to the samples. The KL divergences between the training 
-% and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and $D_{KL}(g||t)$, follow a path that is related to 
-% the behaviour of the models shown in loss and accuracy curve. The divergences both start at a global maximum and tend to
-% a final convergent value. The values sharply drop at the same epoch in training as the losses and accuracies do. The 
-% initial $D_{KL}$ values of the comparison are with earlier generated images that are devoid of structure. The final 
-% value, with some intermediate values, corresponds to images that are very similar to the training data, so the $D_{KL}$
-% values changed over a range of $10^{-1.0}$ to $10^{-2.5}$ from structureless images to realistic images.
-% % KL values being together, not apart is good ?
-% %The KS $p$-value $p_{KS}$, because of how strict the statistic is as a test, does not provide much information 
-% towards convergence, where the differences tend to become less and less. The change in $p_{KS}$ over the training is 
-% from $10^{-1}$ to $10^{-4}$. ~~~~~~~~~~~~~~~~~~~~~~CHECKED
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/stats_2d.png}
-% \centering
-% \caption{The training against generated KL-divergences and KS $p$-value curves for the training in the 2D-GAN 
-% implementation.}
-% \label{fig:2dgan_stats}
-% \end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% \subsubsection{3D-GAN implementation}
-
-% Figure~\ref{fig:3dgan_losscurve} shows the 3D-GAN objectives and accuracies over a run of training. Both the accuracies 
-% and the losses each have similar values for all epochs and this is the behaviour of two well matched models. The accuracies
-% of both models converge at just over 60\% which implies there is space to improve the model architectures. The separate 
-% networks are not able to fully attain their objectives against each other. At this point the discriminator is extracting
-% the maximal amount of information for use in classification and feedback to the generator, which was observed to be 
-% changing the histograms only at the scales given by its convolutional kernels. In other words, the generator is fooling 
-% the discriminator without generating the most realistic cubes it could. Through running many different models it was 
-% found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point the training would 
-% dissipate chaotically. ~~~~~~~~~~~~~~~~~~~~~ CHECKED
-
-% % Figure~\ref{fig:3dgan_stats} shows the KL divergence $D_{KL}$ and KS $p$-value $p_{KS}$ over a run of training. The 
-% curves have similar features to the loss and accuracy curves as they should because of the relation of the cross-entropy
-% to the KL divergence $D_{KL}$. The initial decrease of both $D_{KL}$ values shows the generator and discriminator 
-% learning and the spike at around $4.0\times 10^4$ epochs indicates the generator changing its strategy. The same decrease
-% is seen with a return to similar values of $D_{KL}$. The KS $p$-value $p_{KS}$ shows a large change in value over 
-% training, particularly when compared to the 2D-GAN $p_{KS}$ curve. Even with the realistic samples of the 2D implementation
-% the null hypothesis that either ensembles of samples originated from the same distribution was always rejected at any 
-% point in training. All the $p_{KS}$ values indicated rejection of the null hypothesis at 10\% alpha (the significance 
-% level of the test, see Appendix~\ref{appendix:ks_test}) because the $p_{KS}$ values always fell below the 20\% threshold.
-% The small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout 
-% training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement
-% with each other, as opposed to a preferred replacement of one with the other. The fluctuations are larger in the 2D case. 
-% Further work is required to comment upon the relative values of the convergent $D_{KL}$ pairs in either implementation. 
-% The 3D $D_{KL}$ values changed from the comparisons with initial noisy images against training data from $10^{0.0}$ to 
-% $10^{-1.6}$ with the final realistic histograms. ~~~~~~~~~~~~~~ CHECKED
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{KL trials}\label{sec:kl_trials}
+
+\begin{figure*}[hbt!]
+\includegraphics[width=17cm]{figures/graphs/kl_trials_all.png}
+\centering
+\caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
+         uniform $u$ cube samples. This graph shows the results for downsampling kernel values $k \in\{1, 2, 4\}$.}
+\label{fig:t_z_imgs}
+\end{figure*}
+
+
+% \begin{figure*}[hbt!]
+% \includegraphics[width=17cm]{figures/graphs/kl_trials_1.png}
+% \centering
+% \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
+%          uniform $u$ cube samples. This graph shows the results for a downsampling kernel of size $k=1$.}
+% \label{fig:t_z_imgs}
+% \end{figure*}
+
+% \begin{figure*}[hbt!]
+% \includegraphics[width=17cm]{figures/graphs/kl_trials_2.png}
+% \centering
+% \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
+%          uniform $u$ cube samples. This graph shows the results for a downsampling kernel of size $k=2$.}
+% \label{fig:t_z_imgs}
+% \end{figure*}
+
+% \begin{figure*}[hbt!]
+% \includegraphics[width=17cm]{figures/graphs/kl_trials_4.png}
+% \centering
+% \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
+%          uniform $u$ cube samples. This graph shows the results for a downsampling kernel of size $k=4$.}
+% \label{fig:t_z_imgs}
+% \end{figure*}
+
+\begin{table*}[t]
+  \centering
+  \begin{tabular}{ccccccc}
+    \hline\hline
+    & $(t||g)$  $(g||t)$ & $(t||u)$ $(u||t)$ & $(g||u)$ $(u||g)$ & $(t||t)$  $(t||t)$ & $(g||g)$  $(g||g)$ & $(u||u)$  $(u||u)$\\ [1ex]
+    \hline\hline
+    $k=1$ & 0.358 0.344 &  0.619 0.531 & 0.804 0.722 & 0.195 0.195 & 0.196 0.196 & 0.203 0.202  \\ 
+    % \hline
+    $k=2$ & 0.322 0.309 & 13.879 1.517 & 13.904 1.628 & 0.199 0.199 & 0.202 0.202 & 0.355 0.370 \\
+    % \hline
+    $k=4$ & 0.309 0.292 & 38.687 2.318 & 38.953 2.438 & 0.196 0.195 & 0.197 0.197 & 0.178 0.180 \\ [1ex]
+    \hline\hline
+  \end{tabular}
+  \caption{Results from the $D_{KL}$ trials averaged over redshift $z$ for each kernel size $k$ for each distribution comparison.}
+  \label{tab:1}
+\end{table*}
+
+% \begin{table}[h!]
+% \centering
+% \begin{tabularx}
+% {\columnwidth}{@{}l *5{>{\centering\arraybackslash}X}@{}}%{||c c c c c c||} 
+%  \hline
+%   $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ 
+%   $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$\\ [0.5ex]
+%     % $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ 
+% %   $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$
+%  \hline\hline
+%  0.358 0.344 &  0.619 0.531 & 0.804 0.722 & 0.195 0.195 & 0.196 0.196 & 0.203 0.202  \\ 
+%  0.322 0.309 & 13.879 1.517 & 13.904 1.628 & 0.199 0.199 & 0.202 0.202 & 0.355 0.370 \\
+%  0.309 0.292 & 38.687 2.318 & 38.953 2.438 & 0.196 0.195 & 0.197 0.197 & 0.178 0.180 \\ [1ex]
+% \hline
+% \end{tabularx}
+% \caption{Values of critical hyper-parameters used in the ACGAN implementation.}
+% \label{table:acgan_params}
+% \end{table}
+
+
 % do the same as before (in thesis) but average over classes?
 
 % This section presents the results of the procedure for the repeated ensemble KL divergence testing. transformed into 
@@ -1354,6 +1312,9 @@ to create distributions weighted by luminosity or another characteristic.
 % plane of comparison - the perspective of the observer. Figure~\ref{fig:MRObs} shows a schematic of how the smaller-scale
 % distributions could be pieced together along the line-of-sight of the observer.
 
+3D model works REALLY well - use transposed conv instead of upsampling. As a one-class model, the capacity implies that the
+ACGAN requires more filters that the GPU could not provide.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1442,8 +1403,8 @@ structure could be definitively shown, some of which could have unexplored origi
 \includegraphics[width=\columnwidth]{figures/diagrams/mrobs3.png}
 \centering
 \caption{A diagram depicting the pencil beams of an observer outward from their location; (a) - the pencil beam and the 
-required volumes (green) to span the beam with unrepeated galaxy samples, (b) - the highest efficiency for obtaining the
-volumes of a beam from a distribution volume. From Overzier et al. 2012~\cite{MRObs}.}
+         required volumes (green) to span the beam with unrepeated galaxy samples, (b) - the highest efficiency for 
+         obtaining the volumes of a beam from a distribution volume. From Overzier et al. 2012~\cite{MRObs}.}
 \label{fig:MRObs}
 \end{figure}
 
@@ -1618,16 +1579,16 @@ The hyper-parameters of the ACGAN implementation are shown in Table~\ref{table:a
 $\mathbf{z}(\mathbf{c})$ & &  (256) \\
  \hline
 Linear & BatchNorm  & $(16, 16, 16, 128)$ \\ 
-    - &  Leaky-Relu & - \\ 
+    - &  ELU & - \\ 
  \hline
  Conv3D & BatchNorm  & $(16, 16, 16, 128)$ \\ 
-     ($9\times9\times9$)&  Leaky-Relu  & strides=1 \\
+     ($9\times9\times9$)&  ELU  & strides=1 \\
  \hline
 Conv3DTranspose & BatchNorm  & $(32, 32, 32, 128)$ \\ 
-    ($9\times9\times9$)&  Leaky-Relu & strides=2 \\
+    ($2\times2\times2$)&  ELU & strides=2 \\
  \hline
 Conv3D  & - & $(32, 32, 32, 64)$ \\ 
- ($9\times9\times9$)& Leaky-Relu & strides=1 \\ [1ex] 
+ ($9\times9\times9$)& ELU & strides=1 \\ [1ex] 
  \hline\hline
 Conv3D  & - & $(32, 32, 32, 1)$ \\ 
  ($9\times9\times9$)& tanh & strides=1 \\ [1ex] 
@@ -1641,19 +1602,19 @@ Conv3D  & - & $(32, 32, 32, 1)$ \\
  $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\
  \hline
  Conv3D & - & $(32, 32, 32, 32)$ \\
-  ($7\times7\times7$)&   LeakyRelu &  strides=1 \\
+  ($7\times7\times7$)&   ELU &  strides=1 \\
  \hline
   Conv3D & BatchNorm & $(16, 16, 16, 32)$ \\
-  ($7\times7\times7$) &   LeakyRelu &  strides=2 \\
+  ($7\times7\times7$) &   ELU &  strides=2 \\
  \hline
  Conv3D & BatchNorm & $(16, 16, 16, 64)$ \\ 
- ($7\times7\times7$) &  LeakyRelu   & strides=1 \\
+ ($7\times7\times7$) &  ELU   & strides=1 \\
  \hline
   Conv3D & BatchNorm & $(8, 8, 8, 32)$ \\
-  ($7\times7\times7$) &   LeakyRelu &  strides=2 \\
+  ($7\times7\times7$) &   ELU &  strides=2 \\
  \hline
- Conv3D & BatchNorm &  $(8, 8, 8, 64)$ \\ 
- ($7\times7\times7$) &  LeakyRelu & strides=1 \\
+ Conv3D & BatchNorm &  $(8, 8, 8, 32)$ \\ 
+ ($7\times7\times7$) &  ELU & strides=1 \\
  \hline
 %   \textit{Source} & &  \\
  Linear ($p_\mathbf{x}$) & sigmoid & $ 1 $ \\ [1ex] 
@@ -1689,30 +1650,6 @@ Conv3D  & - & $(32, 32, 32, 1)$ \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Kullback-Leibler Divergence}\label{appendix:kl_div} 
-
-% \subsection{Information theory}
-% Information theory aims to quantify how much information is in a signal. The basic principle is that learning about an 
-% unlikely event is more informative than learning about a likely event - the information content of the unlikely event is 
-% higher than the unlikely event~\cite{gf_book}. This means that learning about an event that consists of two unlikely 
-% events contains more information content than learning of one of the two events alone. The quantity of information 
-% content is expressed by definition of the self-information of an event $\textup{x}=x$ as 
-% \begin{equation}
-%     I(x) = - \log P(x)
-% \end{equation}
-% where the units of the self-information are depend on the base of the logarithm this equation. The same definition of 
-% information for continuous events $\textup{x}$ applies as for the discrete events. 
-
-% Self-information is associated with outcomes from singular events. The amount of uncertainty in a probability 
-% distribution is given by the Shannon entropy~\cite{mackay_book}
-
-% \begin{equation}
-%     H(x) = \mathbb{E}_{\text{x}\sim P} [I(x)] 
-%     = % _\textup{x \sim P}_\textup{x \sim P}
-%     -  \mathbb{E}_{\text{x}\sim P} [\log P(x)]
-% \end{equation}
-
-% this definition shows that the Shannon entropy is the expectation value of the amount of information in an event drawn 
-% from that distribution. When $\textup{x}$ is continuous the Shannon entropy is called the differential entropy. 
 
 \subsection{The Kullback-Leibler Divergence}\label{appendix:kl_div_section}
 
@@ -1796,177 +1733,7 @@ $p_{model}$ as fake.
 % compared ensembles in the training loop determinations of $p_{KS}$, this provides a $p$-value of $0.20$. In this work
 % all the KS $p$-values were calculated using the SciPy~\cite{scipy} \texttt{stats.ks\_2samp}~function. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % \section{GAN components}\label{appendix:gan_parts}
 
-% % \subsection{Convolutional layers}\label{app_convs}
-% % The standard unit in the layers of neural networks is the linear unit of general matrix multiplication. Convolutional 
-% neural networks (CNNs) pioneered by LeCun~\cite{LeCun_cnns} were the first design for methods that could decode grid-like 
-% data such as images. The procedures in CNNs use a linear convolution operation as opposed to the multiplications in linear 
-% units that are also known as perceptrons. The convolution operation between two functions $f$ and $g$ is defined as 
-
-% % \begin{equation}
-% %     h(x) = (f * g)(x) = \int f(\tau)  g(x - \tau)d\tau
-% % \end{equation}
-
-% % where for an image the function $f$ in the convolution is known as the input, the function $g$ is the kernel and the 
-% output function $h$ is the feature map. The grid data means the convolution is discrete so that
-
-% % \begin{equation}
-% %     h(x) = (f * g)(x) = \sum f(\tau) g(x - \tau)
-% % \end{equation}
-
-% % In machine learning the input is an array of data and the kernel is an array of parameters that the learning algorithm
-% changes in training. In the 3D-GAN the convolution equation takes the form 
-
-% % \begin{eqnarray}
-% %     S(i,j,k) &=& (I * K)(i,j,k) \nonumber\\ 
-% %              &=& \sum_{l, m, n} I(i+l, j+m, k+n)K(l,m,n) \nonumber\\ 
-% % \end{eqnarray}
-
-% % for the 3D case, where $I$ and $K$ are the image and kernel grids and $S$ is the feature map from the convolution. A 
-% similar equation holds for the 2D case. The indices $l$, $m$ and $n$ are the kernel size in each dimension. Because 
-% convolutions are commutative, the kernel in the discrete convolutions passes over the image (the kernel and image have 
-% been commuted), these features can be recorded in a network. Figure \ref{fig:3d_conv} shows how a feature map is taken 
-% from an image.
-
-% % \begin{figure}[hbt!]
-% % \includegraphics[width=\columnwidth]{figures/diagrams/3dconv_diag.png}
-% % \centering
-% % \caption{A general 3D-convolution operation; (a) - the image inputted to the convolutional layer with the kernel at 
-% one position in the image, (b) - the kernel-image convolution output at a position, (c) - the output pixel from the 
-% operation and (d) - the feature map of convolutions across the image.}
-% % \label{fig:3d_conv}
-% % \end{figure}
-
-
-% % \subsection{Activation functions}\label{appendix:app_acts}
-% % The activation functions used in each layer of the models in the generator and discriminator are important for the 
-% performance of the GAN. Figure~\ref{fig:act_funcs} shows the activation functions used in the models, plotted on $x,y 
-% \in [-1,+1]$.
-
-% % In the generator models rectified linear unit (ReLU) activation functions were put at the end of the inner layers 
-% with a hyperbolic tangent activation (tanh) activation at the end of the last layer. This final activation helps the
-% GAN match the pixel counts to the range of the training data samples. LeakyReLU activations are the same as ReLU 
-% functions for positive inputs but are scaled by a value $\alpha$ for negative inputs. The value of $\alpha=0.2$ was 
-% taken from~\cite{dcgan}. On the end of the discriminator network a sigmoid activation function was used to match the 
-% range of probabilities $P\in [0,1]$.
-
-% % \begin{figure}[hbt!]
-% % \includegraphics[width=\columnwidth]{figures/graphs/activation_functions.png} %10cm
-% % \centering
-% % \caption{The four types of activation function used in the GAN models.}
-% % \label{fig:act_funcs}
-% % \end{figure}
-
-% % % \subsection{Batch-normalisation}\label{app_BN}
-% % % The forward flow of information in a deep learning model means the parameters of the previous layer influence 
-% the parameters of the next layer through changing the inputs to the next layer. The gradients in optimisation are 
-% used to update the whole model simultaneously which can have unexpected effects because the updates are calculated 
-% under the assumption that the other layers are held constant. Ioffe and Szegedy 2015~\cite{batchnorm} proposed a 
-% reparameterization to help apply the updates across separate layers. Batch normalisation involves normalising data 
-% in the batches that it is presented to a layer in~\cite{gf_book}. For a batch of layer activations expressed as a 
-% matrix $\mathbf{H}$, normalising requires replacement of $\mathbf{H}$ by
-
-% % % \begin{equation}\label{H}
-% % %     \mathbf{H}' = \frac{\mathbf{H} - \mathbf{\mu}}{\mathbf{\sigma}}
-% % % \end{equation}
-
-% % % where $\mathbf{\mu}$ is a vector containing the mean of each activation and $\mathbf{\sigma}$ is a vector 
-% containing the standard deviation of each activation. Each row in $\mathbf{H}$ corresponds to the activations of 
-% some layer for every example in the batch. This means Equation \ref{H} applies $\mathbf{\sigma}$ and $\mathbf{\mu}$
-% to each row in $\mathbf{H}$. The network operates on $\mathbf{H}'$ just as it did on $\mathbf{H}$. In the training 
-% loop
-
-% % % \begin{eqnarray}
-% % %     \mathbf{\mu} &=& \frac{1}{m}\sum_i \mathbf{H}_i \nonumber \\
-% % %     \mathbf{\sigma} &=& \sqrt{ \delta + \frac{1}{m}\sum_i (\mathbf{H} - \mathbf{\mu})_i^2 }
-% % % \end{eqnarray}
-% % % % and 
-% % % % \begin{equation}
-% % % %     \mathbf{\sigma} = \sqrt{ \delta + \frac{1}{m}\sum_i (\mathbf{H} - \mathbf{\mu})_i^2 }
-% % % % \end{equation}
-
-% % % where $\delta$ is a constant. These equations give the same parameters in Equation~\ref{H} for a normalised 
-% and reparameterized $\mathbf{H}$.
-
-% % % % \subsection{Optimisers}\label{optimiser}
-% % % % The component for each model that searches for the Nash equilibrium in a GAN model is the optimiser. This 
-% algorithm finds the parameters $\mathbf{\theta}$ that reduce the objective function $J(\mathbf{\theta})$ in the 
-% parameter space at an epoch. The objective function is the performance of the model for a collection of samples. 
-
-% % % % The complexity of machine learning optimisation, even without the adversarial relationship in the GAN 
-% framework, comes from the indirect effect the optimisation has on the objective function. This is indirect because 
-% the objective function is defined on test data (training data and generated samples for the GAN analogue) that the 
-% optimisation process has no effect on.  
-
-% % % % The Adam optimiser Kingma and Ba, 2014 \cite{adam} is an optimiser that adapts the learning rate of the 
-% optimisation process. The learning rate of the machine learning system is related to the speed at which the optimiser
-% searches for the best gradient step at a given epoch. 
-
-% % % % \subsubsection{Stochastic Gradient Descent}\label{appendix:sgd}
-% % % % A gradient descent algorithm outlines the process of minimizing an objective function for a model. The function
-% may be distributive over a set of samples so that it is the same as the sum of the function acting on each sample. 
-% Stochastic gradient descent (SGD) is a common optimisation algorithm. It uses a constant learning rate (a step to move
-% through the parameter space with) per iteration of training, though in practice this value depends on the value of the 
-% iteration for more advanced algorithms. 
-
-% % % % In SGD a sample of $m$ latent-space vectors $\{ \textbf{z}^{(1)}, \ldots, \textbf{z}^{(m)} \}$ are drawn from 
-% $p_\textbf{z}$ with a sample of $m$ samples of real data $\{ \textbf{x}^{(1)}, \ldots, \textbf{x}^{(m)} \}$. The 
-% discriminator parameters are updated the ascension of the stochastic gradient
-
-% % % % \begin{equation}
-% % % %     \nabla_{\theta^{(D)}} \frac{\epsilon}{m} \sum_{i=1}^m \bigg [ \log D(\mathbf{x}^{(i)}) + \log ( 1 -
-% D( G(\mathbf{z}^{(i)}))) \bigg ]
-% % % % \end{equation}
-
-% % % % and generator is updated by the descension of its stochastic gradient 
-
-% % % % \begin{equation}
-% % % %     \nabla_{\theta^{(G)}} \frac{\epsilon}{m} \sum_{i=1}^m \log ( 1 - D( G(\mathbf{z}^{(i)})))
-% % % % \end{equation}
-
-% % % % where $\epsilon$ is the learning rate and $\nabla_\bm{\theta}$ is the directional derivative in the direction 
-% of increasing or decreasing gradient. 
-
-% % % % % \begin{algorithm}[ht]
-% % % % % \caption{\small Minibatch stochastic gradient descent training of generative adversarial nets.
-% % % % % }
-% % % % % \begin{algorithmic}
-% % % % % \label{alg:AGF}
-% % % % % \FOR{number of training iterations}
-% % % % %   \FOR{$k$ steps}
-% % % % %     \STATE{$\bullet$ Sample minibatch of $m$ noise samples $\{ \bm{z}^{(1)}, \dots, \bm{z}^{(m)} \}$ from 
-% noise prior $p_g(\bm{z})$.}
-% % % % %     \STATE{$\bullet$ Sample minibatch of $m$ examples $\{ \bm{x}^{(1)}, \dots, \bm{x}^{(m)} \}$ from data 
-% generating distribution $p_\text{data}(\bm{x})$.}
-% % % % %     \STATE{$\bullet$ Update the discriminator by ascending its stochastic gradient:
-% % % % %         \[
-% % % % %             \nabla_{\theta_d} \frac{1}{m} \sum_{i=1}^m \left[
-% % % % %             \log D\left(\bm{x}^{(i)}\right)
-% % % % %             + \log \left(1-D\left(G\left(\bm{z}^{(i)}\right)\right)\right)
-% % % % %             \right].
-% % % % %         \]}
-% % % % %     %parameters $\theta_d$ of discriminator $D$
-% % % % %   %in the direction of the stochastic gradient of the binomial cross-entropy
-% % % % %   %for $D$ predicting whether its argument comes from $p_\text{data}(\bm{x})$ (target = 1, input = $\bm{x}$) 
-% or
-% % % % %   %$P_g$ (target = 0, input = $G(\bm{z})$), i.e., towards minimizing
-% % % % %   % \mbox{$-\log D(\bm{x}) - \log(1 - D(G(\bm{z})))$}.}
-% % % % %   \ENDFOR
-% % % % %   \STATE{$\bullet$ Sample minibatch of $m$ noise samples $\{ \bm{z}^{(1)}, \dots, \bm{z}^{(m)} \}$ from noise 
-% prior $p_g(\bm{z})$.}
-% % % % %     \STATE{$\bullet$ Update the generator by descending its stochastic gradient:
-% % % % %         \[
-% % % % %             \nabla_{\theta_g} \frac{1}{m} \sum_{i=1}^m
-% % % % %             \log \left(1-D\left(G\left(\bm{z}^{(i)}\right)\right)\right)
-% % % % %             .
-% % % % %         \]}
-% % % % %   \ENDFOR
-% % % % %   \\The gradient-based updates can use any standard gradient-based learning rule. We used momentum in our experiments.
-% % % % % \end{algorithmic}
-% % % % % \end{algorithm}
 
 
 
