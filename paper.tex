@@ -95,12 +95,12 @@ allcolors=blue]{hyperref}
   \footnotetext[1]{Corresponding author: \url{jedhmr@gmail.com}}
 }
 
-\setcounter{tocdepth}{2}
-\begingroup
-\let\clearpage\relax
-\tableofcontents
-\endgroup
-\newpage
+% \setcounter{tocdepth}{2}
+% \begingroup
+% \let\clearpage\relax
+% \tableofcontents
+% \endgroup
+% \newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -362,17 +362,22 @@ be classified and given to an ACGAN. The generator component of this model can t
 These samples could be tessellated together to form a larger distribution across a continuous range of  redshifts. A very 
 similar method known as a Conditional-GAN (CGAN)~\cite{cgan} is known to work well at the same task.
 
-In the ACGAN framework each generated sample has a corresponding label $c \sim p_c$ and noise vector $\mathbf{z} \sim p_z$ 
-which make the generator create a sample $G(c, \mathbf{z})$. The discriminator $D$ gives probability distributions $P(S|X)$ 
-and $P(C|X) = D(X)$ over the sources of the samples $S$ and class labels $C$. The objective function is made of two 
-independent parts; the likelihood of a correct source $L_S$ and the log-likelihood of the correct class $L_C$
+In the ACGAN framework each sample $\mathbf{x}$ (generated or not) has a corresponding label $c_)\mathbf{x} \sim p_c$ and noise vector $\mathbf{z} \sim p_\mathbf{z}$ 
+which make the generator create a sample $G(c_\mathbf{x}, \mathbf{z})$ where $G(c_\mathbf{x}, \mathbf{z}) \in X_\textup{fake}$.
+The discriminator $D$ gives probability distributions $P(S|X)$ and $P(C|X) = D(X)$ over the sources of the samples $S \in \{X_\textup{real}, X_\textup{fake}\}$ and class labels $C$. The objective function is made of two independent parts; the 
+likelihood of a correct source $L_S$ and the log-likelihood of the correct class $L_C$
 
 \begin{eqnarray}
-    L_S &=& \EE [\log P(S = \textup{real} | X_{real})] \nonumber \\
-        &+& \EE [\log P(S = \textup{fake} | X_{fake})] \\ 
+    % L_S &=& \EE [\log P(S = \textup{real} | X_{real})] \nonumber \\
+    %     &+& \EE [\log P(S = \textup{fake} | X_{fake})] \\ 
+    %     & & \nonumber \\ 
+    % L_C &=& \EE [\log P(C = c | X_{real})] \nonumber \\
+    %     &+& \EE [\log P(C = c | X_{fake})]
+    L_S &=& \EE [\log P(\mathbf{x} \sim p_{\textup{data}} | \mathbf{x} \sim X_{real})] \nonumber \\
+        &+& \EE [\log P(\mathbf{x} \sim p_{\textup{model}} | \mathbf{x} \sim X_{fake})] \\ 
         & & \nonumber \\ 
-    L_C &=& \EE [\log P(C = c | X_{real})] \nonumber \\
-        &+& \EE [\log P(C = c | X_{fake})]
+    L_C &=& \EE [\log P(c_\mathbf{x} = c \, | \mathbf{x} \sim X_{real})] \nonumber \\
+        &+& \EE [\log P(c_\mathbf{x} = c \, | \mathbf{x} \sim X_{fake})]
 \end{eqnarray}
 
 In this case $D$ tries to maximize $L_S + L_C$ and $G$ tries to minimise $L_C - L_S$.
@@ -466,6 +471,13 @@ three-hundred years (CPU time) for the Millennium simulation.\footnotemark.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[hbt!]
+\includegraphics[width=\columnwidth]{figures/diagrams/mill_catalog_comparison.png}
+\centering
+\caption[]{A comparative diagram of Millennium simulation data against galaxy survey data\protect\footnotemark.}
+\label{fig:gal_catalogs}
+\end{figure}
+\footnotetext{Image from \url{wwmpa.mpa-garching.mpg.de/millennium}.}
 
 \subsection{Gravitational wave sources} % Rachel Gray et al. paper
 Measurements of cosmological parameters from observations of gravitational wave events are independent of the 
@@ -492,6 +504,14 @@ modelling from GW170817~\cite{GW170817_m2} obtained a value $H_0 = 74.0^{+11.5}_
 The consensus for the true value of $H_0$ from electromagnetic spectrum observations is a contentious issue. Assuming the 
 $\Lambda \text{CDM}$ cosmology, the Planck experiment found a value of $H_0 =~ 67.4 \pm~0.5 \text{ km s}^{-1} 
 \text{ Mpc}^{-1}$~\cite{planck}. 
+
+\begin{figure}
+\includegraphics[width=\columnwidth]{figures/diagrams/scale_fig.png}% scaling2.png
+\centering
+\caption{The application of the scaling $s$ to a 3D-histogram training sample. The cube on the left shows an 
+image $\mathbf{x}$ and on the right is a scaled image $s(\mathbf{x})$.}
+\label{fig:scaling}
+\end{figure}
 
 The same event GW170817 had a degeneracy between the source distance and the viewing angle to the radio counterpart that 
 limited the initial certainty in the EM localization of the GW source. This degeneracy was broken from radio 
@@ -524,13 +544,13 @@ report because at present it only returns positional data. This could increase t
 techniques for observed GW events perform so that tighter constraints on the source-observer separation could be 
 obtained in the future. This would help to accumulate more data for posteriors to further constrain $H_0$.
 
-\begin{figure}[hbt!]
-\includegraphics[width=\columnwidth]{figures/diagrams/mill_catalog_comparison.png}
-\centering
-\caption[]{A comparative diagram of Millennium simulation data against galaxy survey data\protect\footnotemark.}
-\label{fig:gal_catalogs}
-\end{figure}
-\footnotetext{Image from \url{wwmpa.mpa-garching.mpg.de/millennium}.}
+% \begin{figure}[hbt!]
+% \includegraphics[width=\columnwidth]{figures/diagrams/mill_catalog_comparison.png}
+% \centering
+% \caption[]{A comparative diagram of Millennium simulation data against galaxy survey data\protect\footnotemark.}
+% \label{fig:gal_catalogs}
+% \end{figure}
+% \footnotetext{Image from \url{wwmpa.mpa-garching.mpg.de/millennium}.}
 
 In short, expanding the range for credible inferences of GW event localizations with increased understanding of GW event 
 analyses would provide a more accurate estimate on the value of $H_0$ and other important parameters. This will be 
@@ -541,6 +561,13 @@ simulation from a conditional generative model that is given a redshift value. I
 such a generative model could not generalise to higher redshift simulation data for this purpose. This is left to the 
 discussion of future work in Section~\ref{sec:future_work}. This idea shows the direct link between generative AI and 
 new discoveries in astrophysics.
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/diagrams/kernel_fig.png}
+\centering
+\caption{A histogram down-sampled with three kernels of size $k=\{1, 2, 4\}$ (from left to right).}
+\label{fig:kernel_fig}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -572,7 +599,7 @@ Observatory (TAO)~\cite{TAO}. SAGE modelling adds baryonic processes into N-body
 simulations have been run. The baryonic particle properties are from information in the simulation run such as mass, 
 size, spin and their merger history. SAGE models account for different mechanisms that affect the evolutions of 
 galaxies and therefore the evolution of cosmological structure. The N-body particle positions of the Millennium-SAGE 
-data were taken at snapshots at discrete redshifts $z=\{0.00, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
+data were taken from snapshots at discrete redshifts $z=\{0.00, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
 data for the ACGAN. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -592,13 +619,13 @@ axis. The densities in each bin cell were also scaled to this range to fit the o
 % After testing different sizes, a cube size of $160 \: h^{-1} \,\textup{Mpc}$ was found to balance the selection of unique 
 % samples in the simulation volume against featuring the same features in the simulation structure.
 
-\begin{figure}
-\includegraphics[width=\columnwidth]{figures/diagrams/scale_fig.png}% scaling2.png
-\centering
-\caption{The application of the scaling $s$ to a 3D-histogram training sample. The cube on the left shows an 
-image $\mathbf{x}$ and on the right is a scaled image $s(\mathbf{x})$.}
-\label{fig:scaling}
-\end{figure}
+% \begin{figure}
+% \includegraphics[width=\columnwidth]{figures/diagrams/scale_fig.png}% scaling2.png
+% \centering
+% \caption{The application of the scaling $s$ to a 3D-histogram training sample. The cube on the left shows an 
+% image $\mathbf{x}$ and on the right is a scaled image $s(\mathbf{x})$.}
+% \label{fig:scaling}
+% \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -621,6 +648,7 @@ $200 \:  \: h^{-1} \,\textup{Mpc}$ histograms at all redshifts $z$. This paramet
 of $a$ controls the median pixel density of the scaled image. Figure \ref{fig:scaling} shows the difference between scaled 
 images $s(\mathbf{x})$ and the original images $\mathbf{x}$. The inverse transformation $s^{-1}(\mathbf{x})$ can be applied 
 to obtain the original image. 
+
 % A logarithmic scaling was used originally, but this did not provide good results with the GAN architecture that used 
 % the hyperbolic tangent ($\tanh$) activation because the logarithm of a negative number is undefined. The models using 
 % $\tanh$ activations achieved much better results than models without these activations.
@@ -709,7 +737,7 @@ The ACGAN implementation was limited by the GPU memory capacity - the parameters
 sample batch sizes meant that the GPU was easily saturated. Deeper models with more convolutional units were implemented 
 but these tended to stall the GPU. A training loop for $10^5$ epochs for the $200 \: h^{-1} \: \textup{Mpc}$ cubes 
 formatted to $32 \times 32 \times 32$ pixel histograms took approximately 144 hours on an NVIDIA Tesla V100 GPU with 
-32GB capacity. 
+32GB capacity. To augment the dataset with additional diversity for each redshift, the samples were rotated in-situ during training as the sample batches were gathered. 
 
 Generative adversarial networks are harder to train with three-dimensional input data because of the increase in the 
 number of configurations of interest in the data. There are a number of tricks and techniques for moving toward more 
@@ -823,8 +851,13 @@ a great circle arc on the N-dimensional hypersphere in the latent space, with a 
     S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
 \end{equation}
 
-where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with. 
+where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with and
+$\mu$ are the discrete proportioned steps between $q_1$ and $q_2$. It should be noted that simple linear interpolation 
+along a given axis of the latent space would disregard the curvature of the 256-dimensional latent space and so the path 
+along a great circle by spherical interpolation is required.
 
+% In these cases, we have performed a linear interpolation which assumes that the latent space is uniformly distributed 
+% hypercube. Technically, our chosen latent space is a 100-dimension hypersphere or multimodal Gaussian distribution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -839,7 +872,7 @@ generated cube side-lengths).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Statistics and diagnostics}\label{sec:stats_and_diags}
+\section{Statistics and diagnostics}\label{methods:stats_and_diags}
 % WHAT ARE THESE MEASURES FOR? WHY ARE THEY IMPORTANT TO THE EXPERIMENT ? 
 % WHAT DO THE STATS CONSIST OF IN MAKING? WHAT DO THEY SHOW?
 
@@ -854,12 +887,12 @@ in any comparison. The comparison of sample ensembles tested how well the genera
 real and generated samples to the same distribution. The Kullback-Leibler (KL) divergence and its relevance to the 
 comparisons is defined in Appendix~\ref{appendix:kl_div}.
 
-\begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/diagrams/kernel_fig.png}
-\centering
-\caption{A histogram down-sampled with three kernels of size $k=\{1, 2, 4\}$ (from left to right).}
-\label{fig:kernel_fig}
-\end{figure}
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/diagrams/kernel_fig.png}
+% \centering
+% \caption{A histogram down-sampled with three kernels of size $k=\{1, 2, 4\}$ (from left to right).}
+% \label{fig:kernel_fig}
+% \end{figure}
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{figures/diagrams/kl_stat_process3.png}
@@ -926,7 +959,13 @@ histograms for each comparison were made. This process was repeated for each ker
 % show generated images at various redshifts, compare with training data
 Figures~\ref{fig:t_z_imgs} and ~\ref{fig:g_z_imgs} show separate collections of simulated cosmic web and GAN-generated 
 cosmic web for each class of redshift in the Millennium-SAGE training data. Across each value of redshift the ACGAN 
-demonstrates its ability to evaluate each point in the latent space to a strong representation 
+demonstrates its ability to evaluate each point in the latent space to a strong representation of a sample at the equivalent
+redshift drawn from the model distribution. The ACGAN replicates the pixel density statistics well but the main downfall is 
+in the reproduction of filament structure in the generated images. Typically the generated filaments are not as thin as their 
+real counterparts in the training data. 
+
+Across the generated samples there is no evidence of generator mode collapse whereby a small set of characteristics are 
+reproduced across the generated samples. They show as much mutual difference as the training images.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -943,26 +982,26 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 \centering
 \caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs.Each row corresponds to the 
          redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
-\label{fig:t_z_imgs}
+\label{fig:g_z_imgs}
 \end{figure*}
 
-\begin{figure*}[hbt!]
-\includegraphics[width=16cm]{figures/cubes/acgan2d_t_fig.png}
-\centering
-\caption{A collection of 2D-projections of training data cubes extracted from the Millennium-SAGE catalogs. Each row 
-         corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
-         $\mathbf{x}$.}
-\label{fig:t_z_imgs}
-\end{figure*}
+% \begin{figure*}[hbt!]
+% \includegraphics[width=16cm]{figures/cubes/acgan2d_t_fig.png}
+% \centering
+% \caption{A collection of 2D-projections of training data cubes extracted from the Millennium-SAGE catalogs. Each row 
+%          corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
+%          $\mathbf{x}$.}
+% \label{fig:t_z_imgs_2d}
+% \end{figure*}
 
-\begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/cubes/acgan2d_g_fig.png}
-\centering
-\caption{A collection of 2D-projections of generated data cubes extracted from the Millennium-SAGE catalogs. Each row 
-         corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
-         $\mathbf{x}$.}
-\label{fig:t_z_imgs}
-\end{figure*}
+% \begin{figure*}[hbt!]
+% \includegraphics[width=17cm]{figures/cubes/acgan2d_g_fig.png}
+% \centering
+% \caption{A collection of 2D-projections of generated data cubes extracted from the Millennium-SAGE catalogs. Each row 
+%          corresponds to the redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube 
+%          $\mathbf{x}$.}
+% \label{fig:t_z_imgs_2d}
+% \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -972,11 +1011,14 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 \subsubsection{Redshift interpolation}
 % show grid of cubes ranging from z=0 to z=(highest z in training data classes)
 
+Figure~\ref{fig:acgan_interp} shows the results of varying the class label for a single latent-space point. Between the 
+minimum and maximum redshifts $z=0.0$ and $z=5.0$ respectively, 40 class examples were generated.
+
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/cubes/acgan3d_interp.png}
 \centering
 \caption{A collection of images generated with an array of redshift values for a single latent-space point.}
-\label{fig:kernel_fig}
+\label{fig:acgan_interp}
 \end{figure}
 
 \subsubsection{Universe generation}
@@ -995,6 +1037,24 @@ demonstrates its ability to evaluate each point in the latent space to a strong 
 \caption{A box made of generated cubes at redshift $z=3.00$.}
 \label{fig:kernel_fig}
 \end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Latent space point interpolation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Unseen redshift testing}
+To test the power of the ACGAN generative approach, a selection of redshift values were selected from the Millennium-SAGE
+snapshots to obtain new and unseen redshift data. This unseen data was used to register the ability of the generator to
+create cubes at a redshift to which the discriminator had never been shown in training. 
+
+The new redshifts are $z'=\{0.51, 1.50, 2.62, 3.58, 4.52\}$ where the original redshift values $z$ shown to the
+ACGAN are $z=\{0.0, 1.07, 2.07, 3.06, 4.17, 5.28\}$. With these new redshifts the same $D_{KL}$-trials were repeated and 
+the results are shown in 
+% plot unseen z cubes against true redshifts: 5 rows, 6 cols: 3 real, 3 gen
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1016,10 +1076,12 @@ model. The samples are still being improved on at this stage. This is echoed in 
 to a value of around $9.25$. 
 This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but instead 
 that the architecture of the discriminator cannot extract any more useful information (and is extracting less and less) to 
-the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode collapse and made more samples with more similarity between them.
+the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode 
+collapse and made more samples with more similarity between them.
 
 The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
-architectures. The separate networks are not able to fully attain their objectives against each other. At this point the discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
+architectures. The separate networks are not able to fully attain their objectives against each other. At this point the 
+discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
 which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, 
 the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many 
 different models it was found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point 
@@ -1029,7 +1091,7 @@ the training would dissipate chaotically.
 \includegraphics[width=\columnwidth]{figures/graphs/metrics.png}
 \centering
 \caption{The loss and accuracy curves for the training of the ACGAN.}
-\label{fig:2dgan_losscurve}
+\label{fig:acgan_losscurve}
 \end{figure}
 
 % KL DIVERGENCES
@@ -1046,7 +1108,9 @@ $10^{-1.4}$ from structureless images to realistic images.
 The curves have similar features to the loss and accuracy curves as they should because of the relation of the 
 cross-entropy to the KL divergence $D_{KL}$.
 
-The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values throughout training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for replacement with each other, as opposed to a preferred replacement of one with the other.
+The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values 
+throughout training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for 
+replacement with each other, as opposed to a preferred replacement of one with the other.
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/graphs/stats.png}
@@ -1060,14 +1124,109 @@ The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{K
 
 \subsection{KL trials}\label{sec:kl_trials}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Training redshift trials}
+
+Figure~\ref{fig:kl_trials_all} and Table~\ref{tab:1} show the results of the $D_{KL}$-trials for batches of 32 samples from 
+each distribution repeated for 64 separate comparisons between each distribution pairing. The procedure for the repeated 
+ensemble KL divergence testing outlined in Section~\ref{methods:stats_and_diags} used the samples transformed into 
+probability distributions over the pixel density.
+
+There is a slight broadening of the histograms with increasing kernel size. This shows the random effect, or dispersion, 
+on the $D_{KL}$ value from repeated tests to on separate ensembles of histograms. This is caused by the loss of information 
+due to the down-sampling of larger areas causing more variance in a given value of pixel density because of the averaging 
+over the original pixels. This is predicted by the central-limit theorem. In this discussion a `mutual comparison' 
+refers to the KL divergence $D_{KL}$ between two different ensembles from the same distribution of $t$, $g$ or $u$. The 
+mutual $D_{KL}$ comparisons that show the most broadening are the mutual comparisons which together have increasing 
+variance and separation with kernel size. This shows that in both cases the distributions are composed very differently 
+to the uniform distributions. The means of the mutual distributions stay the same except for the uniform-uniform comparison. 
+This is because the median for the bin separations in the component-histograms was given by the median of the training data 
+batch which consistently has a lower mean pixel density than the uniform histogram data. 
+
+
 \begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/graphs/kl_trials_all.png}
+\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_train.png}
 \centering
 \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
-         uniform $u$ cube samples. This graph shows the results for downsampling kernel values $k \in\{1, 2, 4\}$.}
-\label{fig:t_z_imgs}
+         uniform $u$ cube samples. This graph shows the results for downsampling kernel values $k \in \{1, 2, 4\}$.}
+\label{fig:kl_trials_all}
 \end{figure*}
 
+
+The similar values of the generated-generated $D_{KL}$ average comparison with the training-training average shows the 
+ability of the generator to represent multiple modes in the latent space with as much variety as the simulation data. 
+This was affirmed by the training not displaying any mode collapse after converging. The narrower widths of the $t||g$ 
+and $g||t$ comparisons stems from the generator creating a subset of images drawn from the data distribution. This could
+well be a limitation from the capacity of the model.
+
+The separate kernels cause averaging over different sized volumes. By construction the histograms are already sampling a 
+volume at a fixed resolution for every distribution and so the kernel sizes give the same volume at different levels of 
+resolution. A histogram from any distribution with each kernel down-sampling will exhibit different scales of structure 
+from the original unsampled histogram and this is shown in Figure~\ref{fig:kernel_fig}. The ensembles drawn from each 
+distribution are necessary to measure the difference in the structure from the distributions that is not inherent in the 
+individual variance of the images themselves. The latter difference does not concern the distributions of the samples and 
+is less important for the test of the generator capability. The disparity in the $D_{KL}$ means for each kernel dictates 
+how the structure correlates on each scale. The matching alignment of the means along the $t||g$ and $t||t$ columns for 
+all values of $k$ provides more evidence for the ability of the generator model. In opposition to this the $t||u$ and $g||u$
+columns show $D_{KL}$ means that increase with $k$ and whose separations (between KL comparison means $D_{KL}(a||b)$ and
+$D_{KL}(b||a)$) increase.
+
+
+The widths of the mutual comparison histograms in the $D_{KL}$ trials show that there is an inherent difference in the 
+information content of the ensembles from distributions. Some contribution to this is from the difference in the information
+content of the batches themselves. Within the fixed specifications of the histograms it would be expected that the mutual 
+comparisons show very close values. 
+
+An important characteristic of the training-generated comparisons is that the $D_{KL}$-histograms of these distribution 
+pairs overlap. This gives evidence that the distributions can effectively represent each other. The mean $D_{KL}(t||g)$ and 
+$D_{KL}(g||t)$ values are all nearly a whole order of magnitude smaller than the training-uniform and generated-uniform 
+comparison means. These values of the training-uniform and generated-uniform together show that the generator 
+representations are close to the training data because of their similarity in the mean, variance and mean-separations 
+for all values of $k$. This shows the generator is able to create samples that are strongly correlated to the training 
+data samples, to an extent that is independent of redshift $z$. % check again
+
+% %would liked to have tried to test characteristic statistic of the original dataset
+
+The $D_{KL}$ values of the training-generated comparisons are lower by nearly a whole order of magnitude than the 
+training-uniform and generated-uniform comparisons for all kernel sizes. This is the most important result of this report 
+because it is evidence for the generator being able to generate samples that are statistically similar to the training data
+samples. These values show that much less information would be lost if the model distribution was used in place of the data 
+distribution as opposed to the uniform distribution, and that the amount lost is around a factor of two more than that of the 
+training distribution approximating itself with different ensembles. This is supported by the horizontal separations of the 
+histogram peaks in each column of the first three columns of Figure~\ref{fig:kl_trials_all}. The values of the $D_{KL}(t||g)$ 
+and $D_{KL}(g||t)$ are nearly the same as the $D_{KL}(t_1||t_2)$ and $D_{KL}(t_2||t_1)$ values which suggests that replacing 
+the $p_{data}$ distribution with the $p_{model}$ distribution would provide realistic samples for the same potential uses 
+of the training data. This is because the $D_{KL}(t||t)$ and $D_{KL}(t||t)$ values are nearly the same as the $D_{KL}(t||g)$
+and $D_{KL}(g||t)$ values as well as the fact that they are both smaller than the uniform-generated and uniform-training 
+comparisons. % check 
+The mutual $D_{KL}$ comparisons of the training and generated samples show agreement across the different kernels $k$ and
+redshifts $z$. This shows the generators ability to reproduce a variety of structure in the training data samples at a variety 
+of redshifts. 
+% except for a difference of $10^{-3}$ in the variance of the $k=4$ comparison. 
+% The higher $D_{KL}$ average in the $k=1$ training-generated comparisons are expected; the $D_{KL}$ statistic has more individual pieces of information to compare and find differences with. % check exact figures / statements
+
+The $k=4$ kernel, whilst being the largest kernel, does not completely measure the continuity of filament structures over 
+a number of the pixels in the $k=4$ down-sampled histograms. This could be tested with a few larger kernel-sizes in histograms 
+with a greater number of total pixels. This could also be measured using a cosmological test such as the two-point correlation 
+function or power spectrum. An increase in the number of bins for the component-histograms would measure the similarity of
+the generator images to the training data images better. The values of the standard deviation of each $D_{KL}$ histogram 
+relative to the values of the means suggests the number of trials sufficiently sampled the true $D_{KL}$ mean in each test.
+% The empty plot of Figure~\ref{fig:kl_trials_all} appears this way because the density bin boundary is lower than the median 
+% and mean of the uniform distribution over the pixel densities. The $D_{KL}$ value for this comparison is much lower than $10^{-2}$.
+
+The differences between the training-uniform and generated-uniform means and variances show the significance of the 
+training-generated comparisons. The mean $D_{KL}$ values of the training-generated comparisons are almost at the value of 
+the training-training comparison means which is more evidence for the understandings of the training data by the generator. 
+The similarity shown by the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values may mostly be due to the similar pixel density 
+distributions of the training and generated data. Considering that the lack of filament structure in the larger scales 
+of the generated data compared to the training data is not shown in the $D_{KL}$ comparisons, this may be true. 
+
+The pixel density distribution is an important characteristic of the images but the just obtaining the 
+similarity between the $t$ and $g$ distributions with this property would not guarantee that all the structure in the 
+training data was present. There are many combinations of pixels that make up a matching pixel-density distribution for 
+two histogram distributions, but far less of those show the structure of the cosmic web. 
+% The higher standard deviations in the $D_{KL}$ histograms for the 2D case in all the kernel sizes compared to the 3D cases is due to the larger size of features relative to total size of the image that shows them in either case.
 
 % \begin{figure*}[hbt!]
 % \includegraphics[width=17cm]{figures/graphs/kl_trials_1.png}
@@ -1095,166 +1254,87 @@ The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{K
 
 \begin{table*}[t]
   \centering
-  \begin{tabular}{ccccccc}
+  \begin{tabular}{|ccccccc|}
     \hline\hline
-    & $(t||g)$  $(g||t)$ & $(t||u)$ $(u||t)$ & $(g||u)$ $(u||g)$ & $(t||t)$  $(t||t)$ & $(g||g)$  $(g||g)$ & $(u||u)$  $(u||u)$\\ [1ex]
+          & $\langle D_{KL}(t||g) \rangle_z$ & $\langle D_{KL}(t||u) \rangle_z$ & $\langle D_{KL}(g||u)\rangle_z$ & $\langle D_{KL}(t||t)\rangle_z$ & $\langle D_{KL}(g||g) \rangle_z$ & $\langle D_{KL}(u||u) \rangle_z$ \\ 
+          &  $\langle D_{KL}(g||t)\rangle_z$ & $\langle D_{KL}(u||t)\rangle_z$ & $\langle D_{KL}(u||g)\rangle_z$ & $\langle D_{KL}(t||t) \rangle_z$ & $\langle D_{KL}(g||g)\rangle_z$  & $\langle D_{KL}(u||u)\rangle_z$ \\ [1.0ex]
     \hline\hline
-    $k=1$ & 0.358 0.344 &  0.619 0.531 & 0.804 0.722 & 0.195 0.195 & 0.196 0.196 & 0.203 0.202  \\ 
-    % \hline
-    $k=2$ & 0.322 0.309 & 13.879 1.517 & 13.904 1.628 & 0.199 0.199 & 0.202 0.202 & 0.355 0.370 \\
-    % \hline
-    $k=4$ & 0.309 0.292 & 38.687 2.318 & 38.953 2.438 & 0.196 0.195 & 0.197 0.197 & 0.178 0.180 \\ [1ex]
+    
+    $k=1$ & $0.060\pm0.005$ & $0.103\pm0.006$ & $0.134\pm0.007$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\
+          & $0.057\pm0.004$ & $0.088\pm0.005$ & $0.120\pm0.006$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\ [1ex]
+
+    $k=2$ & $0.054\pm0.006$ & $2.313\pm0.084$ & $2.317\pm0.165$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.059\pm0.016$ \\
+          & $0.052\pm0.005$ & $0.253\pm0.009$ & $0.271\pm0.017$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.062\pm0.017$ \\ [1ex]
+               
+    $k=4$ & $0.051\pm0.008$ & $6.448\pm0.131$ & $6.492\pm0.418$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\
+          & $0.049\pm0.006$ & $0.386\pm0.015$ & $0.406\pm0.033$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\ [1ex]
+    
     \hline\hline
   \end{tabular}
-  \caption{Results from the $D_{KL}$ trials averaged over redshift $z$ for each kernel size $k$ for each distribution comparison.}
+  \caption{Results from the $D_{KL}$ trials between each distribution averaged over redshift $z$ for each kernel size $k$.}
   \label{tab:1}
 \end{table*}
 
-% \begin{table}[h!]
-% \centering
-% \begin{tabularx}
-% {\columnwidth}{@{}l *5{>{\centering\arraybackslash}X}@{}}%{||c c c c c c||} 
-%  \hline
-%   $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ 
-%   $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$ & $(t||g)$  $(g||t)$\\ [0.5ex]
-%     % $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ 
-% %   $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$ & $D_{KL}(t||g)$  $D_{KL}(g||t)$
-%  \hline\hline
-%  0.358 0.344 &  0.619 0.531 & 0.804 0.722 & 0.195 0.195 & 0.196 0.196 & 0.203 0.202  \\ 
-%  0.322 0.309 & 13.879 1.517 & 13.904 1.628 & 0.199 0.199 & 0.202 0.202 & 0.355 0.370 \\
-%  0.309 0.292 & 38.687 2.318 & 38.953 2.438 & 0.196 0.195 & 0.197 0.197 & 0.178 0.180 \\ [1ex]
-% \hline
-% \end{tabularx}
-% \caption{Values of critical hyper-parameters used in the ACGAN implementation.}
-% \label{table:acgan_params}
-% \end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Unseen redshift trials}
+
+Figure~\ref{fig:kl_trials_all_z2} and Table~\ref{tab:2} show the results of the $D_{KL}$-trials between for batches of 32 
+samples from each distribution repeated for 64 separate comparisons between each distribution pairing. These results are 
+produced by using the generator to create samples at values of redshift $z=z'$ that the ACGAN has never been exposed to.
+
+\begin{figure*}[hbt!]
+\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_unseen.png}
+\centering
+\caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
+         uniform $u$ cube samples with cube samples from unseen redshift snapshots in the Millennium-SAGE simulation 
+         data This graph shows the results for downsampling kernel values $k \in \{1, 2, 4\}$.}
+\label{fig:kl_trials_all_z2}
+\end{figure*}
+
+\begin{table*}[t]
+  \centering
+  \begin{tabular}{|ccccccc|}
+    \hline\hline
+          & $\langle D_{KL}(t||g) \rangle_{z'}$ & $\langle D_{KL}(t||u) \rangle_{z'}$ & $\langle D_{KL}(g||u)\rangle_{z'}$ & $\langle D_{KL}(t||t)\rangle_{z'}$ & $\langle D_{KL}(g||g) \rangle_{z'}$ & $\langle D_{KL}(u||u) \rangle_{z'}$ \\ 
+          &  $\langle D_{KL}(g||t)\rangle_{z'}$ & $\langle D_{KL}(u||t)\rangle_{z'}$ & $\langle D_{KL}(u||g)\rangle_{z'}$ & $\langle D_{KL}(t||t) \rangle_{z'}$ & $\langle D_{KL}(g||g)\rangle_{z'}$  & $\langle D_{KL}(u||u)\rangle_{z'}$ \\ [1.0ex]
+    \hline\hline
+    
+    $k=1$ & $0.146\pm0.010$ & $0.100\pm0.005$ & $0.073\pm0.005$ & $0.069\pm0.004$ & $0.081\pm0.004$ & $0.109\pm0.007$ \\
+          & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.036\pm0.007$ & $0.036\pm0.007$ & $0.033\pm0.006$ & $0.033\pm0.006$ \\
+          [1ex]
+    
+    $k=2$ & $0.650\pm0.045$ & $0.166\pm0.007$ & $1.390\pm0.074$ & $0.208\pm0.009$ & $0.343\pm0.021$ & $0.174\pm0.011$ \\
+          & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.059\pm0.013$ & $0.061\pm0.014$ & $0.067\pm0.014$ & $0.067\pm0.014$ \\
+          [1ex]
+               
+    $k=4$ & $2.233\pm0.120$ & $0.253\pm0.011$ & $5.658\pm0.358$ & $0.417\pm0.022$ & $2.986\pm0.249$ & $0.353\pm0.025$ \\
+          & $0.033\pm0.008$ & $0.032\pm0.008$ & $0.061\pm0.018$ & $0.062\pm0.017$ & $0.080\pm0.025$ & $0.080\pm0.025$ \\
+          [1ex]
+    \hline\hline
+  \end{tabular}
+  \caption{Results from the $D_{KL}$ trials between each distribution averaged over values of unseen redshift $z'$ for each 
+           kernel size $k$.}
+  \label{tab:2}
+\end{table*}
+
+The results point to the fact that the generator is less competent at representing values of redshift that lay between the
+values that the ACGAN has been exposed to in training. This is certainly to be expected as the description for the emergence
+of the finite training set of images is certainly more simple than the chronology of the cosmic web that the Millenium-SAGE
+models characterise. Figure~\ref{fig:z_kl} shows the relation between the $\langle D_{KL}(g||t) \rangle$ and 
+$\langle D_{KL}(t||g) \rangle$ values with redshift $z$. The highest peak coincides with the lowest unseen redshift $z'=0.51$.
+
+% lack of data? lack of feature maps
+
+\begin{figure}[!ht]%[hbt!]
+\includegraphics[width=\columnwidth]{figures/graphs/z_kl.png}
+\centering
+\caption{The KL-trial means $\langle D_{KL} \rangle$ for comparisons of image distributions 
+         $t$ and $g$ for all redshifts $z$ and $z'$ }
+\label{fig:z_kl}
+\end{figure}
 
 
-% do the same as before (in thesis) but average over classes?
-
-% This section presents the results of the procedure for the repeated ensemble KL divergence testing. transformed into 
-% probability distributions over the pixel density. This comparison is repeated over 100 iterations 
-
-% \subsubsection{2D-GAN implementation}
-% Figure~\ref{fig:2dgan_kltrials} shows the results of the $D_{KL}$ tests for the 2D-GAN implementation with the $D_{KL}$
-% values on each plot of the distribution comparisons. There is a consistent broadening of the histograms along the columns
-% of increasing kernel size. This shows the random effect, or dispersion, on the $D_{KL}$ value from repeated tests to on 
-% separate ensembles of histograms. This is caused by the loss of information due to the down-sampling of larger areas which
-% causes more variance in a given value of pixel density because of the averaging over the original pixels. This is predicted
-% by the central-limit theorem. In this discussion a `mutual comparison' refers to the KL divergence $D_{KL}$ between two 
-% different ensembles from the same distribution of $t$, $g$ or $u$. The mutual $D_{KL}$ comparisons that show the broadening
-% the most are the generated-generated and uniform-uniform comparisons which together have increasing variance and separation
-% with kernel size. This shows that in both cases the distributions are composed very differently to the uniform distributions.
-% The means of the mutual distributions stay the same except for the uniform-uniform comparison. This is because the median
-% for the bin separations in the component-histograms was given by the median of the training data which has a lower mean 
-% pixel density than the uniform histogram data. 
-% % make pixel dists to show different medians?
-
-% % The smaller value of the generated-generated $D_KL$ average comparison with respect to the other mutual comparisons 
-% shows the tendency of generative adversarial networks to represent a few modes in the latent space most. This was 
-% affirmed by both implementations tending to mode collapse many epochs after converging. THIS WAS TRUE FOR 3D only 
-% I think 
-
-% The separate kernels cause averaging over different sized areas in the 2D case (volumes in the 3D case). By 
-% construction the histograms are already sampling a volume at a fixed resolution for every distribution and so the kernel
-% sizes give the same volume at different levels of resolution. A histogram from any distribution with each kernel 
-% down-sampling will exhibit different scales of structure from the original unsampled histogram and this is shown in Figure~\ref{fig:kernel_fig}. The ensembles drawn from each distribution are necessary to measure the difference in the 
-% structure from the distributions that is not inherent in the individual variance of the images themselves. The latter 
-% difference does not concern the distributions of the samples and is less important for the test of the generator capability. 
-
-% The widths of the mutual comparison histograms in the 2D and 3D $D_{KL}$ trials show that there is an inherent 
-% difference in the information content of the ensembles from distributions in the 2D and 3D distributions. This comes from
-% the differences between the samples themselves and with the fixed specifications of the histograms it would be expected 
-% that the mutual comparisons show very close values. An important characteristic of the training-generated comparisons is
-% that the $D_{KL}$-histograms of these distribution pairs overlap. This gives evidence that the distributions can represent
-% each other. The mean $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values are all nearly a whole order of magnitude smaller than the 
-% training-uniform and generated-uniform comparison means. These values of the training-uniform and generated-uniform 
-% together show that the generator representations are close to the training data because of their similarity in the mean,
-% variance and mean-separations for all values of $k$. This shows the generator is able to create samples that are strongly 
-% correlated to the training data samples.
-
-% %would liked to have tried to test characteristic statistic of the original dataset
-
-% \subsubsection{3D-GAN implementation}
-% The main difference between the 2D and 3D images is in the total information content due to the number of pixels in the 
-% 2D and 3D samples. This was a difficult task for the models in the 3D-GAN and the corresponding $D_{KL}$ tests show this. 
-% Because of the differences in the total information content a direct comparison between the 2D and 3D $D_{KL}$ trials cannot
-% be made. Given a 2D-GAN and a 3D-GAN both creating realistic samples, it would be expected that the average $D_{KL}$ trials 
-% would centre around lower means for the 2D implementation. This is the opposite to what is shown even though the changes in 
-% the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values over training shown in Figures~\ref{fig:2dgan_stats} and~\ref{fig:3dgan_stats} 
-% decrease by the nearly the same amount but for lower starting values in the 2D case.  
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/metrics_3d.png}
-% \centering
-% \caption{The loss and accuracies curve for the training in the 3D-GAN implementation.}
-% \label{fig:3dgan_losscurve}
-% \end{figure}
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/stats_3d.png}
-% \centering
-% \caption{The loss and accuracies curve for the training in the 3D-GAN implementation.}
-% \label{fig:3dgan_stats}
-% \end{figure}
-
-% The $D_{KL}$ values of the training-generated comparisons are lower by nearly a whole order of magnitude than the 
-% training-uniform and generated-uniform comparisons for all kernel sizes. This is the most important result of this report 
-% because it is evidence for the generator being able to generate samples that are statistically similar to the training data
-% samples in the 3D configuration. These values show that much less information would be lost if the model distribution was 
-% used in place of the data distribution as opposed to the uniform distribution, the amount lost is around a factor of two 
-% more than that of the training distribution approximating itself with different ensembles. This is supported by the 
-% horizontal separations of the histogram peaks in each column of the top three rows of Figure~\ref{fig:3dgan_kltrials}. 
-% The values of the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ are nearly the same as the $D_{KL}(t_1||t_2)$ and $D_{KL}(t_2||t_1)$ 
-% values which suggests that replacing the 3D $p_{data}$ distribution with the 3D $p_{model}$ distribution would provide 
-% realistic samples for the same potential uses of the training data. This is because the $D_{KL}(t_1||t_2)$ and 
-% $D_{KL}(t_2||t_1)$ values are nearly the same as the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values as well as the fact that 
-% they are both smaller than the uniform-generated and uniform-training comparisons. 
-
-% The mutual $D_{KL}$ comparisons of the training and generated samples show agreement across the different kernels except 
-% for a difference of $10^{-3}$ in the variance of the $k=4$ comparison. This shows the generators ability to reproduce a 
-% variety of structure in the training data samples. The higher $D_{KL}$ average in the $k=1$ training-generated comparisons
-% are expected; the $D_{KL}$ statistic has more individual pieces of information to compare and find differences with. 
-
-% The $k=4$ kernel, whilst being the largest kernel, does not completely measure the continuity of filament structures over 
-% a number of the pixels in the $k=4$ down-sampled histograms. This could be tested of a few larger kernels in histograms with
-% a greater number of total pixels. This could also be measured using a cosmological test such as the two-point correlation 
-% function or power spectrum. An increase in the number of bins for the component-histograms would measure the similarity of
-% the generator images to the training data images better. The values of the standard deviation of each $D_{KL}$ histogram 
-% relative to the values of the means suggests the number of trials sufficiently sampled the true $D_{KL}$ mean in each test.
-% The empty plot of Figure~\ref{fig:3dgan_kltrials} appears this way, as in the 2D case, because the density bin boundary is 
-% lower than the median and mean of the uniform distribution over the pixel densities. The $D_{KL}$ value for this comparison 
-% is much lower than $10^{-2}$. 
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/log_kl_trials2d_v2.png}
-% \centering
-% \caption{The logarithmic histograms for the KL-trials between the 2D image distributions. Each column holds histograms 
-% from a kernel size $k=\{1,2,4\}.$}
-% \label{fig:2dgan_kltrials}
-% \end{figure}
-
-% The differences between the training-uniform and generated-uniform means and variances are similar to the same values in 
-% the 2D-comparisons. These values show the significance of the training-generated comparisons in the top row of 
-% Figure~\ref{fig:3dgan_kltrials}, which are a nearly a whole order of magnitude smaller. The mean $D_{KL}$ values of these 
-% comparisons are almost at the value of the training-training comparison means which is more evidence for the understandings
-% of the training data by the generator. The similarity shown by the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values may mostly be 
-% due to the similar pixel density distributions of the training and generated data. Considering that the lack of filament 
-% structure in the larger scales of the generated data compared to the training data is not shown in the $D_{KL}$ comparisons,
-% this may be true. The pixel density distribution is an important characteristic of the images but the just obtaining the 
-% similarity between the $t$ and $g$ distrubitions with this property would not guarantee that all the structure in the 
-% training data was present. There are many combinations of pixels that make up a matching pixel-density distribution for 
-% two histogram distributions, but far less of those show the structure of the cosmic web. The higher standard deviations 
-% in the $D_{KL}$ histograms for the 2D case in all the kernel sizes compared to the 3D cases is due to the larger size of 
-% features relative to total size of the image that shows them in either case.
-
-% \begin{figure}[!ht]%[hbt!]
-% \includegraphics[width=\columnwidth]{figures/graphs/log_kl_trials3d_v2.png}
-% \centering
-% \caption{The logarithmic histograms for the KL-trials between the 3D image distributions. Each column holds histograms 
-% from a kernel size $k=\{1,2,4\}.$}
-% \label{fig:3dgan_kltrials}
-% \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1275,9 +1355,9 @@ should be noted that each of these should really be tested independently but it 
 long enough to do so. The author's opinion is that the best route is to improve the current architecture by increasing the 
 number of pixels in the cubes, allowing the depth of the models to increase with more layers, whilst also better translating
 the variance in the structure inside the histograms. It has been found that in amplifying the initial parameterised units 
-in the first layer of the generator model requires that there are at least $\sim \! 10^4$ units in the 3D case. The use of
+in the first layer of the generator model requires that there are at least $\sim \! 10^4$ units. The use of
 fewer units does not allow the generator to draw enough permutations from the potentials  `proto-cubes' allowed by the 
-initial layer. The kernels in the convolutional layers were found to be most effective at size $5 \times 5 \times 5$. 
+initial layer. The kernels in the convolutional layers were found to be most effective at size $9 \times 9 \times 9$. 
 Though it is expected that some combination of higher kernel sizes would better characterise the histogram structures. 
 
 A larger original simulation with which to sample training data would help the networks process differences between 
@@ -1297,23 +1377,14 @@ more varied structure in the kernel sizes.
 % if they were compared to other distribution comparison $p_{KS}$-values.
 
 The other available galaxy properties from the Millennium-SAGE catalogs could also be folded into the generator analysis
-to create distributions weighted by luminosity or another characteristic. 
+to create distributions weighted by luminosity or another characteristic. It is possible that some amount of control over
+the generated images and their additional characteristics
 
-% \subsection{Conditional Generative Adversarial Networks}
-% The ability to generate different classes of an object does not require separate and independent GANs. The GAN 
-% framework may be supplemented by an auxiliary classifier that is attached to the discriminator model, that still 
-% classifies the samples as real and fake, whilst additionally characterising the type of the object. This augmented 
-% GAN was derived by Odena et al. 2017~\cite{acgan} and is referred to as an Auxiliary Classifier Generative Adversarial
-% Network (ACGAN). The application to an artificial universe is that the different redshift data available from N-body 
-% simulations could be given to an ACGAN. Once this model was trained and had achieved convergence the generator 
-% component could create samples at different redshifts. These samples could be tessellated together to form a larger 
-% distribution across redshifts. This could follow the environment envisioned by the Millennium Run Observatory 
-% (MRObs)~\cite{MRObs}. This work sets out to bring together the comparisons of observations and simulations on the same
-% plane of comparison - the perspective of the observer. Figure~\ref{fig:MRObs} shows a schematic of how the smaller-scale
-% distributions could be pieced together along the line-of-sight of the observer.
-
-3D model works REALLY well - use transposed conv instead of upsampling. As a one-class model, the capacity implies that the
-ACGAN requires more filters that the GPU could not provide.
+In previous work, a regular GAN was trained on the same $z=0$ data and a smaller difference in the mean $D_{KL}(t||g)$ value
+was found. As a one class model, this suggests that the architectures in this ACGAN implementation could require a higher 
+capacity in terms of convolution filters.
+% 3D model works REALLY well - use transposed conv instead of upsampling. As a one-class model, the capacity implies that the
+% ACGAN requires more filters that the GPU could not provide.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1342,7 +1413,7 @@ The scaled volumes produced by the GAN require the value of the total number of 
 transform the cubes back into coordinate tensors. This would be done by uniformly distributing the number of galaxy 
 positions required for each histogram cell into each cell. The value of the total number of galaxies can be passed to 
 the GAN framework and detached to a separate `route' in the models. This value, like the histogram cells, would be 
-correctly posited just as the histograms are in training. 
+correctly posited just as the histogram pixel densities are in training. 
 
 % Find a way to co-interpolate a massive volume of cubes between different redshifts
 
@@ -1435,6 +1506,21 @@ the increase in the total generated volume was not too large.
 \subsection{Structuring the latent space}
 % as in INFOGAN. I might be able to do this for this ACGAN. Would be really good.
 
+The condensed spectrum of representations for different features in the dataset of cosmic web at different redshift is, by
+the ACGAN generator, mapped in an entangled way. The dimensions of $\mathbf{z}$ may not correspond to semantic features in
+the data. There is no default ordering to the process through training. This means further work is required to find the 
+effects of each possible axis in the latent space as well as the spherical interpolation paths in the latent space 
+navigation. 
+
+One step towards a more ordered approach was pioneered by Chen et al. 2016~\cite{infogan}. This variant on the original GAN 
+architecture allows the generator model to disentangle the learned feature representations in an unsupervised manner. This 
+is implemented by using a $\mathbf{z}$-vector composed of latent codes $c_z$ and noise. An auxiliary network maps the 
+distribution of these latent codes $Q(c_z|\mathbf{x})$ for an image $\mathbf{x}$ to provide a lower bound on the mutual 
+information between a subset of the latent codes $c$ and the image $\mathbf{x}$.
+
+It is possible that a conditional model such as an ACGAN could have a conditional information maximizing auxiliary component
+to structure the latent space. This could, as is seen in the original INFOGAN results, provide more control on the generated
+samples with the potential for changing semantic features such as the filaments and voids within the images.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1478,86 +1564,86 @@ seems likely their power will be utilised in the next few years of cosmology.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{The Power Spectrum $P_k$}\label{appendix:power_spectrum} 
-%http://www.astro.caltech.edu/~george/ay21/eaa/eaa-powspec.pdf
-The Cosmological Principle states that the Universe is homogeneous and isotropic. The appearance of the universe in the 
-scales of the images in this report shows that there are voids without luminous matter as well as filaments and clusters 
-of galaxies.
+% \section{The Power Spectrum $P_k$}\label{appendix:power_spectrum} 
+% %http://www.astro.caltech.edu/~george/ay21/eaa/eaa-powspec.pdf
+% The Cosmological Principle states that the Universe is homogeneous and isotropic. The appearance of the universe in the 
+% scales of the images in this report shows that there are voids without luminous matter as well as filaments and clusters 
+% of galaxies.
 
-% Considering the difference between the appearance of the early Universe and the present day displayed in the relic 
-% CMBR~\cite{wmap1} and its characterisation of primordial temperature fluctuation it is
+% % Considering the difference between the appearance of the early Universe and the present day displayed in the relic 
+% % CMBR~\cite{wmap1} and its characterisation of primordial temperature fluctuation it is
 
-The evolution of the small fluctuations in the early Universe into the webbed volumes of the present day is called 
-structure formation. The exact origins are not well understood and the following argument assumes small perturbations 
-in the energy density of the early universe which were amplified by gravity over cosmic time. These density perturbations
-obey the wave equation 
+% The evolution of the small fluctuations in the early Universe into the webbed volumes of the present day is called 
+% structure formation. The exact origins are not well understood and the following argument assumes small perturbations 
+% in the energy density of the early universe which were amplified by gravity over cosmic time. These density perturbations
+% obey the wave equation 
 
-\begin{equation}
-    \bigg ( \frac{\partial^2}{\partial t^2} - c_s^2\nabla^2\bigg )\delta n
-\end{equation}
+% \begin{equation}
+%     \bigg ( \frac{\partial^2}{\partial t^2} - c_s^2\nabla^2\bigg )\delta n
+% \end{equation}
 
-where $c_s^2$ is the sound speed in the cosmological fluid medium (which at this scale is a fluid regardless of its 
-material composition) and $\delta n$ is the small change in number density $n$ caused by the perturbation. The complex
-solutions to the wave equation are 
+% where $c_s^2$ is the sound speed in the cosmological fluid medium (which at this scale is a fluid regardless of its 
+% material composition) and $\delta n$ is the small change in number density $n$ caused by the perturbation. The complex
+% solutions to the wave equation are 
 
-\begin{equation}
-    \delta n = C(\mathbf{k})\exp(i(\omega t - \mathbf{k}\cdot\mathbf{x}))
-\end{equation}
+% \begin{equation}
+%     \delta n = C(\mathbf{k})\exp(i(\omega t - \mathbf{k}\cdot\mathbf{x}))
+% \end{equation}
 
-for complex amplitude $C$, where $\mathbf{k}$ is the co-moving wave vector of the density perturbation in the 
-cosmological fluid, $\mathbf{x}$ is the co-moving vector displacement of the fluid and $\omega$ is the angular frequency
-of this oscillation. A perturbation of this fluid can be described as
+% for complex amplitude $C$, where $\mathbf{k}$ is the co-moving wave vector of the density perturbation in the 
+% cosmological fluid, $\mathbf{x}$ is the co-moving vector displacement of the fluid and $\omega$ is the angular frequency
+% of this oscillation. A perturbation of this fluid can be described as
 
-\begin{equation}
-    n(\mathbf{x},t) = \bar{n}(t)[1+\delta(\mathbf{x},t)]
-\end{equation}
+% \begin{equation}
+%     n(\mathbf{x},t) = \bar{n}(t)[1+\delta(\mathbf{x},t)]
+% \end{equation}
 
-where $\bar{n}$ is the spatially homogeneous number density and $\delta(\mathbf{x},t)$ is the density contrast given by
+% where $\bar{n}$ is the spatially homogeneous number density and $\delta(\mathbf{x},t)$ is the density contrast given by
 
-\begin{equation}
-    \delta = \frac{\delta n}{\bar{n}}=\frac{\delta \rho}{\bar{\rho}}
-\end{equation}
+% \begin{equation}
+%     \delta = \frac{\delta n}{\bar{n}}=\frac{\delta \rho}{\bar{\rho}}
+% \end{equation}
 
-where $\rho$ and $\bar{\rho}$ are the mass density and its average respectively. The transform to Fourier space is 
+% where $\rho$ and $\bar{\rho}$ are the mass density and its average respectively. The transform to Fourier space is 
 
-\begin{equation}
-    \delta(\mathbf{k}, t) = \int d^3x \: \textup{e}^{i\mathbf{k}\cdot\mathbf{x}} \: \delta(\mathbf{x},t)
-\end{equation}
+% \begin{equation}
+%     \delta(\mathbf{k}, t) = \int d^3x \: \textup{e}^{i\mathbf{k}\cdot\mathbf{x}} \: \delta(\mathbf{x},t)
+% \end{equation}
 
-where $\delta(\mathbf{k})$ is the Fourier transform of $\delta(\mathbf{x})$. The density perturbations in the early 
-Universe can be seen through the spatial distribution of galaxies in the universe. The spatial average of the density 
-contrast $\langle \delta(\mathbf{x},t) \rangle$ is zero at any time $t$ from the isotropy of the universe. The correlation
-function $\xi(|\mathbf{x} - \mathbf{y}|,t)$ is defined as
+% where $\delta(\mathbf{k})$ is the Fourier transform of $\delta(\mathbf{x})$. The density perturbations in the early 
+% Universe can be seen through the spatial distribution of galaxies in the universe. The spatial average of the density 
+% contrast $\langle \delta(\mathbf{x},t) \rangle$ is zero at any time $t$ from the isotropy of the universe. The correlation
+% function $\xi(|\mathbf{x} - \mathbf{y}|,t)$ is defined as
 
-\begin{equation}
-    \xi(|\mathbf{x} - \mathbf{y}|,t) = \langle \delta(\mathbf{x}, t), \delta(\mathbf{y},t) \rangle
-\end{equation}
+% \begin{equation}
+%     \xi(|\mathbf{x} - \mathbf{y}|,t) = \langle \delta(\mathbf{x}, t), \delta(\mathbf{y},t) \rangle
+% \end{equation}
 
-This function can be interpreted as the probability of another galaxy at position $\mathbf{y}$ being a distance $|\mathbf{x}
-- \mathbf{y}|$ from a galaxy at $\mathbf{x}$. $\xi(|\mathbf{x} - \mathbf{y}|,t)$ depends only on $|\mathbf{x} - \mathbf{y}|$
-since the universe is homogeneous and isotropic. The scalar value of the separation gives the isotropic probability. The 
-correlation function is a measure of the degree of clustering in the spatial distribution of galaxies compared to a random
-distribution of the galaxies.
+% This function can be interpreted as the probability of another galaxy at position $\mathbf{y}$ being a distance $|\mathbf{x}
+% - \mathbf{y}|$ from a galaxy at $\mathbf{x}$. $\xi(|\mathbf{x} - \mathbf{y}|,t)$ depends only on $|\mathbf{x} - \mathbf{y}|$
+% since the universe is homogeneous and isotropic. The scalar value of the separation gives the isotropic probability. The 
+% correlation function is a measure of the degree of clustering in the spatial distribution of galaxies compared to a random
+% distribution of the galaxies.
 
-Returning to the Fourier transform of the density contrast $\delta(\mathbf{x},t)$, the correlation function in 
-$\mathbf{k}$-space is 
+% Returning to the Fourier transform of the density contrast $\delta(\mathbf{x},t)$, the correlation function in 
+% $\mathbf{k}$-space is 
 
-\begin{equation}
-    \langle \delta(\mathbf{k},t), \delta(\mathbf{k}',t) \rangle = 8\pi^3 \delta^3_D(\mathbf{k} + \mathbf{k}') \int d^3 r 
-    \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
-\end{equation}
+% \begin{equation}
+%     \langle \delta(\mathbf{k},t), \delta(\mathbf{k}',t) \rangle = 8\pi^3 \delta^3_D(\mathbf{k} + \mathbf{k}') \int d^3 r 
+%     \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
+% \end{equation}
 
-where $\delta_D^3$ is the three-dimensional Dirac-delta function and $\mathbf{r} = \mathbf{x}-\mathbf{y}$. The definition
-of the power spectrum $P_k$ is 
+% where $\delta_D^3$ is the three-dimensional Dirac-delta function and $\mathbf{r} = \mathbf{x}-\mathbf{y}$. The definition
+% of the power spectrum $P_k$ is 
 
-\begin{equation}
-    P_k = \int d^3 r \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
-\end{equation}
+% \begin{equation}
+%     P_k = \int d^3 r \: \textup{e}^{i\mathbf{k}\cdot\mathbf{r}} \: \xi(r,t)
+% \end{equation}
 
-which shows the power spectrum is the three-dimensional Fourier transform of the correlation function. This quantity in 
-either a two or three-dimensional space, with the density field fluctuations being drawn from a Gaussian distribution, means
-that the power spectrum gives a distribution of the fluctuations. The power spectrum describes the amplitude of fluctuations
-on different length scales or equivalently mass scales.
+% which shows the power spectrum is the three-dimensional Fourier transform of the correlation function. This quantity in 
+% either a two or three-dimensional space, with the density field fluctuations being drawn from a Gaussian distribution, means
+% that the power spectrum gives a distribution of the fluctuations. The power spectrum describes the amplitude of fluctuations
+% on different length scales or equivalently mass scales.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1595,29 +1681,30 @@ Conv3D  & - & $(32, 32, 32, 1)$ \\
  
  \hline
  \\
- \hline
+ \hline\hline
  
  \bf{\textit{Discriminator}} & &  \\
- \hline
- $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\
- \hline
+ \hline  
+%  \vspace{0.001cm} & \vspace{0.001cm} & \vspace{0.001cm} \\ [0.01ex]
+ $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\ [0.5ex]
+ \hline 
  Conv3D & - & $(32, 32, 32, 32)$ \\
-  ($7\times7\times7$)&   ELU &  strides=1 \\
+  ($7\times7\times7$)&   ELU &  strides=1 \\ [0.5ex]
  \hline
   Conv3D & BatchNorm & $(16, 16, 16, 32)$ \\
-  ($7\times7\times7$) &   ELU &  strides=2 \\
+  ($7\times7\times7$) &   ELU &  strides=2 \\ [0.5ex]
  \hline
  Conv3D & BatchNorm & $(16, 16, 16, 64)$ \\ 
- ($7\times7\times7$) &  ELU   & strides=1 \\
+ ($7\times7\times7$) &  ELU   & strides=1 \\ [0.5ex]
  \hline
   Conv3D & BatchNorm & $(8, 8, 8, 32)$ \\
-  ($7\times7\times7$) &   ELU &  strides=2 \\
+  ($7\times7\times7$) &   ELU &  strides=2 \\ [0.55ex]
  \hline
  Conv3D & BatchNorm &  $(8, 8, 8, 32)$ \\ 
- ($7\times7\times7$) &  ELU & strides=1 \\
+ ($7\times7\times7$) &  ELU & strides=1 \\ [0.55ex]
  \hline
 %   \textit{Source} & &  \\
- Linear ($p_\mathbf{x}$) & sigmoid & $ 1 $ \\ [1ex] 
+ Linear ($p_\mathbf{x}$) & sigmoid & $ 1 $ \\ [0.75ex] 
 %   \textit{Classification} & &  \\
  Linear ($p_\mathbf{c}$) & softmax & $ 6 $ \\ [1ex] 
  \hline
