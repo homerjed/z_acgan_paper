@@ -716,28 +716,46 @@ to obtain the original image.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textit{Architecture} --- 
+\subsubsection{Architecture}
 Table~\ref{table:acgan_archi} of Appendix~\ref{appendix:acgan_setup} shows the architectures of the ACGAN discriminator 
 and generator models. The hyper-parameters used in the ACGAN are also given in Table~\ref{table:acgan_params} of 
 Appendix~\ref{appendix:acgan_setup}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
 parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers 
-for the discriminator model. \\
+for the discriminator model. 
+% \textit{Architecture} --- 
+% Table~\ref{table:acgan_archi} of Appendix~\ref{appendix:acgan_setup} shows the architectures of the ACGAN discriminator 
+% and generator models. The hyper-parameters used in the ACGAN are also given in Table~\ref{table:acgan_params} of 
+% Appendix~\ref{appendix:acgan_setup}. Together the discriminator and generator models had around $2.5\times10^8$ trainable 
+% parameters across one linear layer and three convolutional layers for the generator model and three convolutional layers 
+% for the discriminator model. \\
 
-{\setlength{\parindent}{0cm}
-\textit{Training} --- 
+% {\setlength{\parindent}{0cm}
+% \textit{Training} --- 
+% The networks follow the structuring of the DCGAN models~\cite{dcgan} and are written in Tensorflow~\cite{tensorflow} and 
+% Keras~\cite{keras}. The generator transforms a 256-dimensional vector drawn from a Gaussian prior $\mathbf{z}\sim 
+% \mathcal{N}(0,1)$ into a $32 \times 32 \times 32$ single-channel image. The latent-space vector is followed by a fully 
+% connected layer that is reshaped to a stack of feature maps for the convolutional layers. 
+% % Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} 
+% % for more detail on batch-normalisation and activation functions. 
+% }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Training}
+
 The networks follow the structuring of the DCGAN models~\cite{dcgan} and are written in Tensorflow~\cite{tensorflow} and 
 Keras~\cite{keras}. The generator transforms a 256-dimensional vector drawn from a Gaussian prior $\mathbf{z}\sim 
 \mathcal{N}(0,1)$ into a $32 \times 32 \times 32$ single-channel image. The latent-space vector is followed by a fully 
 connected layer that is reshaped to a stack of feature maps for the convolutional layers. 
 % Through each layer hyperbolic tangent activations are used. See Appendices~\ref{appendix:app_acts} and~\ref{app_BN} 
 % for more detail on batch-normalisation and activation functions. 
-}
 
 The ACGAN implementation was limited by the GPU memory capacity - the parameters and architectures together with the 
 sample batch sizes meant that the GPU was easily saturated. Deeper models with more convolutional units were implemented 
 but these tended to stall the GPU. A training loop for $10^5$ epochs for the $200 \: h^{-1} \: \textup{Mpc}$ cubes 
 formatted to $32 \times 32 \times 32$ pixel histograms took approximately 144 hours on an NVIDIA Tesla V100 GPU with 
-32GB capacity. To augment the dataset with additional diversity for each redshift, the samples were rotated in-situ during training as the sample batches were gathered. 
+32GB capacity. To augment the dataset with additional diversity for each redshift, the samples were rotated in-situ during 
+training as the sample batches were gathered. 
 
 Generative adversarial networks are harder to train with three-dimensional input data because of the increase in the 
 number of configurations of interest in the data. There are a number of tricks and techniques for moving toward more 
@@ -790,6 +808,23 @@ Where $\mathbf{X}$ denotes a minibatch of samples. The minibatch discrimination 
 flattened-features from the last convolutional layers in the discriminator. This is done separately for the real and 
 fake samples. The discriminator is able to designate the validity of a sample with additional information from samples 
 in a collection.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Spectral Normalization}
+To control discriminator training and the heuristic feedback to the generator and its products, a method proposed by 
+\cite{spectral_norm} uses the normalization of weight matrices in the discriminator and generator convolutional nets. This 
+method allows control over the derivative of the discriminator value function in the adversarial setting of GANs. The 
+Lipschitz constant of the discriminator is constrained without specifics concerning the inputs to either models. This 
+data-independent regularization is an advantage over traditional regularization particularly in the generative context. 
+The spectral norm of a weight matrix $W$ for a given layer $g : \mathbf{h}_{in} \rightarrow \mathbf{h}_{out}$ is
+
+\begin{equation}
+    \sigma(W) = \max_{\mathbf{h}:\mathbf{h}\neq 0} \frac{|| W \mathbf{h}||_2}{||\mathbf{h}||_2}
+              = \max_{||\mathbf{h}||_2 \leq 1} ||W\mathbf{h}||_2
+\end{equation}
+
+which is equivalent to the singular value of $W$. This is applied to all layers in the discriminator and the generator.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1021,22 +1056,22 @@ minimum and maximum redshifts $z=0.0$ and $z=5.0$ respectively, 40 class example
 \label{fig:acgan_interp}
 \end{figure}
 
-\subsubsection{Universe generation}
-% show three scales (side lengths in terms of generated cubes - e.g. 7, 9, 11) of generated-cube-universes. 
+% \subsubsection{Universe generation}
+% % show three scales (side lengths in terms of generated cubes - e.g. 7, 9, 11) of generated-cube-universes. 
 
-\begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/cubes/mill_box_3.png}
-\centering
-\caption{A box made of generated cubes at redshift $z=3.19$.}
-\label{fig:kernel_fig}
-\end{figure}
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/cubes/mill_box_3.png}
+% \centering
+% \caption{A box made of generated cubes at redshift $z=3.19$.}
+% \label{fig:kernel_fig}
+% \end{figure}
 
-\begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/cubes/gen_box_9_z3.png}
-\centering
-\caption{A box made of generated cubes at redshift $z=3.00$.}
-\label{fig:kernel_fig}
-\end{figure}
+% \begin{figure}[!ht]%[hbt!]
+% \includegraphics[width=\columnwidth]{figures/cubes/gen_box_9_z3.png}
+% \centering
+% \caption{A box made of generated cubes at redshift $z=3.00$.}
+% \label{fig:kernel_fig}
+% \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1059,7 +1094,7 @@ the results are shown in
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Loss and $D_{KL}$ curves}
+\subsection{Loss curves}
 % separation of D and G losses because of number of images shown to models in one training step
 
 % LOSSES AND ACCURACIES
@@ -1093,6 +1128,8 @@ the training would dissipate chaotically.
 \caption{The loss and accuracy curves for the training of the ACGAN.}
 \label{fig:acgan_losscurve}
 \end{figure}
+
+\subsection{$D_{KL}$ curves}
 
 % KL DIVERGENCES
 The KL divergences between the training and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and 
@@ -1146,7 +1183,7 @@ batch which consistently has a lower mean pixel density than the uniform histogr
 
 
 \begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_train.png}
+\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_train1.png}
 \centering
 \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
          uniform $u$ cube samples. This graph shows the results for downsampling kernel values $k \in \{1, 2, 4\}$.}
@@ -1284,7 +1321,7 @@ samples from each distribution repeated for 64 separate comparisons between each
 produced by using the generator to create samples at values of redshift $z=z'$ that the ACGAN has never been exposed to.
 
 \begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_unseen.png}
+\includegraphics[width=17cm]{figures/graphs/kl_trials_all_z_unseen1.png}
 \centering
 \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
          uniform $u$ cube samples with cube samples from unseen redshift snapshots in the Millennium-SAGE simulation 
@@ -1324,10 +1361,15 @@ of the finite training set of images is certainly more simple than the chronolog
 models characterise. Figure~\ref{fig:z_kl} shows the relation between the $\langle D_{KL}(g||t) \rangle$ and 
 $\langle D_{KL}(t||g) \rangle$ values with redshift $z$. The highest peak coincides with the lowest unseen redshift $z'=0.51$.
 
+The last two unseen redshift values show consistency between kernel sizes and they are similar values to the trained redshift 
+values either side of these redshifts. Because these $\langle D_KL \rangle$ values have the lowest separation between the 
+nearest trained redshifts, it suggests that the ACGAN has a certain range in redshift over which it can obtain the same coherence 
+in samples with. The other redshifts suggest this boundary away from a given trained redshift value is between 0.3 and 0.5.
+
 % lack of data? lack of feature maps
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/graphs/z_kl.png}
+\includegraphics[width=\columnwidth]{figures/graphs/z_kl1.png}
 \centering
 \caption{The KL-trial means $\langle D_{KL} \rangle$ for comparisons of image distributions 
          $t$ and $g$ for all redshifts $z$ and $z'$ }
@@ -1506,11 +1548,10 @@ the increase in the total generated volume was not too large.
 \subsection{Structuring the latent space}
 % as in INFOGAN. I might be able to do this for this ACGAN. Would be really good.
 
-The condensed spectrum of representations for different features in the dataset of cosmic web at different redshift is, by
-the ACGAN generator, mapped in an entangled way. The dimensions of $\mathbf{z}$ may not correspond to semantic features in
-the data. There is no default ordering to the process through training. This means further work is required to find the 
-effects of each possible axis in the latent space as well as the spherical interpolation paths in the latent space 
-navigation. 
+The spectrum of representations for different features in the dataset is held in the latent space of the generator. The 
+various features of the cosmic web at different redshift is mapped in an entangled way. The dimensions of $\mathbf{z}$ may 
+not correspond to semantic features in the data. There is no default ordering to the process through training. This means 
+further work is required to find the effects of each possible axis in the latent space as well as the spherical interpolation paths in the latent space navigation. 
 
 One step towards a more ordered approach was pioneered by Chen et al. 2016~\cite{infogan}. This variant on the original GAN 
 architecture allows the generator model to disentangle the learned feature representations in an unsupervised manner. This 
@@ -1522,6 +1563,15 @@ It is possible that a conditional model such as an ACGAN could have a conditiona
 to structure the latent space. This could, as is seen in the original INFOGAN results, provide more control on the generated
 samples with the potential for changing semantic features such as the filaments and voids within the images.
 
+More recent work~\cite{latent_disentanglement} provides another step towards solving the latent space entanglement problem.
+Further work is required to explore the potential for these methods to this work, but there are no obvious reasons why this
+would not fit into the current method. 
+
+\subsection{ACGAN architecture and training}
+% SBN AND CBN
+Batch normalisation~\cite{batchnorm} is critical to the function of the ACGAN presented in this work. However this method was derived for non-generative networks, and so normalising over a batch of conditioned latent vectors $\mathbf{z}(c)$ can distort the task of creating the latent space mapping for the generator. Conditional batch normalisation (CBN)~\cite{GAN_CBN} and self-modulated batch normalisation (SBN)~\cite{GAN_SBN} offer alternatives for this task by conditioning a set of learned parameters over the class space $C$ for normalisation. The difference between CBN and SBN are that the labels are required for the normalisation parameters in CBN whereas SBN depends only on the latent vectors. In practice CBN would be useful in both the discriminator and the generator.
+% CGD
+Recent work by Sch\"{a}fer et al.~\cite{GAN_CGD1, GAN_CGD2} provides an additional regularization, known as competitive gradient descent, to reinvent the interaction of the discriminator and generator models whilst maintaining their independent agencies. No metrics dependent on the space of training images are required such as in gradient penalty techniques for the same purpose. The method ensures that the discriminator model does not exploit the imperceptible errors of the generator products. This means that the generator loss is maximally related to the difference between the model and data distributions.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
