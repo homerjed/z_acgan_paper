@@ -763,15 +763,17 @@ convergent and stable training. A compilation of these has resulted from testing
 that were used to train the ACGAN in this work were one-sided label smoothing, historical averaging and a decaying noise 
 input which were borrowed from~\cite{gantricks_sali, gan_noise_decay}. The exact implementations stem only from the 
 original theoretical basis. One-sided label smoothing adds scalar values sampled from a uniform distribution $\mathcal{U}
-(-0.1,0)$ to the real labels only. Historical averaging~\cite{gantricks_sali} adds a penalty $L_H$ to the objective functions 
-of the discriminator and generator. The addition is
+(-0.1,0)$ to the real labels only. 
+%Historical averaging~\cite{gantricks_sali} adds a penalty $L_H$ to the objective functions 
+%of the discriminator and generator. The addition is
 
-\begin{equation}
-    L_H = \Bigl\lvert\Bigl\lvert \, \bm{\theta} - \frac{1}{t} \sum_i^t\bm{\theta}[i] \,  \Bigr\rvert\Bigr\rvert^2
-\end{equation}
+%\begin{equation}
+%    L_H = \Bigl\lvert\Bigl\lvert \, \bm{\theta} - \frac{1}{t} \sum_i^t\bm{\theta}[i] \,  \Bigr\rvert\Bigr\rvert^2
+%\end{equation}
 
-where $\bm{\theta}$ and $\bm{\theta}[i]$ are the model parameters at the present and previous epochs respectively. This
-cost term helps the networks avoid mode collapse. The decaying noise input temporarily slows the discriminator training
+%where $\bm{\theta}$ and $\bm{\theta}[i]$ are the model parameters at the present and previous epochs respectively. This
+%cost term helps the networks avoid mode collapse. 
+The decaying noise input temporarily slows the discriminator training
 by showing it less clear real samples. This in turn allows a strong discriminator model that doesn't overwhelm the generator
 early in training. The decaying noise input samples noise at each epoch to add to every histogram pixel in an ensemble of
 samples. The Gaussian noise $\mathbf{n}$ has standard deviation $\sigma_i$ that depends on epoch $i$ such that 
@@ -856,9 +858,9 @@ samples can be derived with different characteristics that have been extracted f
 discriminator and generator models.
 
 An array of latent-space vectors and class labels of a given redshift are passed to the trained ACGAN generator to create
-a collection of cube samples. These are placed together face-to-face to create larger samples of cosmic structure. A 
-discussion on the viability of this approach is left to Section~\ref{sec:results}.
-
+a collection of cube samples. 
+%These are placed together face-to-face to create larger samples of cosmic structure. A 
+%discussion on the viability of this approach is left to Section~\ref{sec:results}.
 In the specific case of interpolating through redshift $z$ values, a single point in the latent-space was chosen. This was 
 repeatedly supplied to the generator with a class label $c$ that was changed by a small amount $\textup{d}c \sim 0.01$. 
 This demonstrates the understanding of the generative model on the relationship between realisations of cosmic structure 
@@ -867,41 +869,41 @@ at different values of $z$. The results of this are left to Section~\ref{sec:res
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Latent space navigation}\label{methods:z_navig}
-% show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
-In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is 
-less than the total parameters that constitute the training set. This means the discriminator and generator must find 
-condensed representations of the training data. The generator model is sampled from a set of latent variables in the 
-latent space that constitute the latent-vectors $\mathbf{z}$. Vector space arithmetic with points in the latent space 
-allows interpolation between tenable examples of learned representations of the training data the GAN is exposed to in 
-training. 
-% With the inherent structuring of the latent space by GANs, these operations can allow complex 
+% \subsubsection{Latent space navigation}\label{methods:z_navig}
+% % show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
+% In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is 
+% less than the total parameters that constitute the training set. This means the discriminator and generator must find 
+% condensed representations of the training data. The generator model is sampled from a set of latent variables in the 
+% latent space that constitute the latent-vectors $\mathbf{z}$. Vector space arithmetic with points in the latent space 
+% allows interpolation between tenable examples of learned representations of the training data the GAN is exposed to in 
+% training. 
+% % With the inherent structuring of the latent space by GANs, these operations can allow complex 
 
-Interpolation is the transit between two distinct points in the latent space. In this work, spherical interpolation is used
-as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in
-this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation~\cite{spherical_interp} uses 
-a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by 
+% Interpolation is the transit between two distinct points in the latent space. In this work, spherical interpolation is used
+% as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model trained in
+% this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation~\cite{spherical_interp} uses 
+% a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by 
 
-\begin{equation}
-    S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
-\end{equation}
+% \begin{equation}
+%     S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
+% \end{equation}
 
-where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with and
-$\mu$ are the discrete proportioned steps between $q_1$ and $q_2$. It should be noted that simple linear interpolation 
-along a given axis of the latent space would disregard the curvature of the 256-dimensional latent space and so the path 
-along a great circle by spherical interpolation is required.
+% where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with and
+% $\mu$ are the discrete proportioned steps between $q_1$ and $q_2$. It should be noted that simple linear interpolation 
+% along a given axis of the latent space would disregard the curvature of the 256-dimensional latent space and so the path 
+% along a great circle by spherical interpolation is required.
 
-% In these cases, we have performed a linear interpolation which assumes that the latent space is uniformly distributed 
-% hypercube. Technically, our chosen latent space is a 100-dimension hypersphere or multimodal Gaussian distribution.
+%% In these cases, we have performed a linear interpolation which assumes that the latent space is uniformly distributed 
+%% hypercube. Technically, our chosen latent space is a 100-dimension hypersphere or multimodal Gaussian distribution.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Building larger volumes from generated samples}\label{methods:volume_building}
-% say how the larger volumes are made from smaller generated cubes, talk about 
-A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ 
-drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic 
-mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial 
-generated cube side-lengths). 
+% \subsubsection{Building larger volumes from generated samples}\label{methods:volume_building}
+% % say how the larger volumes are made from smaller generated cubes, talk about 
+% A selection of cubes were generated with a batch of $N$ latent vectors $\mathbf{Z}=\{\mathbf{z}_i, ..., \mathbf{z}_N\}$ 
+% drawn from the same prior $\mathcal{N}(0,1)$ as the generative model in training. These are placed at points on a cubic 
+% mesh to create a larger box of generated cubes. This was repeated for side-lengths 7, 9 and 11 (in multiples of the initial 
+% generated cube side-lengths). 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1005,7 +1007,7 @@ reproduced across the generated samples. They show as much mutual difference as 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/cubes/acgan3d_t_fig.png}
+\includegraphics[width=17cm]{figures/cubes/acgan_training.png} % acgan3d_t_fig.png
 \centering
 \caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the 
          redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
@@ -1013,9 +1015,9 @@ reproduced across the generated samples. They show as much mutual difference as 
 \end{figure*}
 
 \begin{figure*}[hbt!]
-\includegraphics[width=17cm]{figures/cubes/acgan3d_g_fig.png}
+\includegraphics[width=17cm]{figures/cubes//acgan_generated.png} % acgan3d_g_fig.png
 \centering
-\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs.Each row corresponds to the 
+\caption{A collection of training data cubes extracted from the Millennium-SAGE catalogs. Each row corresponds to the 
          redshift value given above each cube. The scaling $s(\mathbf{x})$ is applied to each cube $\mathbf{x}$.}
 \label{fig:g_z_imgs}
 \end{figure*}
@@ -1050,7 +1052,7 @@ Figure~\ref{fig:acgan_interp} shows the results of varying the class label for a
 minimum and maximum redshifts $z=0.0$ and $z=5.0$ respectively, 40 class examples were generated.
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/cubes/acgan3d_interp.png}
+\includegraphics[width=\columnwidth]{figures/cubes/acgan3d_z_spec.png} % acgan3d_interp.png
 \centering
 \caption{A collection of images generated with an array of redshift values for a single latent-space point.}
 \label{fig:acgan_interp}
@@ -1123,7 +1125,7 @@ different models it was found that $8.0\times 10^4$ epochs was enough time for t
 the training would dissipate chaotically.
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/graphs/metrics.png}
+\includegraphics[width=\columnwidth]{figures/graphs/metrics1.png}
 \centering
 \caption{The loss and accuracy curves for the training of the ACGAN.}
 \label{fig:acgan_losscurve}
@@ -1150,7 +1152,7 @@ throughout training is important. This suggests that the training and generated 
 replacement with each other, as opposed to a preferred replacement of one with the other.
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/graphs/stats.png}
+\includegraphics[width=\columnwidth]{figures/graphs/stats1.png}
 \centering
 \caption{The KL divergence $D_{KL}$ curves for the training of the ACGAN.}
 \label{fig:2dgan_losscurve}
@@ -1289,28 +1291,28 @@ two histogram distributions, but far less of those show the structure of the cos
 % \label{fig:t_z_imgs}
 % \end{figure*}
 
-\begin{table*}[t]
-  \centering
-  \begin{tabular}{|ccccccc|}
-    \hline\hline
-          & $\langle D_{KL}(t||g) \rangle_z$ & $\langle D_{KL}(t||u) \rangle_z$ & $\langle D_{KL}(g||u)\rangle_z$ & $\langle D_{KL}(t||t)\rangle_z$ & $\langle D_{KL}(g||g) \rangle_z$ & $\langle D_{KL}(u||u) \rangle_z$ \\ 
-          &  $\langle D_{KL}(g||t)\rangle_z$ & $\langle D_{KL}(u||t)\rangle_z$ & $\langle D_{KL}(u||g)\rangle_z$ & $\langle D_{KL}(t||t) \rangle_z$ & $\langle D_{KL}(g||g)\rangle_z$  & $\langle D_{KL}(u||u)\rangle_z$ \\ [1.0ex]
-    \hline\hline
+% \begin{table*}[t]
+%   \centering
+%   \begin{tabular}{|ccccccc|}
+%     \hline\hline
+%           & $\langle D_{KL}(t||g) \rangle_z$ & $\langle D_{KL}(t||u) \rangle_z$ & $\langle D_{KL}(g||u)\rangle_z$ & $\langle D_{KL}(t||t)\rangle_z$ & $\langle D_{KL}(g||g) \rangle_z$ & $\langle D_{KL}(u||u) \rangle_z$ \\ 
+%           &  $\langle D_{KL}(g||t)\rangle_z$ & $\langle D_{KL}(u||t)\rangle_z$ & $\langle D_{KL}(u||g)\rangle_z$ & $\langle D_{KL}(t||t) \rangle_z$ & $\langle D_{KL}(g||g)\rangle_z$  & $\langle D_{KL}(u||u)\rangle_z$ \\ [1.0ex]
+%     \hline\hline
     
-    $k=1$ & $0.060\pm0.005$ & $0.103\pm0.006$ & $0.134\pm0.007$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\
-          & $0.057\pm0.004$ & $0.088\pm0.005$ & $0.120\pm0.006$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\ [1ex]
+%     $k=1$ & $0.060\pm0.005$ & $0.103\pm0.006$ & $0.134\pm0.007$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\
+%           & $0.057\pm0.004$ & $0.088\pm0.005$ & $0.120\pm0.006$ & $0.032\pm0.006$ & $0.033\pm0.006$ & $0.034\pm0.006$ \\ [1ex]
 
-    $k=2$ & $0.054\pm0.006$ & $2.313\pm0.084$ & $2.317\pm0.165$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.059\pm0.016$ \\
-          & $0.052\pm0.005$ & $0.253\pm0.009$ & $0.271\pm0.017$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.062\pm0.017$ \\ [1ex]
+%     $k=2$ & $0.054\pm0.006$ & $2.313\pm0.084$ & $2.317\pm0.165$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.059\pm0.016$ \\
+%           & $0.052\pm0.005$ & $0.253\pm0.009$ & $0.271\pm0.017$ & $0.033\pm0.006$ & $0.034\pm0.007$ & $0.062\pm0.017$ \\ [1ex]
                
-    $k=4$ & $0.051\pm0.008$ & $6.448\pm0.131$ & $6.492\pm0.418$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\
-          & $0.049\pm0.006$ & $0.386\pm0.015$ & $0.406\pm0.033$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\ [1ex]
+%     $k=4$ & $0.051\pm0.008$ & $6.448\pm0.131$ & $6.492\pm0.418$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\
+%           & $0.049\pm0.006$ & $0.386\pm0.015$ & $0.406\pm0.033$ & $0.033\pm0.007$ & $0.033\pm0.007$ & $0.030\pm0.009$ \\ [1ex]
     
-    \hline\hline
-  \end{tabular}
-  \caption{Results from the $D_{KL}$ trials between each distribution averaged over redshift $z$ for each kernel size $k$.}
-  \label{tab:1}
-\end{table*}
+%     \hline\hline
+%   \end{tabular}
+%   \caption{Results from the $D_{KL}$ trials between each distribution averaged over redshift $z$ for each kernel size $k$.}
+%   \label{tab:1}
+% \end{table*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1329,31 +1331,31 @@ produced by using the generator to create samples at values of redshift $z=z'$ t
 \label{fig:kl_trials_all_z2}
 \end{figure*}
 
-\begin{table*}[t]
-  \centering
-  \begin{tabular}{|ccccccc|}
-    \hline\hline
-          & $\langle D_{KL}(t||g) \rangle_{z'}$ & $\langle D_{KL}(t||u) \rangle_{z'}$ & $\langle D_{KL}(g||u)\rangle_{z'}$ & $\langle D_{KL}(t||t)\rangle_{z'}$ & $\langle D_{KL}(g||g) \rangle_{z'}$ & $\langle D_{KL}(u||u) \rangle_{z'}$ \\ 
-          &  $\langle D_{KL}(g||t)\rangle_{z'}$ & $\langle D_{KL}(u||t)\rangle_{z'}$ & $\langle D_{KL}(u||g)\rangle_{z'}$ & $\langle D_{KL}(t||t) \rangle_{z'}$ & $\langle D_{KL}(g||g)\rangle_{z'}$  & $\langle D_{KL}(u||u)\rangle_{z'}$ \\ [1.0ex]
-    \hline\hline
+% \begin{table*}[t]
+%   \centering
+%   \begin{tabular}{|ccccccc|}
+%     \hline\hline
+%           & $\langle D_{KL}(t||g) \rangle_{z'}$ & $\langle D_{KL}(t||u) \rangle_{z'}$ & $\langle D_{KL}(g||u)\rangle_{z'}$ & $\langle D_{KL}(t||t)\rangle_{z'}$ & $\langle D_{KL}(g||g) \rangle_{z'}$ & $\langle D_{KL}(u||u) \rangle_{z'}$ \\ 
+%           &  $\langle D_{KL}(g||t)\rangle_{z'}$ & $\langle D_{KL}(u||t)\rangle_{z'}$ & $\langle D_{KL}(u||g)\rangle_{z'}$ & $\langle D_{KL}(t||t) \rangle_{z'}$ & $\langle D_{KL}(g||g)\rangle_{z'}$  & $\langle D_{KL}(u||u)\rangle_{z'}$ \\ [1.0ex]
+%     \hline\hline
     
-    $k=1$ & $0.146\pm0.010$ & $0.100\pm0.005$ & $0.073\pm0.005$ & $0.069\pm0.004$ & $0.081\pm0.004$ & $0.109\pm0.007$ \\
-          & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.036\pm0.007$ & $0.036\pm0.007$ & $0.033\pm0.006$ & $0.033\pm0.006$ \\
-          [1ex]
+%     $k=1$ & $0.146\pm0.010$ & $0.100\pm0.005$ & $0.073\pm0.005$ & $0.069\pm0.004$ & $0.081\pm0.004$ & $0.109\pm0.007$ \\
+%           & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.036\pm0.007$ & $0.036\pm0.007$ & $0.033\pm0.006$ & $0.033\pm0.006$ \\
+%           [1ex]
     
-    $k=2$ & $0.650\pm0.045$ & $0.166\pm0.007$ & $1.390\pm0.074$ & $0.208\pm0.009$ & $0.343\pm0.021$ & $0.174\pm0.011$ \\
-          & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.059\pm0.013$ & $0.061\pm0.014$ & $0.067\pm0.014$ & $0.067\pm0.014$ \\
-          [1ex]
+%     $k=2$ & $0.650\pm0.045$ & $0.166\pm0.007$ & $1.390\pm0.074$ & $0.208\pm0.009$ & $0.343\pm0.021$ & $0.174\pm0.011$ \\
+%           & $0.033\pm0.006$ & $0.033\pm0.006$ & $0.059\pm0.013$ & $0.061\pm0.014$ & $0.067\pm0.014$ & $0.067\pm0.014$ \\
+%           [1ex]
                
-    $k=4$ & $2.233\pm0.120$ & $0.253\pm0.011$ & $5.658\pm0.358$ & $0.417\pm0.022$ & $2.986\pm0.249$ & $0.353\pm0.025$ \\
-          & $0.033\pm0.008$ & $0.032\pm0.008$ & $0.061\pm0.018$ & $0.062\pm0.017$ & $0.080\pm0.025$ & $0.080\pm0.025$ \\
-          [1ex]
-    \hline\hline
-  \end{tabular}
-  \caption{Results from the $D_{KL}$ trials between each distribution averaged over values of unseen redshift $z'$ for each 
-           kernel size $k$.}
-  \label{tab:2}
-\end{table*}
+%     $k=4$ & $2.233\pm0.120$ & $0.253\pm0.011$ & $5.658\pm0.358$ & $0.417\pm0.022$ & $2.986\pm0.249$ & $0.353\pm0.025$ \\
+%           & $0.033\pm0.008$ & $0.032\pm0.008$ & $0.061\pm0.018$ & $0.062\pm0.017$ & $0.080\pm0.025$ & $0.080\pm0.025$ \\
+%           [1ex]
+%     \hline\hline
+%   \end{tabular}
+%   \caption{Results from the $D_{KL}$ trials between each distribution averaged over values of unseen redshift $z'$ for each 
+%           kernel size $k$.}
+%   \label{tab:2}
+% \end{table*}
 
 The results point to the fact that the generator is less competent at representing values of redshift that lay between the
 values that the ACGAN has been exposed to in training. This is certainly to be expected as the description for the emergence
@@ -1369,7 +1371,7 @@ in samples with. The other redshifts suggest this boundary away from a given tra
 % lack of data? lack of feature maps
 
 \begin{figure}[!ht]%[hbt!]
-\includegraphics[width=\columnwidth]{figures/graphs/z_kl1.png}
+\includegraphics[width=\columnwidth]{figures/graphs/z_kl4.png}
 \centering
 \caption{The KL-trial means $\langle D_{KL} \rangle$ for comparisons of image distributions 
          $t$ and $g$ for all redshifts $z$ and $z'$ }
