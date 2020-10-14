@@ -610,7 +610,7 @@ Observatory (TAO)~\cite{TAO}. SAGE modelling adds baryonic processes into N-body
 simulations have been run. The baryonic particle properties are from information in the simulation run such as mass, 
 size, spin and their merger history. SAGE models account for different mechanisms that affect the evolutions of 
 galaxies and therefore the evolution of cosmological structure. The N-body particle positions of the Millennium-SAGE 
-data were taken from snapshots at discrete redshifts $z=\{0.00, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
+data were taken from snapshots at discrete redshifts $z\,~=~\!\{0.00, 1.07, 2.07, 3.06, 4.18, 5.28\}$ to give the training 
 data for the ACGAN. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -813,7 +813,7 @@ are exponentiated as
 \end{equation}
 
 The output $o(\mathbf{x}_i)$ of the minibatch discrimination layer for a sample $\mathbf{x}_i$ is defined as the sum of 
-each $c_b(\mathbf{x}_i, \mathbf{x}_j)$ for $B$ samples in a minibatch
+each $c_b(\mathbf{x}_i, \mathbf{x}_j)$ for $B$ samples in a minibatch;
 
 \begin{eqnarray}
     o(\mathbf{x}_i)_b &=& \sum_{j=1}^n c_b(\mathbf{x}_i, \mathbf{x}_j) \nonumber \\
@@ -822,7 +822,7 @@ each $c_b(\mathbf{x}_i, \mathbf{x}_j)$ for $B$ samples in a minibatch
     o(\mathbf{X}) &\in& \mathbb{R}^{n \times B} \nonumber
 \end{eqnarray}
 
-Where $n$ is the number of pairings in a minibatch and  $\mathbf{X}$ denotes a minibatch of samples. The minibatch 
+where $n$ is the number of pairings in a minibatch and  $\mathbf{X}$ denotes a minibatch of samples. The minibatch 
 discrimination output is concatenated to the 
 flattened-features from the last convolutional layers in the discriminator. This is done separately for the real and 
 fake samples. The discriminator is able to designate the validity of a sample with additional information from samples 
