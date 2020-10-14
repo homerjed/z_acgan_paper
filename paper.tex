@@ -172,7 +172,7 @@ future work and conclusions.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{figure}
-\includegraphics[width=\columnwidth]{figures/diagrams/ACGAN_diagram_box.png}
+\includegraphics[width=\columnwidth, trim=4 4 4 4,clip]{figures/diagrams/ACGAN_diagram_box.png}
 \centering
 \caption{Schematic of the GAN framework; including discriminator and generator networks, the latent-space vector, dataset 
          of samples and the backpropagation feedback to model parameters. \textit{Source} and \textit{Class} refer to the
@@ -226,22 +226,26 @@ neural network. In this equilibrium the returns of the objective functions only 
 other network and at this stage the gradients for backpropagation to either model have vanished.
 
 % WHAT ARE D AND G? HOW DO D AND G WORK?
-The discriminator and generator models can be represented as functions $D$ and $G$ respectively because of their 
-mappings as neural networks and parameter dependencies. The discriminator $D$ has image input $\mathbf{x}$ and parameters 
+% The discriminator and generator models can be represented as functions $D$ and $G$ respectively because of their 
+% mappings as neural networks and parameter dependencies. 
+The discriminator $D$ has image input $\mathbf{x}$ and parameters 
 $\bm{\theta}^{(D)}$. The generator $G$ takes a latent space vector $\mathbf{z}$ as input and uses parameters 
-$\bm{\theta}^{(G)}$. Information flows through the network and its parameters to create the outputs $D(\mathbf{x})$ or 
-$D(G(\mathbf{z}))$ for the discriminator and $G(\mathbf{z})$ for the generator. This is the forward-propagation from 
-an input to an output. The model performances are calculated with the objective functions $J^{(D)}$ or $J^{(G)}$. 
+$\bm{\theta}^{(G)}$. 
+% Information flows through the network and its parameters to create the outputs $D(\mathbf{x})$ or 
+% $D(G(\mathbf{z}))$ for the discriminator and $G(\mathbf{z})$ for the generator. This is the forward-propagation from 
+% an input to an output. The model performances are calculated with the objective functions $J^{(D)}$ or $J^{(G)}$. 
 
 % HOW DO D AND G WORK TOGETHER IN A GAN AND PLAY THE GAME?
 In the case of a GAN, the optimisation landscape is more complex because of the simultaneous learning of the two 
-neural networks that both constantly adjust their parameters. The discriminator and generator models in a GAN depend 
-on parameters $\bm{\theta}^{(D)}$ and $\bm{\theta}^{(G)}$ respectively. The models typically consist of multi-layer 
-perceptrons with the potential for other parametric components such as convolutional layers and the parameters are 
-the state of these components at an epoch of training. The generator $G$ draws noise vectors $\mathbf{z}$ from a prior 
+neural networks that both constantly adjust their parameters. 
+% The discriminator and generator models in a GAN depend on parameters $\bm{\theta}^{(D)}$ and $\bm{\theta}^{(G)}$ respectively. 
+% The models typically consist of multi-layer 
+% perceptrons with the potential for other parametric components such as convolutional layers and the parameters are 
+% the state of these components at an epoch of training. 
+The generator $G$ draws noise vectors $\mathbf{z}$ from a prior 
 distribution $p_{\mathbf{z}}$. The vectors $\mathbf{z}$ are passed through the generator architecture to create a 
 sample $\mathbf{x}=G(\mathbf{z};\bm{\theta}^{(G)})$ that is now a sample $\mathbf{x}$ from the model distribution 
-$p_{model}$. The model distribution is the distribution of generated samples $G(\mathbf{z})$ obtained from passing 
+$p_{model}$ - this is the distribution of generated samples $G(\mathbf{z})$ obtained from passing 
 latent vectors $\mathbf{z}$ through $G$ such that $\mathbf{z} \sim p_{\mathbf{z}}$. The learning of the generator 
 means that the samples evolve over the training process. Eventually, the samples will appear to have been drawn 
 from the true data distribution $p_{data}$ so that $G(\mathbf{z}) \sim p_{data}$. The generated samples 
@@ -267,7 +271,9 @@ returns from backpropagation related to the discriminator classifications. The m
 between two networks in search of a Nash equilibrium and added together the objectives for the discriminator and generator 
 give a value function $V(\bm{\theta}^{(D)}, \bm{\theta}^{(G)})$ in the combined parameter space $(\bm{\theta}^{(D)}, 
 \bm{\theta}^{(G)})$. Figure~\ref{fig:gan_game} shows the value function in the combined parameter space for which the 
-backpropagation gradients are calculated with $D$ and $G$ as adversaries of each other. The optimum parameters for each 
+backpropagation gradients are calculated 
+%with $D$ and $G$ as adversaries of each other. 
+The optimum parameters for each 
 network are shown at the Nash equilibrium. The game between the models is described with the value function $V$ as 
 
 \begin{eqnarray}\label{eqn:value}
@@ -275,9 +281,11 @@ network are shown at the Nash equilibrium. The game between the models is descri
                          &+& \mathbb{E}_{G(\mathbf{z}) \sim p_{model}}\log(1-D(G(\mathbf{z}))) \nonumber \\
 \end{eqnarray}
 
-in the combined parameter space. This equation shows the opposition between the maximization of the correct 
-classifications by $D$ and the minimisation of the correct classifications by $D$ of the generator products that are 
-made by $G$. 
+in the combined parameter space. The expectation operators 
+$\mathbb{E}_{\mathbf{x} \sim p_{data}}$ and $\mathbb{E}_{G(\mathbf{z}) \sim p_{model}}$ correspond to the ensemble 
+averages over the classifications of real and fake samples respectively. This equation shows the opposition between 
+the maximization of the correct classifications by $D$ and the minimisation of the correct classifications by $D$ of 
+the generator products that are made by $G$. 
 
 The Nash equilibrium is satisfied by a pair of parameter sets $(\bm{\theta}^{(D)*}, \bm{\theta}^{(G)*})$ for which 
 no further changes occur to the objective functions $J^{(D)}$ and $J^{(G)}$ of both networks~\cite{NIPS16}. 
@@ -293,9 +301,7 @@ $D$ and $G$ defines an objective function $J^{(D)}$ for the discriminator
 \end{eqnarray}
 
 this is from the cross-entropy discriminator objective function for the binary classification of real and fake 
-samples. Appendix~\ref{appendix:cross_entropy} defines cross-entropy in this context. The expectation operators 
-$\mathbb{E}_{\mathbf{x} \sim p_{data}}$ and $\mathbb{E}_{G(\mathbf{z}) \sim p_{model}}$ correspond to the ensemble 
-averages over the classifications of real and fake samples respectively. Equation~\ref{eq:J_D} shows that the first 
+samples. Appendix~\ref{appendix:cross_entropy} defines cross-entropy in this context. Equation~\ref{eq:J_D} shows that the first 
 term cannot be influenced by the generator $G$ because here the samples are drawn from the data distribution to which 
 it has no access to. Inputs to the generator $\mathbf{z}$ are drawn from the prior distribution $p_\mathbf{z}$ over 
 the latent-space to the model. The discriminator is given a generator sample $G(\mathbf{z})$ to classify it as fake, 
@@ -429,7 +435,8 @@ their mutual independence. This estimates the effect of a weakness of GANs again
 as mode collapse~\cite{gf_gan}, where generated samples can often be very similar if not identical. The generated 
 2D slices are compared to simulation samples in a cosmological context by calculating the automatic and cross 
 (sample-to-sample) power spectrum of the 2D images using a discrete Fourier transform. The power spectra $P_k$ 
-(see Appendix~\ref{appendix:power_spectrum}) of the generated samples against the training samples agree to 1-2\% 
+% (see Appendix~\ref{appendix:power_spectrum}) 
+of the generated samples against the training samples agree to 1-2\% 
 for the majority of $k$ values. This work shows the potential for GAN methods to subvert N-body simulations. 
 
 Work by Mustafa et al.~\cite{cosmogan} uses a GAN to generate weak lensing convergence maps. The lensing maps are 
@@ -785,12 +792,17 @@ samples. The Gaussian noise $\mathbf{n}$ has standard deviation $\sigma_i$ that 
 where the free parameters $A=10^{-2}$ and $\gamma=10^{-3}$ were found to work well. Diluting the real and fake batches of 
 samples to $1\%$ of the batch-size with the opposite validity of samples helped the training process stabilise.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Minibatch Discrimination}
+
 Minibatch discrimination~\cite{gantricks_sali} was implemented to help avoid mode collapse by discriminating over a 
 collection of samples given to the discriminator as opposed to a single sample at a time. The original work describes 
 the `closeness' of samples in a collection as follows: Let $\mathbf{f}(\bm{x}_i) \in \mathbb{R}^A$ represent a vector of 
-features extracted by $D$ for sample $\mathbf{x}_i$. Multiplying $\mathbf{f}(\bm{x}_i)$ by a tensor $T \in \mathbb{R}^{A\times 
-B\times C}$ results in a matrix $M_i^{B\times C}$. The $L_1$-distance is calculated between each row of $M_i$ for each sample 
-$i$ in the collection. The distances are exponentiated as
+features extracted by $D$ for sample $\mathbf{x}_i$, where $A$ is the number of components of the feature vector. Multiplying $\mathbf{f}(\bm{x}_i)$ by a tensor $T \in \mathbb{R}^{A\times B\times C}$ results in a matrix $M_i^{B\times C}$, where $B$ 
+and $C$ are the number of discriminative kernels and the dimensionality of the space where the closeness of samples is 
+calculated. The $L_1$-distance is calculated between each row of $M_i$ for each sample $i$ in the collection. The distances 
+are exponentiated as
 
 \begin{equation}
     c_b(\mathbf{x}_i, \mathbf{x}_j) = \exp({- ||M_{i,b} - M_{j,b}||_{L_1}}) \in \mathbb{R} \nonumber
@@ -806,10 +818,11 @@ each $c_b(\mathbf{x}_i, \mathbf{x}_j)$ for $B$ samples in a minibatch
     o(\mathbf{X}) &\in& \mathbb{R}^{n \times B} \nonumber
 \end{eqnarray}
 
-Where $\mathbf{X}$ denotes a minibatch of samples. The minibatch discrimination output is concatenated to the 
+Where $n$ is the number of pairings in a minibatch and  $\mathbf{X}$ denotes a minibatch of samples. The minibatch 
+discrimination output is concatenated to the 
 flattened-features from the last convolutional layers in the discriminator. This is done separately for the real and 
 fake samples. The discriminator is able to designate the validity of a sample with additional information from samples 
-in a collection.
+in a collection which in turn causes the generator to promote variety in its products.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -932,7 +945,7 @@ comparisons is defined in Appendix~\ref{appendix:kl_div}.
 % \end{figure}
 
 \begin{figure}
-\includegraphics[width=\columnwidth]{figures/diagrams/kl_stat_process3.png}
+\includegraphics[width=\columnwidth, trim=4 4 4 4,clip]{figures/diagrams/kl_stat_process1.png}
 \centering
 \caption{From a single ensemble of 3D-histograms to a normalised distribution; 
          (a) - an ensemble of 3D-histograms that will be transformed into a distribution, 
@@ -1049,7 +1062,10 @@ reproduced across the generated samples. They show as much mutual difference as 
 % show grid of cubes ranging from z=0 to z=(highest z in training data classes)
 
 Figure~\ref{fig:acgan_interp} shows the results of varying the class label for a single latent-space point. Between the 
-minimum and maximum redshifts $z=0.0$ and $z=5.0$ respectively, 40 class examples were generated.
+minimum and maximum redshifts $z=0.0$ and $z=5.28$ respectively, 40 class examples were generated. The figure shows a 
+smooth evolution of the latent space point evaluated by the generator for redshift $z$. It is left to Section~\ref{sec:kl_trials} 
+for a discussion on the validity of the generator samples that are conditioned for $z$ values not in the set of training 
+data redshifts, though initial inspection suggests the generator is able to reproduce samples of all redshifts consistently.
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/cubes/acgan3d_z_spec.png} % acgan3d_interp.png
@@ -1077,7 +1093,7 @@ minimum and maximum redshifts $z=0.0$ and $z=5.0$ respectively, 40 class example
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Latent space point interpolation}
+% \subsubsection{Latent space point interpolation}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1086,12 +1102,11 @@ To test the power of the ACGAN generative approach, a selection of redshift valu
 snapshots to obtain new and unseen redshift data. This unseen data was used to register the ability of the generator to
 create cubes at a redshift to which the discriminator had never been shown in training. 
 
-The new redshifts are $z'=\{0.51, 1.50, 2.62, 3.58, 4.52\}$ where the original redshift values $z$ shown to the
-ACGAN are $z=\{0.0, 1.07, 2.07, 3.06, 4.17, 5.28\}$. With these new redshifts the same $D_{KL}$-trials were repeated and 
-the results are shown in 
+The new values of simulation snapshot redshifts are $z'=\{0.51, 1.50, 2.62, 3.58, 4.52\}$ where the original redshift values
+$z$ shown to the ACGAN are $z~=~\{0.0, 1.07, 2.07, 3.06, 4.17, 5.28\}$. With these new redshifts the same $D_{KL}$-trials 
+were repeated and the results are shown in \ref{fig:kl_trials_all_z2}. A number of similar redshift values to the unseen
+redshift values $z'$ are displayed in Figure~\ref{fig:acgan_interp}.
 % plot unseen z cubes against true redshifts: 5 rows, 6 cols: 3 real, 3 gen
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1101,28 +1116,36 @@ the results are shown in
 
 % LOSSES AND ACCURACIES
 Figure~\ref{fig:acgan_losscurve} shows the ACGAN objectives and accuracies over a run of training. The behaviours of the 
-models over the training are apparent in these curves. The sharp jump at the start over the first few $10^3$ epochs or so 
+models over the training are apparent in these curves. The initial decline over the first few $10^4$ epochs or so 
 shows the initial learning for both models that are new to their tasks. Each sharp jump in the losses of both models shows
 the  generator attempting a new strategy for its objective. There are small fluctuations in the accuracies of either model 
 as the generator makes smaller adjustments relative to the initial training, just after $1.0\times10^4$ epochs, these are 
-in part due to the mistakes made by the discriminator in seeing new training and generated samples.
+in part due to the mistakes made by the discriminator in seeing new training and generated samples. 
+% The use of spectral normalisation keeps the weights of the % general
 
-The accuracies reported by the discriminator model tend very slowly toward around $55\%$. This is an ideal value because the
-discriminator and generator are both engaged in a conflict that still supplies information through gradients to the generator
-model. The samples are still being improved on at this stage. This is echoed in the convergence of the losses for each model 
-to a value of around $9.25$. 
-This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but instead 
-that the architecture of the discriminator cannot extract any more useful information (and is extracting less and less) to 
-the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode 
-collapse and made more samples with more similarity between them.
+The accuracies and losses of the models in this implementation are extremely chaotic in comparison to typical behaviours of
+these parameters in GANs. This is because the spectral normalization regularization constrains the spectral norm of the weight
+matrices on each layer it is applied to. This means that changes to this value are always normalised in the next training
+iteration. This chaotic behaviour is implicit to the GAN framework and not this implementation itself. The cross entropy loss
+is related to the specific KL-divergence we have defined in this work and so the models converging can still be seen in the
+$\langle D_{KL}\rangle_z$ curves.
 
-The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
-architectures. The separate networks are not able to fully attain their objectives against each other. At this point the 
-discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
-which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, 
-the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many 
-different models it was found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point 
-the training would dissipate chaotically.
+% The accuracies reported by the discriminator model tend very slowly toward around $55\%$. This is an ideal value because the
+% discriminator and generator are both engaged in a conflict that still supplies information through gradients to the generator
+% model. The samples are still being improved on at this stage. This is echoed in the convergence of the losses for each model 
+% to a value of around $9.25$. 
+% This does not mean an ideal `perfect' generator has closed the distance between the model and data distributions, but instead 
+% that the architecture of the discriminator cannot extract any more useful information (and is extracting less and less) to 
+% the generator.The gradients for backpropagation have vanished. This was seen in training. The generator suffered from mode 
+% collapse and made more samples with more similarity between them. % NON SN model
+
+% The accuracies of both models converge at just over 60\% which implies there is space to improve the model 
+% architectures. The separate networks are not able to fully attain their objectives against each other. At this point the 
+% discriminator is extracting the maximal amount of information for use in classification and feedback to the generator, 
+% which was observed to be changing the histograms only at the scales given by its convolutional kernels. In other words, 
+% the generator is fooling the discriminator without generating the most realistic cubes it could. Through running many 
+% different models it was found that $8.0\times 10^4$ epochs was enough time for the network to converge. Past this point 
+% the training would dissipate chaotically.
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/graphs/metrics1.png}
@@ -1133,23 +1156,25 @@ the training would dissipate chaotically.
 
 \subsection{$D_{KL}$ curves}
 
-% KL DIVERGENCES
-The KL divergences between the training and generated distributions $t$ and $g$, denoted by $D_{KL}(t||g)$ and 
-$D_{KL}(g||t)$, follow a path that is related to the behaviour of the models shown in loss and accuracy curve. The 
-divergences both start at a global maximum and tend to a final convergent value. The initial value corresponds to the 
-comparison between batches of cubes with pixel-densities sampled from the $\mathbf{z}$-prior $\mathcal{N}(0,1)$ that are
-devoid of structure and the final value corresponds to the cubes with realistic cosmological structure in. The values 
-sharply drop at the same epoch in training as the losses and accuracies do. The initial $D_{KL}$ values of the comparison 
-are with earlier generated images that are devoid of structure. The final value, with some intermediate values, corresponds
-to images that are very similar to the training data, so the $D_{KL}$ values changed over a range of $10^{1.0}$ to 
-$10^{-1.4}$ from structureless images to realistic images.
+The KL divergences between the training and generated distributions $t$ and $g$, denoted by $\langle D_{KL}(t||g) \rangle_z$ 
+and $\langle D_{KL}(g||t) \rangle_z$ (where $\langle\dot\rangle_z$ is an averaging over redshift), follow a path that is 
+related to the behaviour of the models shown in loss and accuracy curve. The divergences both start at a global maximum and 
+tend to a final convergent value. The initial value corresponds to the comparison between batches of cubes with 
+pixel-densities sampled from the $\mathbf{z}$-prior $\mathcal{N}(0,1)$ that are devoid of structure and the final value 
+corresponds to the cubes with realistic cosmological structure in. 
+% The values sharply drop at the same epoch in training as the losses and accuracies do. 
+The initial $D_{KL}$ values of the comparison are with earlier generated images that are 
+devoid of structure. The final value, with some intermediate values, corresponds to images that are very similar to the 
+training data, so the $D_{KL}$ values changed over a range of $10^{1.0}$ to $10^{-1.4}$ from structureless images to 
+realistic images.
 
-The curves have similar features to the loss and accuracy curves as they should because of the relation of the 
-cross-entropy to the KL divergence $D_{KL}$.
+% The curves have similar features to the loss and accuracy curves as they should because of the relation of the 
+% cross-entropy to the KL divergence $D_{KL}$.
 
-The increasingly small differences between the observed $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values with respect to the values 
-throughout training is important. This suggests that the training and generated distributions $t$ and $g$ are suited for 
-replacement with each other, as opposed to a preferred replacement of one with the other.
+The increasingly small differences between the observed $\langle D_{KL}(t||g) \rangle_z$ and $\langle D_{KL}(g||t) \rangle_z$ 
+values with respect to the values throughout training is important. This suggests that the training and generated distributions 
+$t$ and $g$, and ultimately $p_{model}$ and $p_{data}$ are suited for replacement with each other, as opposed to a preferred 
+replacement of one with the other.
 
 \begin{figure}[!ht]%[hbt!]
 \includegraphics[width=\columnwidth]{figures/graphs/stats1.png}
@@ -1167,9 +1192,9 @@ replacement with each other, as opposed to a preferred replacement of one with t
 
 \subsubsection{Training redshift trials}
 
-Figure~\ref{fig:kl_trials_all} and Table~\ref{tab:1} show the results of the $D_{KL}$-trials for batches of 32 samples from 
-each distribution repeated for 64 separate comparisons between each distribution pairing. The procedure for the repeated 
-ensemble KL divergence testing outlined in Section~\ref{methods:stats_and_diags} used the samples transformed into 
+Figure~\ref{fig:kl_trials_all_z1} shows the results of the $D_{KL}$-trials for batches of 64 samples comprised from samples
+from each distribution repeated for 128 separate comparisons between each distribution pairing. The procedure for the 
+repeated ensemble KL divergence testing outlined in Section~\ref{methods:stats_and_diags} used the samples transformed into 
 probability distributions over the pixel density.
 
 There is a slight broadening of the histograms with increasing kernel size. This shows the random effect, or dispersion, 
@@ -1182,6 +1207,7 @@ variance and separation with kernel size. This shows that in both cases the dist
 to the uniform distributions. The means of the mutual distributions stay the same except for the uniform-uniform comparison. 
 This is because the median for the bin separations in the component-histograms was given by the median of the training data 
 batch which consistently has a lower mean pixel density than the uniform histogram data. 
+% It is also not symmetric as can be seen from the sheer sparsity of the samples for each redshift.
 
 
 \begin{figure*}[hbt!]
@@ -1189,7 +1215,7 @@ batch which consistently has a lower mean pixel density than the uniform histogr
 \centering
 \caption{Histograms showing the $D_{KL}$ values for distribution-comparisons between training $t$, generated $g$ and 
          uniform $u$ cube samples. This graph shows the results for downsampling kernel values $k \in \{1, 2, 4\}$.}
-\label{fig:kl_trials_all}
+\label{fig:kl_trials_all_z1}
 \end{figure*}
 
 
@@ -1261,7 +1287,7 @@ The similarity shown by the $D_{KL}(t||g)$ and $D_{KL}(g||t)$ values may mostly 
 distributions of the training and generated data. Considering that the lack of filament structure in the larger scales 
 of the generated data compared to the training data is not shown in the $D_{KL}$ comparisons, this may be true. 
 
-The pixel density distribution is an important characteristic of the images but the just obtaining the 
+The pixel density distribution is an important characteristic of the images but just obtaining the 
 similarity between the $t$ and $g$ distributions with this property would not guarantee that all the structure in the 
 training data was present. There are many combinations of pixels that make up a matching pixel-density distribution for 
 two histogram distributions, but far less of those show the structure of the cosmic web. 
@@ -1318,8 +1344,8 @@ two histogram distributions, but far less of those show the structure of the cos
 
 \subsubsection{Unseen redshift trials}
 
-Figure~\ref{fig:kl_trials_all_z2} and Table~\ref{tab:2} show the results of the $D_{KL}$-trials between for batches of 32 
-samples from each distribution repeated for 64 separate comparisons between each distribution pairing. These results are 
+Figure~\ref{fig:kl_trials_all_z2} shows the results of the $D_{KL}$-trials between for batches of 64 
+samples from each distribution repeated for 128 separate comparisons between each distribution pairing. These results are 
 produced by using the generator to create samples at values of redshift $z=z'$ that the ACGAN has never been exposed to.
 
 \begin{figure*}[hbt!]
@@ -1357,16 +1383,21 @@ produced by using the generator to create samples at values of redshift $z=z'$ t
 %   \label{tab:2}
 % \end{table*}
 
-The results point to the fact that the generator is less competent at representing values of redshift that lay between the
-values that the ACGAN has been exposed to in training. This is certainly to be expected as the description for the emergence
+The results point to the fact that the generator is competent at representing values of redshift that lay between the
+values that the ACGAN has been exposed to in training. This is interesting because the description for the emergence
 of the finite training set of images is certainly more simple than the chronology of the cosmic web that the Millenium-SAGE
 models characterise. Figure~\ref{fig:z_kl} shows the relation between the $\langle D_{KL}(g||t) \rangle$ and 
 $\langle D_{KL}(t||g) \rangle$ values with redshift $z$. The highest peak coincides with the lowest unseen redshift $z'=0.51$.
 
 The last two unseen redshift values show consistency between kernel sizes and they are similar values to the trained redshift 
-values either side of these redshifts. Because these $\langle D_KL \rangle$ values have the lowest separation between the 
-nearest trained redshifts, it suggests that the ACGAN has a certain range in redshift over which it can obtain the same coherence 
-in samples with. The other redshifts suggest this boundary away from a given trained redshift value is between 0.3 and 0.5.
+values either side of these redshifts. Because these $\langle D_{KL} \rangle$ values have the lowest separation between the 
+nearest trained redshifts, it suggests that the ACGAN has trouble obtaining the same coherence in samples either side of the 
+median $z$ value of the data it is exposed to. The coherence of the $z$ redshift samples to the $z'$ redshift samples suggests
+the ACGAN can represent samples to a distance away from a given trained redshift value of between 0.3 and 0.5.
+
+The similarity between the lowest and highest $z$ and $z'$ $D_{KL}$-histograms suggests that the characteristics of the data 
+cause the ACGAN some difficulty in imitating samples at these redshifts successfully, but that it is not necessarily a deficiency 
+that only this implementation of the ACGAN would suffer with.
 
 % lack of data? lack of feature maps
 
@@ -1400,7 +1431,7 @@ long enough to do so. The author's opinion is that the best route is to improve 
 number of pixels in the cubes, allowing the depth of the models to increase with more layers, whilst also better translating
 the variance in the structure inside the histograms. It has been found that in amplifying the initial parameterised units 
 in the first layer of the generator model requires that there are at least $\sim \! 10^4$ units. The use of
-fewer units does not allow the generator to draw enough permutations from the potentials  `proto-cubes' allowed by the 
+fewer units does not allow the generator to draw enough permutations from the potential `proto-cubes' allowed by the 
 initial layer. The kernels in the convolutional layers were found to be most effective at size $9 \times 9 \times 9$. 
 Though it is expected that some combination of higher kernel sizes would better characterise the histogram structures. 
 
@@ -1422,11 +1453,13 @@ more varied structure in the kernel sizes.
 
 The other available galaxy properties from the Millennium-SAGE catalogs could also be folded into the generator analysis
 to create distributions weighted by luminosity or another characteristic. It is possible that some amount of control over
-the generated images and their additional characteristics
+the generated images and their additional characteristics could deepen the effectiveness of replacing simulation data in 
+analyses, allowing samples that are emergent from different cosmological parameters to be considered separately.
 
 In previous work, a regular GAN was trained on the same $z=0$ data and a smaller difference in the mean $D_{KL}(t||g)$ value
 was found. As a one class model, this suggests that the architectures in this ACGAN implementation could require a higher 
-capacity in terms of convolution filters.
+capacity in terms of convolution filters. The differences in the pixel sparsity between redshift classes increases the need
+for more filters in the ACGAN convolutions.
 % 3D model works REALLY well - use transposed conv instead of upsampling. As a one-class model, the capacity implies that the
 % ACGAN requires more filters that the GPU could not provide.
 
@@ -1439,7 +1472,45 @@ encodes informative features in the natural data samples. This latent space can 
 axes, to interpolate through the features. This could be implemented in the latent space of an ACGAN that is trained on 
 data with different redshifts to interpolate between different values of redshift in an inexpensive procedure. This 
 interpolation may hold the ability to evolve a collection of samples simultaneously by interpolating through redshift 
-values in a continuous way. The problem of mode collapse for the generator model could be estimated by interpolating the 
+values in a continuous way. 
+
+% In the research for this publication, arrays of samples generated by points constituting a path in the latent-space. Uniform
+% (along collinear points on one axis) and Gaussian interpolation along a hypershere
+
+% \subsubsection{Latent space navigation}\label{methods:z_navig}
+% % show the maths behind it, the general method of doing it. See https://arxiv.org/pdf/1609.04468.pdf, % (Larsen et al., 2016).
+In all non-trivial cases, the number of parameters available to the generative model of a GAN through its architecture is 
+less than the total parameters that constitute the training set. This means the discriminator and generator must find 
+condensed representations of the training data. The generator model is sampled from a set of latent variables in the 
+latent space that constitute the latent-vectors $\mathbf{z}$. Vector space arithmetic with points in the latent space 
+allows interpolation between tenable examples of learned representations of the training data the GAN is exposed to in 
+training. 
+% % With the inherent structuring of the latent space by GANs, these operations can allow complex 
+
+Interpolation is the transit between two distinct points in the latent space. In research for this work, spherical interpolation 
+was tested as opposed to linear interpolation. The latter being a over-simplistic approach as the latent space of the model 
+trained in this work had 256 dimensions with a Gaussian prior $\mathcal{N}(0,1)$. Spherical interpolation~\cite{spherical_interp} uses a great circle arc on the N-dimensional hypersphere in the latent space, with a path given by 
+
+\begin{equation}
+    S(q_1, q_2; \mathbf{\mu}) = \frac{\sin (1 - \mu)\theta}{\sin \theta}q_1 + \frac{\sin \mu\theta}{\sin \theta}q_2
+\end{equation}
+
+where a discrete set of points between points $q_1$ and $q_2$ are passed to the generator model to create samples~with and
+$\mu$ are the discrete proportioned steps between $q_1$ and $q_2$. It should be noted that simple linear interpolation 
+along a given axis of the latent space would disregard the curvature of the 256-dimensional latent space and so the path 
+along a great circle by spherical interpolation is required.
+
+Typical applications of generating samples along paths interpolated as above concern representations of more natural images.
+This type of data, being more tangible to humans, permits results of vector arithmetic in the latent space to be judged easily.
+With samples of the cosmic web no such comparisons can be so easily made - it remains a target of future work to explore the 
+potential of isolating regions in the latent space according to physically-semantic features in the samples produced using points
+there. It is potentially possible to characterise samples in the latent space to query the generator for samples that display, for
+example, more or less filament structure. 
+
+%% In these cases, we have performed a linear interpolation which assumes that the latent space is uniformly distributed 
+%% hypercube. Technically, our chosen latent space is a 100-dimension hypersphere or multimodal Gaussian distribution.
+
+The problem of mode collapse for the generator model could be estimated by interpolating the 
 latent space to create a sample of images to test with each other for similarity. A simple test would be to create the 
 mean-image of this sample to test for overlaps but more advanced cross-correlations could show more detail of the overlaps.  
 
@@ -1448,16 +1519,18 @@ mean-image of this sample to test for overlaps but more advanced cross-correlati
 
 \subsection{Universe generation} 
 To create a cosmological volume on order of the size of the Millennium-SAGE volume, with the tested default cube-size, a 
-generator would need to create around $10^2$ cubes. The generator model in this work once trained can do so within 30 
+generator would need to create around $20$ cubes. The generator model in this work once trained can do so within 
 seconds. Whilst in the process of fusing the samples together coherently avoiding density discontinuities would not be a 
-trivial task. It is logical to assume that it is a process that is maximally as intensive as generating the cubes 
+trivial task, it is logical to assume that it is a process that is maximally as intensive as generating the cubes 
 themselves. It is expected that the GAN would be able to generalise well to higher resolution or larger volume sample data.  
 
 The scaled volumes produced by the GAN require the value of the total number of galaxies contained in the cubes to 
-transform the cubes back into coordinate tensors. This would be done by uniformly distributing the number of galaxy 
-positions required for each histogram cell into each cell. The value of the total number of galaxies can be passed to 
-the GAN framework and detached to a separate `route' in the models. This value, like the histogram cells, would be 
-correctly posited just as the histogram pixel densities are in training. 
+transform the cubes back into coordinate tensors - the initial objects extracted from the simulation. This would be done 
+by uniformly distributing the number of galaxy positions required for each histogram cell into each cell. The value of the
+total number of galaxies can be passed to the GAN framework and detached to a separate `route' in the models. This value, 
+like the histogram cells, would be correctly posited just as the histogram pixel densities are in training. An important 
+test for the methods presented would be to compare the original simulation coordinate tensors to those built from generated
+samples. 
 
 % Find a way to co-interpolate a massive volume of cubes between different redshifts
 
@@ -1499,11 +1572,14 @@ $\Lambda \text{CDM}$ cosmology and the webbed structure is consistent. An inform
 simulation operating at a higher resolution with a greater number of total simulation particles such as the Millennium-XXL 
 simulation~\cite{millxxlsim}. The Millennium-XXL simulation uses $6720^3$ particles in a volume of $3000 \: h^{-1} 
 \,\textup{Mpc}$. Assuming a larger set of samples from this simulation, the GAN would be recreating the distributions of 
-smaller scale cosmological structure that could be tested further. From the experience of obtaining the strongest model in
-the 3D-GAN implementations, increasing the number of pixels increased the performance of the models. This could be due to 
+smaller scale cosmological structure that could be tested further. Extending a high-resolution cosmological simulation
+using a generative model such as the ACGAN outlined in this work is a realistic and powerful application for future work.
+
+From the experience of obtaining the strongest model in
+the ACGAN implementations, increasing the number of pixels increased the performance of the models. This could be due to 
 a lower loss of information between an increase in the number of pixels for a pixel in the previous resolution. The 
 appearance of the structure is better defined in this way. The lower the number of pixels, the more randomly distributed 
-the pixel densities will be when they average over similar features such as filaments. This is the most difficult obstacle
+the pixel densities will be when they average over similar features such as filaments. This is a difficult obstacle
 for the GAN as this problem is obviously much greater with the 3D samples. The analog to this problem for images would be
 the randomness of a set of pixelated images of flowers compared to the same images but in higher resolution. The structure
 is consistent between the samples in the latter distribution. 
@@ -1555,7 +1631,7 @@ various features of the cosmic web at different redshift is mapped in an entangl
 not correspond to semantic features in the data. There is no default ordering to the process through training. This means 
 further work is required to find the effects of each possible axis in the latent space as well as the spherical interpolation paths in the latent space navigation. 
 
-One step towards a more ordered approach was pioneered by Chen et al. 2016~\cite{infogan}. This variant on the original GAN 
+One step towards a more ordered approach was using an InfoGAN pioneered by Chen et al. 2016~\cite{infogan}. This variant on the original GAN 
 architecture allows the generator model to disentangle the learned feature representations in an unsupervised manner. This 
 is implemented by using a $\mathbf{z}$-vector composed of latent codes $c_z$ and noise. An auxiliary network maps the 
 distribution of these latent codes $Q(c_z|\mathbf{x})$ for an image $\mathbf{x}$ to provide a lower bound on the mutual 
@@ -1569,11 +1645,26 @@ More recent work~\cite{latent_disentanglement} provides another step towards sol
 Further work is required to explore the potential for these methods to this work, but there are no obvious reasons why this
 would not fit into the current method. 
 
+An elegant solution to improved latent-space sampling~\cite{discriminator_z_sampling} is through use of the trained discriminator 
+as a guide to determining suitable regions of the latent space in which to sample. This method relaxes the requirement for an 
+optimal discriminator-generator architecture relation by use of an energy function comprising the implicit generator log-density 
+and the discriminator logit score. Note that in typical GAN implementations the discriminator is discared after training. 
+
 \subsection{ACGAN architecture and training}
+\subsubsection{Parametric components}
 % SBN AND CBN
 Batch normalisation~\cite{batchnorm} is critical to the function of the ACGAN presented in this work. However this method was derived for non-generative networks, and so normalising over a batch of conditioned latent vectors $\mathbf{z}(c)$ can distort the task of creating the latent space mapping for the generator. Conditional batch normalisation (CBN)~\cite{GAN_CBN} and self-modulated batch normalisation (SBN)~\cite{GAN_SBN} offer alternatives for this task by conditioning a set of learned parameters over the class space $C$ for normalisation. The difference between CBN and SBN are that the labels are required for the normalisation parameters in CBN whereas SBN depends only on the latent vectors. In practice CBN would be useful in both the discriminator and the generator.
+\subsubsection{Regularization and training strategy}
 % CGD
 Recent work by Sch\"{a}fer et al.~\cite{GAN_CGD1, GAN_CGD2} provides an additional regularization, known as competitive gradient descent, to reinvent the interaction of the discriminator and generator models whilst maintaining their independent agencies. No metrics dependent on the space of training images are required such as in gradient penalty techniques for the same purpose. The method ensures that the discriminator model does not exploit the imperceptible errors of the generator products. This means that the generator loss is maximally related to the difference between the model and data distributions.
+
+\subsection{Alternative models and architectures}
+
+The archetypal GAN is a powerful basis to begin the task of reproducing strains of natural data. It is possible that the  objective of this research could be completed through a number of different explorations with not only the GAN framework but also other models such as the Variational Auto-Encoder (VAE)~\cite{vaes, vaes2} with the similar conditional extension \cite{cvae} variant for the optional dependence of the output on redshift $z$. 
+
+One particularly promising extension to the GAN method is the StyleGAN~\cite{nvidia_gan}. The specific part of the architectural innovations in this work that are relevant to this work is the introduction of the intermediate latent space
+and adaptive instance normalization. This allows many different modes in the data to be represented in the generated samples.
+This could provide a handle on the coupled modes in cosmological structure, leading to more realistic samples. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1581,20 +1672,20 @@ Recent work by Sch\"{a}fer et al.~\cite{GAN_CGD1, GAN_CGD2} provides an addition
 
 \section{Conclusions}\label{sec:conclusions}
 This work has demonstrated the potential of Generative Adversarial Networks in reproducing large-scale cosmological 
-structure with deep convolutional neural networks. The generator model can create realistic samples and this has been 
-achieved in both implementations, but it is still early in terms of stating the generative models as being perfect. In 
-particular this is due to the lack of consistent filament structures in the 3D images. The 2D and 3D implementations have 
-been referenced to each other in rational comparisons, with the generator showing it can imitate simulated cosmological 
-structure. %This is shown in the galaxy distributions with respect to N-body simulation data. 
+structure with deep convolutional neural networks. The generator model can create realistic samples, but it is still 
+early in terms of stating the generative models as being perfect. In particular this is due to the lack of consistent 
+filament structures images.
 This realism is not limited to a single example, it is present across a large sample of histograms tested over many 
-ensembles from this distribution. This assertion is founded on the statistical tests of Section~\ref{sec:kl_trials} on 
+ensembles from this distribution. The tests cause the generator to sample over a total volume that greatly exceeds the original
+simulation volume. This assertion is founded on the statistical tests of Section~\ref{sec:kl_trials} on 
 generated data and simulation-data samples. These tests show that rigorous statistical methods native to natural science 
-are a potential step forward in profiling the behaviour and function of the generative adversarial framework and the field
+are a potential step forward in profiling the behaviour and function of GANs and other generative frameworks and the field
 of artificial intelligence at large. 
 
 Future work has been outlined that builds on the foundations of the reported work, moving towards generating an artificial 
-universe at higher levels of statistical agreement with both observation and simulation. The methods of deep learning and
-generative adversarial networks have been shown to be a valuable tool to extend the expanses of N-body simulations and it 
+universe at higher levels of statistical agreement with both observation and simulation. There is also a considerable scope 
+for abstracting the generative method into inferring properties and parameters that govern the samples.
+The methods of deep learning and GANs have been shown to be a valuable tool to extend the expanses of N-body simulations and it 
 seems likely their power will be utilised in the next few years of cosmology. 
 
 {\footnotesize \bibliographystyle{ieeetr} %\bibliographystyle{acm}
@@ -1716,17 +1807,17 @@ The hyper-parameters of the ACGAN implementation are shown in Table~\ref{table:a
  \hline\hline
 $\mathbf{z}(\mathbf{c})$ & &  (256) \\
  \hline
-Linear & BatchNorm  & $(16, 16, 16, 128)$ \\ 
-    - &  ELU & - \\ 
+Linear & BatchNorm  & $(16, 16, 16, 64)$ \\ 
+    - &  LeakyReLU & - \\ 
  \hline
- Conv3D & BatchNorm  & $(16, 16, 16, 128)$ \\ 
-     ($9\times9\times9$)&  ELU  & strides=1 \\
+ Conv3D & BatchNorm  & $(16, 16, 16, 64)$ \\ 
+     ($9\times9\times9$)&  LeakyReLU  & strides=1 \\
  \hline
-Conv3DTranspose & BatchNorm  & $(32, 32, 32, 128)$ \\ 
-    ($2\times2\times2$)&  ELU & strides=2 \\
+Conv3DTranspose & BatchNorm  & $(32, 32, 32, 64)$ \\ 
+    ($2\times2\times2$)& LeakyReLU & strides=2 \\
  \hline
 Conv3D  & - & $(32, 32, 32, 64)$ \\ 
- ($9\times9\times9$)& ELU & strides=1 \\ [1ex] 
+ ($9\times9\times9$)& LeakyReLU & strides=1 \\ [1ex] 
  \hline\hline
 Conv3D  & - & $(32, 32, 32, 1)$ \\ 
  ($9\times9\times9$)& tanh & strides=1 \\ [1ex] 
@@ -1740,20 +1831,20 @@ Conv3D  & - & $(32, 32, 32, 1)$ \\
 %  \vspace{0.001cm} & \vspace{0.001cm} & \vspace{0.001cm} \\ [0.01ex]
  $\mathbf{x}$ & &  $(32, 32, 32, 1)$ \\ [0.5ex]
  \hline 
- Conv3D & - & $(32, 32, 32, 32)$ \\
-  ($7\times7\times7$)&   ELU &  strides=1 \\ [0.5ex]
+ Conv3D & - & $(32, 32, 32, 16)$ \\
+  ($7\times7\times7$)& LeakyReLU &  strides=1 \\ [0.5ex]
  \hline
-  Conv3D & BatchNorm & $(16, 16, 16, 32)$ \\
-  ($7\times7\times7$) &   ELU &  strides=2 \\ [0.5ex]
+  Conv3D & BatchNorm & $(16, 16, 16, 16)$ \\
+  ($7\times7\times7$) & LeakyReLU &  strides=2 \\ [0.5ex]
  \hline
- Conv3D & BatchNorm & $(16, 16, 16, 64)$ \\ 
- ($7\times7\times7$) &  ELU   & strides=1 \\ [0.5ex]
+ Conv3D & BatchNorm & $(16, 16, 16, 32)$ \\ 
+ ($7\times7\times7$) & LeakyReLU & strides=1 \\ [0.5ex]
  \hline
   Conv3D & BatchNorm & $(8, 8, 8, 32)$ \\
-  ($7\times7\times7$) &   ELU &  strides=2 \\ [0.55ex]
+  ($7\times7\times7$) & LeakyReLU &  strides=2 \\ [0.55ex]
  \hline
- Conv3D & BatchNorm &  $(8, 8, 8, 32)$ \\ 
- ($7\times7\times7$) &  ELU & strides=1 \\ [0.55ex]
+ Conv3D & BatchNorm &  $(8, 8, 8, 64)$ \\ 
+ ($7\times7\times7$) &  LeakyReLU & strides=1 \\ [0.55ex]
  \hline
 %   \textit{Source} & &  \\
  Linear ($p_\mathbf{x}$) & sigmoid & $ 1 $ \\ [0.75ex] 
